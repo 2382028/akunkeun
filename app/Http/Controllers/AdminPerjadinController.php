@@ -94,7 +94,7 @@ class AdminPerjadinController extends Controller
             $info->jumlah_hari = $jumlahHari;
         }
 
-        
+
         return view('admin.perjadin.HKT.index', [
             'title' => 'HKT Perjalanan Dinas',
             'perjadins' => $perjadin,
@@ -175,7 +175,8 @@ class AdminPerjadinController extends Controller
         ]);
     }
 
-    public function detail_perjadin_BMN($id){
+    public function detail_perjadin_BMN($id)
+    {
 
         $pesertaPegawais = DB::table('data_perjadinlangsungs')
             ->join('pegawais', 'data_perjadinlangsungs.pegawai_id', '=', 'pegawais.id')
@@ -220,7 +221,7 @@ class AdminPerjadinController extends Controller
             ->get();
         $kebutuhans = DB::table('keuangan_perjadinlangsungs')
             ->join('kebutuhans', 'keuangan_perjadinlangsungs.kebutuhan_id', '=', 'kebutuhans.id')
-            ->select('kebutuhans.id as idKebutuhan', 'kebutuhans.nama', 'kebutuhans.jumlah_frekuensi', 'kebutuhans.satuan', 'kebutuhans.tipe_pendanaan', 'kebutuhans.ket', 'kebutuhans.status', 'keuangan_perjadinlangsungs.kebutuhan_id', 'keuangan_perjadinlangsungs.id as idKeuangan', 'keuangan_perjadinlangsungs.uang_harian', 'keuangan_perjadinlangsungs.uang_harian_fullday', 'keuangan_perjadinlangsungs.uang_harian_fullboard','keuangan_perjadinlangsungs.uang_representasi', 'keuangan_perjadinlangsungs.persen_pajak', 'keuangan_perjadinlangsungs.jumlah_harga')
+            ->select('kebutuhans.id as idKebutuhan', 'kebutuhans.nama', 'kebutuhans.jumlah_frekuensi', 'kebutuhans.satuan', 'kebutuhans.tipe_pendanaan', 'kebutuhans.ket', 'kebutuhans.status', 'keuangan_perjadinlangsungs.kebutuhan_id', 'keuangan_perjadinlangsungs.id as idKeuangan', 'keuangan_perjadinlangsungs.uang_harian', 'keuangan_perjadinlangsungs.uang_harian_fullday', 'keuangan_perjadinlangsungs.uang_harian_fullboard', 'keuangan_perjadinlangsungs.uang_representasi', 'keuangan_perjadinlangsungs.persen_pajak', 'keuangan_perjadinlangsungs.jumlah_harga')
             ->where('keuangan_perjadinlangsungs.info_perjadinlangsung', $id)
             ->get();
         $pengemudi = DB::table('pegawais')
@@ -247,7 +248,7 @@ class AdminPerjadinController extends Controller
         $pesertaPegawais = DB::table('data_perjadinlangsungs')
             ->join('pegawais', 'data_perjadinlangsungs.pegawai_id', '=', 'pegawais.id')
             ->join('keuangan_perjadinlangsungs', 'data_perjadinlangsungs.id', '=', 'keuangan_perjadinlangsungs.data_perjadinlangsungs')
-            ->select('keuangan_perjadinlangsungs.id as idKeuangan', 'pegawais.nama_lengkap', 'pegawais.pangkat', 'pegawais.golongan', 'data_perjadinlangsungs.status_pegawai', 'data_perjadinlangsungs.id as idData', 'keuangan_perjadinlangsungs.akun_x_rkakl', 'keuangan_perjadinlangsungs.ref_sbm', 'keuangan_perjadinlangsungs.uang_harian', 'keuangan_perjadinlangsungs.uang_harian_fullday', 'keuangan_perjadinlangsungs.uang_harian_fullboard','keuangan_perjadinlangsungs.uang_representasi', 'keuangan_perjadinlangsungs.persen_pajak', 'keuangan_perjadinlangsungs.jumlah_harga', 'keuangan_perjadinlangsungs.status', 'keuangan_perjadinlangsungs.pph22', 'keuangan_perjadinlangsungs.pph23', 'keuangan_perjadinlangsungs.tgl_bayar', 'keuangan_perjadinlangsungs.ppn')
+            ->select('keuangan_perjadinlangsungs.id as idKeuangan', 'pegawais.nama_lengkap', 'pegawais.pangkat', 'pegawais.golongan', 'data_perjadinlangsungs.status_pegawai', 'data_perjadinlangsungs.id as idData', 'keuangan_perjadinlangsungs.akun_x_rkakl', 'keuangan_perjadinlangsungs.ref_sbm', 'keuangan_perjadinlangsungs.uang_harian', 'keuangan_perjadinlangsungs.uang_harian_fullday', 'keuangan_perjadinlangsungs.uang_harian_fullboard', 'keuangan_perjadinlangsungs.uang_representasi', 'keuangan_perjadinlangsungs.persen_pajak', 'keuangan_perjadinlangsungs.jumlah_harga', 'keuangan_perjadinlangsungs.status', 'keuangan_perjadinlangsungs.pph22', 'keuangan_perjadinlangsungs.pph23', 'keuangan_perjadinlangsungs.tgl_bayar', 'keuangan_perjadinlangsungs.ppn')
             ->where('data_perjadinlangsungs.info_perjadinlangsung', $id)
             ->get();
         $pesertaNonPegawais = DB::table('data_perjadinlangsungs')
@@ -840,7 +841,7 @@ class AdminPerjadinController extends Controller
                 $uangharian = 'uang_harian' . $i;
                 $uangfullday = 'uang_harian_fullday' . $i;
                 $uangfullboard = 'uang_harian_fullboard' . $i;
-                $uangrepresentasi ='uang_representasi' . $i;
+                $uangrepresentasi = 'uang_representasi' . $i;
                 $totaluangpeserta = 'total_' . $i;
                 $tglbayar = 'tglbayar_' . $i;
                 $refSBM = 'sbmPegawai_' . $i;
@@ -933,7 +934,7 @@ class AdminPerjadinController extends Controller
                 $uangharian = 'uang_harian' . $i;
                 $uangfullday = 'uang_harian_fullday' . $i;
                 $uangfullboard = 'uang_harian_fullboard' . $i;
-                $uangrepresentasi ='uang_representasi' . $i;
+                $uangrepresentasi = 'uang_representasi' . $i;
                 $pajakPeserta = 'pajak_' . $i;
                 $pph22 = 'pph22_' . $i;
                 $pph23 = 'pph23_' . $i;
@@ -1317,7 +1318,7 @@ class AdminPerjadinController extends Controller
 
         // Stream file PDF ke browser
         return $pdf->stream('surtug.pdf');
-        }
+    }
 
     public function StoreSurtugPDF(Request $request)
     {
@@ -1411,9 +1412,10 @@ class AdminPerjadinController extends Controller
             ]);
         DB::table('info_perjadinlangsungs')
             ->where('id', $id)
+            ->whereNull('is_acceptKeu')
             ->update([
-                'is_acceptKeu' => 'verifikasi-1',
-                'status_pengajuan_detail' => 'Verifikasi-1-Keuangan',
+                'is_acceptBend' => 'approval-1',
+                'status_pengajuan_detail' => 'Approval-1-Bendahara',
                 'kode_surat_tugas' => $request->nomor_surtug,
                 'is_acceptHKT' => 'selesai',
                 'updated_at' => now(),
@@ -1512,7 +1514,7 @@ class AdminPerjadinController extends Controller
         $surat = DB::table('surtug_perjadinlangsungs')
             ->join('info_perjadinlangsungs', 'surtug_perjadinlangsungs.id_perjadinlangsung', '=', 'info_perjadinlangsungs.id')
             ->join('keuangan_perjadinlangsungs', 'info_perjadinlangsungs.id', '=', 'keuangan_perjadinlangsungs.info_perjadinlangsung') // Memperbaiki klausa ON dengan menggunakan kolom yang sesuai
-            ->select('surtug_perjadinlangsungs.nomor_surat', 'surtug_perjadinlangsungs.perihal','surtug_perjadinlangsungs.tgl_surat_dibuat', 'info_perjadinlangsungs.tanggal_surat', 'info_perjadinlangsungs.tgl_mulai', 'surtug_perjadinlangsungs.paragraf_1', 'surtug_perjadinlangsungs.paragraf_2', 'surtug_perjadinlangsungs.paragraf_3', 'info_perjadinlangsungs.provinsi', 'info_perjadinlangsungs.kabupaten_kota', 'keuangan_perjadinlangsungs.uang_harian_fullday',  'keuangan_perjadinlangsungs.uang_harian', 'keuangan_perjadinlangsungs.tgl_bayar', 'keuangan_perjadinlangsungs.jumlah_harga','keuangan_perjadinlangsungs.akun_x_rkakl') // Mengubah pemilihan kolom agar sesuai dengan join yang dilakukan
+            ->select('surtug_perjadinlangsungs.nomor_surat', 'surtug_perjadinlangsungs.perihal', 'surtug_perjadinlangsungs.tgl_surat_dibuat', 'info_perjadinlangsungs.tanggal_surat', 'info_perjadinlangsungs.tgl_mulai', 'surtug_perjadinlangsungs.paragraf_1', 'surtug_perjadinlangsungs.paragraf_2', 'surtug_perjadinlangsungs.paragraf_3', 'info_perjadinlangsungs.provinsi', 'info_perjadinlangsungs.kabupaten_kota', 'keuangan_perjadinlangsungs.uang_harian_fullday',  'keuangan_perjadinlangsungs.uang_harian', 'keuangan_perjadinlangsungs.tgl_bayar', 'keuangan_perjadinlangsungs.jumlah_harga', 'keuangan_perjadinlangsungs.akun_x_rkakl') // Mengubah pemilihan kolom agar sesuai dengan join yang dilakukan
             ->where('surtug_perjadinlangsungs.id_perjadinlangsung', $id)
             ->get();
         $akuns = DB::table('akun_x_rkakls')
@@ -1526,15 +1528,15 @@ class AdminPerjadinController extends Controller
             ->join('ref_rkakl_satkers', 'ref_rkakl_programs.ref_rkakl_satker_id', '=', 'ref_rkakl_satkers.id')
             ->select('akun_x_rkakls.id as idAkun', 'ref_rkakl_sub_komponens.nama_sub_kegiatan', 'akuns.uraian', 'ref_rkakl_satkers.kode_satker', 'ref_rkakl_programs.kode_program', 'ref_rkakl_kegiatans.kode_kegiatan', 'ref_rkakl_outputs.kode_output', 'ref_rkakl_suboutputs.kode_sub_output', 'ref_rkakl_komponens.kode_komponen', 'ref_rkakl_sub_komponens.kode_sub_kegiatan', 'ref_rkakl_sub_komponens.nama_sub_kegiatan', 'akuns.kode_akun', 'akuns.uraian')
             ->get();
-        
+
         $datas = [
             'pesertaPegawais' => $pesertaPegawais,
             'pesertaNonPegawais' => $pesertaNonPegawais,
             'perjadin' => Info_perjadinlangsung::find($id),
             'sppd' => $surat,
-            'akuns'=> $akuns,
-            
-            
+            'akuns' => $akuns,
+
+
         ];
 
         // Lakukan proses pembuatan file PDF
@@ -1547,7 +1549,7 @@ class AdminPerjadinController extends Controller
 
         // Stream file PDF ke browser
         return $pdf->stream('sppd.pdf');
-    } 
+    }
 
 
 
@@ -1585,14 +1587,13 @@ class AdminPerjadinController extends Controller
     {
         //
     }
- 
-    public function getDokumen($filename) {
+
+    public function getDokumen($filename)
+    {
         $path = storage_path('app/public/dokumen-perjadins/' . $filename);
         if (!file_exists($path)) {
             abort(404);
         }
         return response()->file($path);
     }
-    
-  
 }

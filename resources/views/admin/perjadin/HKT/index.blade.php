@@ -93,7 +93,7 @@
                         <button class="btn btn-secondary" disabled><i class="fa-solid fa-pen-to-square"></i> Buat Surat Tugas</button>
                       </span>
                       <span class="p-1">
-                        <button class="btn btn-secondary" disabled><i class="fa-solid fa-print"></i> Cetak Surat Tugas</button>
+                        <a href="{{url('/perjadin-HKT/surtug/preview/' . $perjadin->id) }}" target="_blank" class="btn btn-primary"><i class="fa-solid fa-eye"></i> Lihat Surat Tugas</a>
                       </span>
                       <span class="p-1">
                         <button class="btn btn-secondary" disabled><i class="fa-solid fa-upload"></i> Upload</button>

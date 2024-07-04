@@ -150,6 +150,35 @@
                 </div>
               </div>
 
+              <div class="col-md-12 mb-3" id="divInformasiPeserta">
+                        <h5 class="fw-bold">Informasi Peserta</h5>
+                        <div class="table-responsive">
+                            <table id="example" class="table table-bordered" style="width: 100%">
+                                <thead>
+                                    <tr class="text-center small">
+                                        <th class="th-md">Nama Lengkap</th>
+                                        <th class="th-md">Pangkat/Golongan</th>
+                                        <th class="th-md">Sebagai</th>
+                                    </tr>
+                                </thead>
+                                @foreach ($pesertaPegawais as $pesertaPegawai)
+                                <tr>
+                                    <td>{{$pesertaPegawai->nama_lengkap}}</td>
+                                    <td>{{$pesertaPegawai->pangkat}}-{{$pesertaPegawai->golongan}}</td>
+                                    <td class="text-center">{{$pesertaPegawai->status_pegawai}}</td>
+                                </tr>
+                                @endforeach
+                                @foreach ($pesertaNonPegawais as $pesertaNonPegawai)
+                                <tr>
+                                    <td>{{$pesertaNonPegawai->nama_lengkap}}</td>
+                                    <td>{{$pesertaNonPegawai->pangkat}}-{{$pesertaNonPegawai->golongan}}</td>
+                                    <td>{{$pesertaNonPegawai->status_pegawai}}</td>
+                                </tr>
+                                @endforeach
+                            </table>
+                        </div>
+                    </div>
+
               <div class="col-md-12 mb-3">
                 @unless($perjadin->is_acceptKeu == 'verifikasi-2')
                 <div class="d-flex justify-content-between">

@@ -58,21 +58,14 @@
                                         </thead>
                                         <tbody>
                                             @if ($dokumen->isNotEmpty())
-
                                             <tr>
                                                 <td class='text-center'>1</td>
                                                 <td>Surat Undangan</td>
                                                 <td class='text-center'>
-
-                                                    <!-- @if ($dokumen[0]->surat_undangan != null)
-                                      <?php
-                                        $path = $dokumen[0]->surat_undangan;
-                                        $filename = basename($path);
-                                        ?>
-                                       <a href="{{asset('/storage/' . $dokumen[0]->surat_undangan)}}" target="_blank" class="btn btn-sm btn-secondary"><i class="fa-solid fa-eye"></i> Lihat Dokumen</a> 
-                                      <a href="{{url('/storage/perjadin/getdokumen' . $filename[0])}}" target="_blank" class="btn btn-sm btn-secondary"><i class="fa-solid fa-eye"></i> Lihat Dokumen</a>
-                                      @endif                       -->
-
+                                                    <?php
+                                                    $path = $dokumen[0]->surat_undangan;
+                                                    $filename = basename($path);
+                                                    ?>
 
                                                     @if ($dokumen[0]->surat_undangan != null)
                                                     <?php
@@ -133,11 +126,9 @@
                                 @foreach ($pengemudis as $pengemudi)
                                 <tr>
                                     <td>{{$pengemudi->nama_lengkap}}</td>
-
                                     <td class="text-center">{{$pengemudi->nama_jabatan}}</td>
                                 </tr>
                                 @endforeach
-
                             </table>
                         </div>
                     </div>
@@ -146,7 +137,6 @@
 
                     @endif
 
-
                     <div class="col-md-12 mb-3">
                         <div class="d-grid gap-2 d-md-flex justify-content-center">
                             <a href="{{url('/perjadin-HKT/' . 'pengajuan')}}" class="btn btn-dark">Kembali</a>
@@ -154,7 +144,6 @@
                             <button class="btn btn-danger" type="submit" name="action" value="tolak">Tolak Perjalanan dinas</button>
                             <!-- <button class="btn btn-info text-white" type="submit" name="action" value="revisi">Revisi</button> -->
                             @endif
-
                         </div>
                     </div>
                     </form>
