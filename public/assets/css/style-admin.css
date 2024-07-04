@@ -1,0 +1,265 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+
+body,
+button {
+  font-family: "Inter", sans-serif;
+}
+:root {
+  --offcanvas-width: 270px;
+  --topNavbarHeight: 3.75rem;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+
+html,
+body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  font-size: small;
+}
+
+body > * {
+  flex-shrink: 0;
+}
+
+.bg-secondary {
+  background-color: #D9D9D9 !important;
+}
+
+.dropdown-menu > li > a.active  {
+  color: #E9A336;
+  background-color: white !important;
+}
+
+.accordion-item {
+  background-color: #082a99 !important;
+}
+.accordion-body {
+  color: white;
+  background-color: #082a99 !important;
+}
+.accordion-button {
+  color: white !important;
+  background-color: #082a99 !important;
+}
+.accordion-button::after {
+  color: white !important;
+}
+
+.custom-button:hover {
+  background-color: #0b34b9 !important;
+}
+.custom-button:focus {
+  background-color: #0b34b9 !important;
+}
+
+.remove-button::after {
+  display: none;
+}
+.list-group-flush {
+  overflow: hidden;
+}
+
+.list-group-item {
+  background-color: #082a99 !important;
+  color: white;
+}
+.list-group-item:hover {
+  background-color: #0b34b9 !important;
+  cursor: pointer;
+}
+.list-group-item.active {
+  background-image: none;
+	color: white !important;
+  background-color: #E9A336 !important;
+  border: 0;
+}
+
+main {
+  flex-grow: 1;
+}
+
+.sidebar-nav {
+  width: var(--offcanvas-width);
+  background-color: #082a99;
+}
+
+.sidebar-nav::-webkit-scrollbar {
+  width: 0;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-link .right-icon {
+  display: inline-flex;
+}
+
+@media (min-width: 992px) {
+  body {
+    overflow: auto !important;
+  }
+}
+
+@media (max-width: 992px) {
+  .hide-btn {
+    display: none;
+  }
+}
+
+/* Login hover */
+.submit-button > button {
+  color: white;
+}
+
+.submit-button > button:hover {
+  background-color: #E9A336;
+  background-image: none;
+}
+
+.submit-button > button:focus {
+  background-color: #E9A336;
+  color: none;
+}
+
+
+/* table */
+table > * {
+  border: solid black 1px;
+}
+table tbody tr:nth-child(even) {
+  background-color: #dcdcdc; 
+}
+
+.th-sm {
+  min-width: 5px; 
+}
+
+.th-md {
+  min-width: 150px;
+}
+
+.th-lg {
+  min-width: 500px;
+}
+
+.th-lg-percent {
+  min-width: 15%;
+}
+
+/* label */
+.upload-label > label {
+  color: blue;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.upload-label > label:hover {
+  color: #0b34b9; 
+}
+
+/* button */
+.btn-primary {
+  background-color: #0b34b9;
+  border: 0;
+}
+
+.btn-warning {
+  background-color: #E9A336;
+  border: 0;
+}
+
+.btn-orange {
+  background-color: #22A699;
+  border: 0;
+}
+
+/* Tab Active */
+.page > a {
+  color: white;
+}
+
+.page > a:hover{
+  background-color: black;
+  background-image: none;
+  color: white;
+  justify-content: center !important;
+}
+
+.page-wrap-active {
+  background-color: black !important;
+  color: white !important;
+}
+
+
+.wrapper {
+  display: flex;
+  overflow: auto;
+}
+
+.wrapper::-webkit-scrollbar {
+  width: 0;
+}
+
+.wrapper .page-wrap {
+  min-width: 160px;
+  text-align: center;
+  margin-right: 5px;
+}
+
+/* Form-Step */
+.form-step {
+  display: none;
+  transform-origin: top;
+  animation: animate 0.5s;
+}
+
+.form-step-active {
+  display: block;
+}
+
+.toast-container {
+  right: 20px;
+  top: 19px;
+}
+
+/* Laporan */
+.long-space {
+  margin-right: 150px;
+}
+
+/*Print PDF*/
+#secondButton {
+  display: none;
+}
+
+@page { 
+  size: auto;  
+  margin: 0mm; 
+}
+
+@media print {
+  .print-pdf {
+      display: none;
+  }
+  #secondButton {
+      display: none !important;
+  }
+  .noprint {
+    visibility: hidden;
+  }
+}
+
+/* User Icon */
+@media only screen and (max-width:767px){
+  .user-icon {
+    display: none;
+  }
+}

@@ -1,0 +1,275 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Didact+Gothic&display=swap');
+
+body {
+  font-family: 'Didact Gothic', sans-serif !important; 
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', sans-serif !important;
+}
+
+
+/* Navbar active */
+.navbar .nav-item {
+  margin-left: 20px;
+}
+
+.navbar .nav-item .nav-link {
+  padding: 5px 0;
+  position: relative;
+}
+
+.navbar .nav-item .nav-link::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 3px;
+  background-color: #fda10d;
+  transition: all 0.5s ease;
+  transform: scale(0);
+}
+
+.navbar .nav-item .nav-link.active::before,
+.navbar .nav-item .nav-link:hover::before {
+  transform: scale(1);
+}
+
+nav a{
+	text-decoration: none;
+	transition: background-color 0.3s, color 0.3s;
+}
+
+.navbar a:hover,
+.navbar a.active{
+  background-image: none;
+	color: #082A99 !important;
+}
+
+/* Progressbar */
+:root {
+  --primary-color: #082A99;
+}
+
+.progressbar {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  counter-reset: step;
+  margin: 2rem 0 4rem;
+}
+
+.progressbar::before,
+.progress {
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 4px;
+  width: 100%;
+  background-color: #dcdcdc;
+  z-index: -1;
+}
+
+.progress {
+  background-color: var(--primary-color);
+  width: 0%;
+  transition: 0.3s;
+}
+
+
+.progress-step {
+  width: 2.1875rem;
+  height: 2.1875rem;
+  background-color: #dcdcdc;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.progress-step::after {
+  content: attr(data-title);
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  font-size: 0.6rem;
+  color: #666;
+  text-align: center;
+}
+
+.progress-step-active {
+  background-color: var(--primary-color);
+  color: #f3f3f3;
+}
+
+/* Tab Active */
+.page > button {
+  background-color: #f8f8f8;
+}
+
+.page > button:hover{
+  background-color: #0b34b9;
+  background-image: none;
+  color: white;
+  border-color: #0b34b9;
+}
+
+.details > button {
+  background-color: #082A99;
+  border-color: #082A99 ;
+  color: white;
+}
+  
+.page-wrap > button:hover, button.active {
+  background-color: #082A99 !important;
+  color: white !important;
+}
+
+/* Tab Active */
+.page > a {
+  background-color: #f8f8f8;
+}
+
+.page > a:hover{
+  background-color: #0b34b9;
+  background-image: none;
+  color: white;
+  border-color: #0b34b9;
+}
+
+.details > a {
+  background-color: #082A99;
+  border-color: #082A99 ;
+  color: white;
+}
+  
+.active-link {
+  background-color: #082A99 !important;
+  color: white !important;
+}
+
+
+.th-sm {
+  min-width: 5px; 
+}
+
+.th-md {
+  min-width: 150px;
+}
+
+.th-lg {
+  min-width: 500px;
+}
+
+.th-lg-percent {
+  min-width: 15%;
+}
+
+/* circle */
+.circle-with-text {
+  justify-content: center;
+  align-items: center;
+  border-radius: 100%;
+  text-align: center;
+  display: flex;
+  height: 100px;
+  width: 100px;
+  line-height: 400px;
+}
+
+/* profile */
+.bottomleft {
+  position: absolute;
+  bottom: -12px;
+  left: 16px;
+  font-size: 18px;
+}
+
+.small > * {
+  font-size: 15px;
+}
+
+.user-card-1 > div {
+ border-left-color: #456dee;
+ border-left-width: 10px;
+}
+
+.user-card-2 > div {
+ border-left-color: #FFB94B;
+ border-left-width: 10px;
+}
+
+.user-card-3 > div {
+ border-left-color: #2CCE82;
+ border-left-width: 10px;
+}
+
+.user-side {
+  display: inline-block;
+}
+
+/* Toast */
+.toast-container {
+  position: fixed;
+  right: 20px;
+  top: 17px;
+}
+
+.toast:not(.showing):not(.show) {
+  display: none !important;
+}
+
+/* table */
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+@media only screen and (max-width: 789px) {
+  .user-side {
+    display: none;
+  }
+  .center-item {
+    margin:0 auto;
+  }
+  .btn {
+    display: block !important;
+    width: auto;
+    float: none;
+  }
+}
+
+@media only screen and (max-width:860px){
+.user-image {
+  width: 50px; 
+  height: 50px; 
+  }
+}
+
+@media only screen and (min-width:998px){
+  .hide-profile {
+    display: none;
+  }
+}
+
+@media only screen and (max-width:998px){
+  .notif {
+    display: none;
+  }  
+}
+
+@media only screen and (max-width:767px){
+  .hide-notif {
+    display: none;
+  }  
+}
+
+@media only screen and (min-width:992px){
+.footer-img > img{
+  width: 100px;
+  }
+}
+
+
+
+

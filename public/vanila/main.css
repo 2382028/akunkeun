@@ -1,0 +1,49 @@
+.top-nav{
+    margin-top: 9vh;
+}
+
+.m-all {
+    margin-top: 20vh;
+}
+
+.mobile{
+    display: none;
+}
+
+.jumbo {
+    background-color: #f1f1f1;
+    padding: 15px;
+    width: 100vw;
+}
+
+.center-item {
+    align-items: center;
+}
+
+.scroll-page {
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow: auto;
+}
+
+.custom-input {
+    border: none !important;
+    box-shadow: none !important;
+    background: none !important;
+  }
+
+@media screen and (min-width: 768px) {
+    .mobile{
+        display: inline-block;
+    }
+    .top-nav{
+        margin-top: 6vh;
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .top-nav{
+        margin-top: 10vh;
+    }
+}

@@ -1,0 +1,34 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('ref_ss_iku_programkerja', function (Blueprint $table) {
+            $table->id();
+            $table->string("tahun");
+            $table->string("kode_ss");
+            $table->string("nama_ss");
+            $table->string("kode_iku");
+            $table->string("nama_iku");
+            $table->string("pokja");
+            $table->string("nama_program_kerja");
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('ref_ss_iku_programkerja');
+    }
+};
