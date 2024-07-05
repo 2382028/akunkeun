@@ -1258,6 +1258,13 @@ class AdminPerjadinController extends Controller
     public function storeSurtug(Request $request)
     {
         $id = $request->input('idPerjadin'); // 'id' sesuai dengan parameter dalam URL
+
+        $exists = DB::table('surtug_perjadinlangsungs')->where('id_perjadinlangsung', $id)->exists();
+
+        if ($exists) {
+            return redirect()->back()->with('error', 'Surat Tugas sudah ada untuk perjalanan dinas ini.');
+        }
+        
         DB::table('surtug_perjadinlangsungs')->Insert([
             'id_perjadinlangsung' => $request->idPerjadin,
             'perihal' => $request->perihal,
