@@ -61,24 +61,49 @@
                   <td>
                     <div class="">
                       @if ($perjadin->is_acceptHKT == 'pengajuan')
-                      <span class="p-1">
-                        <a href="{{url('/perjadin-HKT/detail/' . $perjadin->id)}}" class="btn btn-info"><i class="fa-solid fa-eye"></i> Lihat Data</a>
-                      </span>
-                      <span class="p-1">
-                        <a href="{{url('/perjadin-HKT/surtug/' . $perjadin->id)}}" class="btn btn-success"><i class="fa-solid fa-pen-to-square"></i> Buat Surat Tugas</a>
-                      </span>
-                      <span class="p-1">
-                        <a href="{{ url('/perjadin-HKT/surtug/edit/' . $perjadin->id) }}" class="btn btn-warning"><i class="fa-solid fa-pen-to-square"></i> Edit Surat Tugas</a>
-                      </span>
-                      <span class="p-1">
-                        <a href="{{url('/perjadin-HKT/surtug/preview/' . $perjadin->id) }}" target="_blank" class="btn btn-dark"><i class="fa-solid fa-print"></i> Cetak Surat Tugas</a>
-                      </span>
-                      <span class="p-1">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#upload_surat">Upload<i class="fa-solid fa-upload"></i></button>
-                      </span>
-                      <span class="p-1">
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#tolak_surat"><i class="fa-solid fa-exclamation-circle"></i> Tolak Surat</button>
-                      </span>
+                        @php
+                            // Cek apakah id_perjadin ada di dalam koleksi surtugExist
+                            $exists = $surtugExist->contains($perjadin->id);
+                        @endphp
+                        @if (!$exists)
+                            <span class="p-1">
+                                <button class="btn btn-secondary" disabled><i class="fa-solid fa-eye"></i> Lihat Data</button></span>
+                            <span class="p-1">
+                                <a href="{{url('/perjadin-HKT/surtug/' . $perjadin->id)}}" class="btn btn-success"><i class="fa-solid fa-pen-to-square"></i> Buat Surat Tugas</a>
+                            </span>
+                            <span class="p-1">
+                                <button class="btn btn-secondary" disabled><i class="fa-solid fa-pen-to-square"></i> Cetak Surat Tugas</button>
+                            </span>
+                            <span class="p-1">
+                                <button class="btn btn-secondary" disabled><i class="fa-solid fa-print"></i> Cetak Surat Tugas</button>
+                            </span>
+                            <span class="p-1">
+                                <button class="btn btn-secondary" disabled><i class="fa-solid fa-upload"></i> Upload</button>
+                            </span>
+                            <span class="p-1">
+
+                        <button class="btn btn-secondary" disabled><i class="fa-solid fa-exclamation-circle"></i> Tolak Surat</button>
+                            </span>
+                        @else
+                            <span class="p-1">
+                                <a href="{{url('/perjadin-HKT/detail/' . $perjadin->id)}}" class="btn btn-info"><i class="fa-solid fa-eye"></i> Lihat Data</a>
+                            </span>
+                            <span class="p-1">
+                                <a href="{{url('/perjadin-HKT/surtug/' . $perjadin->id)}}" class="btn btn-success"><i class="fa-solid fa-pen-to-square"></i> Buat Surat Tugas</a>
+                            </span>
+                            <span class="p-1">
+                                <a href="{{ url('/perjadin-HKT/surtug/edit/' . $perjadin->id) }}" class="btn btn-warning"><i class="fa-solid fa-pen-to-square"></i> Edit Surat Tugas</a>
+                            </span>
+                            <span class="p-1">
+                                <a href="{{url('/perjadin-HKT/surtug/preview/' . $perjadin->id) }}" target="_blank" class="btn btn-dark"><i class="fa-solid fa-print"></i> Cetak Surat Tugas</a>
+                            </span>
+                            <span class="p-1">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#upload_surat">Upload<i class="fa-solid fa-upload"></i></button>
+                            </span>
+                            <span class="p-1">
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#tolak_surat"><i class="fa-solid fa-exclamation-circle"></i> Tolak Surat</button>
+                            </span>
+                        @endif
                       @endif
                       @if (($perjadin->is_acceptHKT == 'revisi'))
                       <span class="p-1">

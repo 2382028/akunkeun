@@ -81,6 +81,14 @@ class AdminPerjadinController extends Controller
             ->where('is_acceptBMN', 'proses')
             ->where('versi_id', session('versi'))
             ->get();
+
+        // Ambil semua id_perjadin dari perjadin
+        $perjadinIds = $perjadin->pluck('id');
+
+        $surtugExist = DB::table('surtug_perjadinlangsungs')
+            ->whereIn('id_perjadinlangsung',  $perjadinIds)
+            ->pluck('id_perjadinlangsung');
+
         // Iterasi melalui hasil query untuk menghitung jumlah hari
         foreach ($perjadin as $info) {
             // Konversi tanggal ke dalam objek Carbon untuk perhitungan
@@ -98,7 +106,8 @@ class AdminPerjadinController extends Controller
         return view('admin.perjadin.HKT.index', [
             'title' => 'HKT Perjalanan Dinas',
             'perjadins' => $perjadin,
-            'surtugs' => surtug_perjadinlangsung::all()
+            'surtugs' => surtug_perjadinlangsung::all(),
+            'surtugExist' => $surtugExist
         ]);
     }
 
@@ -1264,7 +1273,7 @@ class AdminPerjadinController extends Controller
         if ($exists) {
             return redirect()->back()->with('error', 'Surat Tugas sudah ada untuk perjalanan dinas ini.');
         }
-        
+
         DB::table('surtug_perjadinlangsungs')->Insert([
             'id_perjadinlangsung' => $request->idPerjadin,
             'perihal' => $request->perihal,
