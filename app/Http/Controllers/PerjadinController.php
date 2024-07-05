@@ -23,7 +23,7 @@ class PerjadinController extends Controller
     /**
      * Display a listing of the resource.
      */
- 
+
     public function index()
     {
         //
@@ -461,16 +461,28 @@ class PerjadinController extends Controller
         ]);
 
         $kebutuhan_max = Kebutuhan::max('id');
-        DB::table('keuangan_perjadinlangsungs')->insertOrIgnore([
-            'info_perjadinlangsung' => $request->info_perjadinlangsung,
-            'kebutuhan_id' => $kebutuhan_max,
-            'status' => 'Menunggu Persetujuan Bendahara',
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
 
-        $id = $request->info_perjadinlangsung;
-        return redirect()->route('perjadin_step_2', ['id' => $id])->with('success', 'Fasilitas berhasil ditambahkan!');
+        $data_perjadinlangsung = DB::table('data_perjadinlangsungs')
+            ->where('status_pegawai', 'PIC')
+            ->where('info_perjadinlangsung', $request->info_perjadinlangsung)
+            ->first();
+
+        if ($data_perjadinlangsung) {
+            DB::table('keuangan_perjadinlangsungs')->insertOrIgnore([
+                'info_perjadinlangsung' => $request->info_perjadinlangsung,
+                'data_perjadinlangsungs' => $data_perjadinlangsung->id, // Assuming 'data_perjadinlangsungs' has 'id' column
+                'kebutuhan_id' => $kebutuhan_max,
+                'status' => 'Menunggu Persetujuan Bendahara',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            $id = $request->info_perjadinlangsung;
+
+            return redirect()->route('perjadin_step_2', ['id' => $id])->with('success', 'Fasilitas berhasil ditambahkan!');
+        } else {
+            return redirect()->route('perjadin_step_2')->with('error', 'Tidak ada data perjadin langsung dengan status pegawai PIC.');
+        }
     }
 
     public function storePerjadin(Request $request)
@@ -484,7 +496,7 @@ class PerjadinController extends Controller
         if ($cek_peserta->isEmpty()) {
             return redirect()->route('perjadin_step_2', ['id' => $id])->with('success', 'Peserta tidak boleh kosong. Mohon Isi data peserta yang akan mengikuti perjalanan dinas!');
         }
-            DB::table('dokumens')->insert([
+        DB::table('dokumens')->insert([
             'info_perjadinlangsung_id' => $request->info_perjadinlangsung,
             'surat_undangan' => $validationData['surat_undangan'] = $request->file('surat_undangan')->store('dokumen-perjadins', 'public'),
             'status_persetujuan' => 'pengajuan',
@@ -665,7 +677,7 @@ class PerjadinController extends Controller
                 }
 
                 // Simpan file lap_perjadin
-                if ($request->hasFile('lap_perjadin') && $request->file('lap_perjadin')->isValid()){
+                if ($request->hasFile('lap_perjadin') && $request->file('lap_perjadin')->isValid()) {
                     $lapPerjadinPath = $request->file('lap_perjadin')->store('dokumen-pejadins', 'public');
                     DB::table('dokumens')
                         ->where('info_perjadinlangsung_id', $request->info_perjadinlangsung)
@@ -696,13 +708,13 @@ class PerjadinController extends Controller
         return redirect()->route('perjadin_step_2', ['id' => $perjadin])->with('success', 'PIC berhasil dipilih');
     }
 
-    
-    
+
+
 
     /**
      * Remove the specified resource from storage.
      */
-    
+
     public function destroy(string $id)
     {
         //
@@ -756,14 +768,12 @@ class PerjadinController extends Controller
     }
 
 
-    public function getDokumen($filename) {
+    public function getDokumen($filename)
+    {
         $path = storage_path('app/public/dokumen-perjadins/' . $filename);
         if (!File::exists($path)) {
             abort(404);
         }
         return response()->file($path);
     }
-   
-    
-    
 }
