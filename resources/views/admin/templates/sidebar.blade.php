@@ -162,7 +162,7 @@
                       @endif
                       @if ((auth('administrator')->user()->role == 'Keuangan') | (auth('administrator')->user()->role == 'Master'))
                       <li class=" list-group-item list-group-item-action">
-                        <a href="{{url('/perjadin-keuangan/' . 'verifikasi-1')}}" class="nav-link px-1 sidebar-link py-1 text-white" aria-current="true">
+                        <a href="{{url('/perjadin-keuangan/' . 'verifikasi-2')}}" class="nav-link px-1 sidebar-link py-1 text-white" aria-current="true">
                           <span class="me-2"><i class="fa-solid fa-sack-dollar"></i></span>
                           <span>Keuangan</span>
                         </a>

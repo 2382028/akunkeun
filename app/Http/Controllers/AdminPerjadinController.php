@@ -247,8 +247,7 @@ class AdminPerjadinController extends Controller
     {
         $pesertaPegawais = DB::table('data_perjadinlangsungs')
             ->join('pegawais', 'data_perjadinlangsungs.pegawai_id', '=', 'pegawais.id')
-            ->join('keuangan_perjadinlangsungs', 'data_perjadinlangsungs.id', '=', 'keuangan_perjadinlangsungs.data_perjadinlangsungs')
-            ->select('keuangan_perjadinlangsungs.id as idKeuangan', 'pegawais.nama_lengkap', 'pegawais.pangkat', 'pegawais.golongan', 'data_perjadinlangsungs.status_pegawai', 'data_perjadinlangsungs.id as idData', 'keuangan_perjadinlangsungs.akun_x_rkakl', 'keuangan_perjadinlangsungs.ref_sbm', 'keuangan_perjadinlangsungs.uang_harian', 'keuangan_perjadinlangsungs.uang_harian_fullday', 'keuangan_perjadinlangsungs.uang_harian_fullboard', 'keuangan_perjadinlangsungs.uang_representasi', 'keuangan_perjadinlangsungs.persen_pajak', 'keuangan_perjadinlangsungs.jumlah_harga', 'keuangan_perjadinlangsungs.status', 'keuangan_perjadinlangsungs.pph22', 'keuangan_perjadinlangsungs.pph23', 'keuangan_perjadinlangsungs.tgl_bayar', 'keuangan_perjadinlangsungs.ppn')
+            ->select('pegawais.id as idPegawai', 'pegawais.nama_lengkap', 'pegawais.pangkat', 'pegawais.golongan', 'data_perjadinlangsungs.status_pegawai', 'data_perjadinlangsungs.id as idData')
             ->where('data_perjadinlangsungs.info_perjadinlangsung', $id)
             ->get();
         $pesertaNonPegawais = DB::table('data_perjadinlangsungs')
@@ -573,9 +572,9 @@ class AdminPerjadinController extends Controller
             DB::table('info_perjadinlangsungs')
                 ->where('id', $request->idPerjadin)
                 ->update([
-                    'is_acceptKeu' => 'verifikasi-2',
-                    'is_acceptBend' => 'approval-1',
-                    'status_pengajuan_detail' => 'Verifikasi-1-Bendahara',
+                    'is_acceptKeu' => 'selesai',
+                    'is_acceptBend' => 'approval-2',
+                    'status_pengajuan_detail' => 'Approval-2-Bendahara',
                     'admin_Keu' => auth('administrator')->user()->id,
                     'updated_at' => now(),
                 ]);
