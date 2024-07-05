@@ -447,19 +447,20 @@ class AdminPerjadinController extends Controller
                     DB::table('keuangan_perjadinlangsungs')->insertOrIgnore([
                         'info_perjadinlangsung' => $request->idPerjadin,
                         'data_perjadinlangsungs' => $data_perjaidinlangsung_max->id,
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]);
-
-
-                    $kebutuhan_max = Kebutuhan::max('id');
-                    DB::table('keuangan_perjadinlangsungs')->insertOrIgnore([
-                        'info_perjadinlangsung' => $request->idPerjadin,
-                        'kebutuhan_id' => $kebutuhan_max,
                         'status' => 'Menunggu Persetujuan Bendahara',
                         'created_at' => now(),
                         'updated_at' => now(),
                     ]);
+
+
+                    // $kebutuhan_max = Kebutuhan::max('id');
+                    // DB::table('keuangan_perjadinlangsungs')->insertOrIgnore([
+                    //     'info_perjadinlangsung' => $request->idPerjadin,
+                    //     'kebutuhan_id' => $kebutuhan_max,
+                    //     'status' => 'Menunggu Persetujuan Bendahara',
+                    //     'created_at' => now(),
+                    //     'updated_at' => now(),
+                    // ]);
                 }
             }
 

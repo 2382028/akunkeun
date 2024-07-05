@@ -137,9 +137,13 @@
                         <td class='text-center'>5</td>
                         <td>Laporan Perjadin</td>
                         <td class='text-center'>
-                          <span>
-                            @if ($dokumen[0]->hasil)
-                            <a href="{{url('/note-perjadin-admin/' . $perjadin->id)}}" target="_blank" class="btn btn-sm btn-secondary"><i class="fa-solid fa-eye"></i> Lihat Laporan</a>
+                        <span>
+                            @if ($dokumen[0]->lap_perjadin != null)
+                            <?php
+                            $path = $dokumen[0]->lap_perjadin;
+                            $filename = basename($path);
+                            ?>
+                            <a href="{{url('/perjadin-getDokumen/' . $filename)}}" target="_blank" class="btn btn-sm btn-secondary"><i class="fa-solid fa-eye"></i> Lihat Laporan</a>
                             @endif
                           </span>
                         </td>
