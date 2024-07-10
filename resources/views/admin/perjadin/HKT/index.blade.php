@@ -67,7 +67,7 @@
                         @endphp
                         @if (!$exists)
                             <span class="p-1">
-                                <button class="btn btn-secondary" disabled><i class="fa-solid fa-eye"></i> Lihat Data</button></span>
+                                <a href="{{url('/perjadin-HKT/detail/' . $perjadin->id)}}" class="btn btn-info"><i class="fa-solid fa-eye"></i> Lihat Data</a>
                             <span class="p-1">
                                 <a href="{{url('/perjadin-HKT/surtug/' . $perjadin->id)}}" class="btn btn-success"><i class="fa-solid fa-pen-to-square"></i> Buat Surat Tugas</a>
                             </span>
@@ -89,7 +89,8 @@
                                 <a href="{{url('/perjadin-HKT/detail/' . $perjadin->id)}}" class="btn btn-info"><i class="fa-solid fa-eye"></i> Lihat Data</a>
                             </span>
                             <span class="p-1">
-                                <a href="{{url('/perjadin-HKT/surtug/' . $perjadin->id)}}" class="btn btn-success"><i class="fa-solid fa-pen-to-square"></i> Buat Surat Tugas</a>
+
+                        <button class="btn btn-secondary" disabled><i class="fa-solid fa-pen-to-square"></i> Buat Surat Tugas</button>
                             </span>
                             <span class="p-1">
                                 <a href="{{ url('/perjadin-HKT/surtug/edit/' . $perjadin->id) }}" class="btn btn-warning"><i class="fa-solid fa-pen-to-square"></i> Edit Surat Tugas</a>
