@@ -137,7 +137,7 @@
                         <td class='text-center'>5</td>
                         <td>Laporan Perjadin</td>
                         <td class='text-center'>
-                        <span>
+                          <span>
                             @if ($dokumen[0]->lap_perjadin != null)
                             <?php
                             $path = $dokumen[0]->lap_perjadin;
@@ -184,7 +184,7 @@
               </div>
 
               <div class="col-md-12 mb-3">
-                @if($perjadin->is_acceptBend == 'approval-2')
+                @if($perjadin->is_acceptBend == 'approval-3')
                 <div class="d-flex justify-content-between">
                   <h5 class="fw-bold">Informasi Peserta</h5>
                 </div>
@@ -350,7 +350,7 @@
                     <th>Detail</th>
                     <th>Tipe Pendanaan</th>
                     <th>Keterangan</th>
-                    <th>Akun</th>                   
+                    <th>Akun</th>
                     <th>Nominal</th>
                     <th>Total Pembayaran Bersih</th>
                   </tr>
