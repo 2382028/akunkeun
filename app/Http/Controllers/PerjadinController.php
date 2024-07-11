@@ -71,8 +71,9 @@ class PerjadinController extends Controller
 
         $kebutuhans = DB::table('keuangan_perjadinlangsungs')
             ->join('kebutuhans', 'keuangan_perjadinlangsungs.kebutuhan_id', '=', 'kebutuhans.id')
-            ->select('kebutuhans.id as idKebutuhan', 'kebutuhans.nama', 'kebutuhans.jumlah_frekuensi', 'kebutuhans.satuan', 'kebutuhans.tipe_pendanaan', 'kebutuhans.ket', 'keuangan_perjadinlangsungs.info_perjadinlangsung', 'keuangan_perjadinlangsungs.kebutuhan_id', 'keuangan_perjadinlangsungs.status')
+            ->select('kebutuhans.id as idKebutuhan', 'kebutuhans.nama', 'kebutuhans.jumlah_frekuensi', 'kebutuhans.satuan', 'kebutuhans.tipe_pendanaan', 'kebutuhans.ket', 'keuangan_perjadinlangsungs.info_perjadinlangsung',  'keuangan_perjadinlangsungs.kebutuhan_id', 'keuangan_perjadinlangsungs.data_perjadinlangsungs','keuangan_perjadinlangsungs.kebutuhan_id', 'keuangan_perjadinlangsungs.status')
             ->where('keuangan_perjadinlangsungs.info_perjadinlangsung', $id)
+            ->groupBy('kebutuhans.id', 'kebutuhans.nama', 'kebutuhans.jumlah_frekuensi', 'kebutuhans.satuan', 'kebutuhans.tipe_pendanaan', 'kebutuhans.ket', 'keuangan_perjadinlangsungs.info_perjadinlangsung', 'keuangan_perjadinlangsungs.kebutuhan_id', 'keuangan_perjadinlangsungs.data_perjadinlangsungs','keuangan_perjadinlangsungs.status')
             ->get();
 
         $pegawais = DB::table('pegawais')
@@ -463,9 +464,8 @@ class PerjadinController extends Controller
         $kebutuhan_max = Kebutuhan::max('id');
 
         $data_perjadinlangsung = DB::table('data_perjadinlangsungs')
-            ->where('status_pegawai', 'PIC')
-            ->where('info_perjadinlangsung', $request->info_perjadinlangsung)
-            ->first();
+            ->where('id', $request->pegawai_id)
+            ->first();;
 
         if ($data_perjadinlangsung) {
             DB::table('keuangan_perjadinlangsungs')->insertOrIgnore([

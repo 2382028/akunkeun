@@ -356,7 +356,7 @@ use Carbon\Carbon;
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form action="" method="post">
+          <form action="{{url('/c_fasilitasDetail_bendahara')}}" method="post">
             @csrf
             <input id="" type="hidden" value="{{ $perjadin->id }}" name="info_perjadinlangsung">
             <div class="row">

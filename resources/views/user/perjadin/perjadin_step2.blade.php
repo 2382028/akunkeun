@@ -73,29 +73,19 @@
                                                     </thead>
                                                     @if ($selectPesertas->isNotEmpty())
                                                     @foreach ($selectPesertas as $selectPeserta)
-                                                     <tr>
+                                                    <tr>
                                                         <td class='text-center'>{{$loop->iteration }}</td>
                                                         <td class=''>{{ $selectPeserta->nama_lengkap }}</td>
                                                         <td class='text-center'>{{ $selectPeserta->golongan }}-{{ $selectPeserta->pangkat }}</td>
                                                         <td class='text-center'>{{$selectPeserta->status_pegawai}}</td>
                                                         <td class='text-center justify-content-center'>
                                                             <div class="d-inline-block">
-                                                                <button class="btn btn-primary text-white mb-3 lihat-fasilitas"
-                                                                    data-bs-toggle="modal"
-                                                                    data-bs-target="#lihat_fasilitas_{{$selectPeserta->id}}"
-                                                                    data-nama="{{ $selectPeserta->nama_lengkap }}"
-                                                                    data-pegawai-id="{{ $selectPeserta->id }}"
-                                                                    type="button">
+                                                                <button class="btn btn-primary text-white mb-3 lihat-fasilitas" data-bs-toggle="modal" data-bs-target="#lihat_fasilitas_{{$selectPeserta->id}}" data-nama="{{ $selectPeserta->nama_lengkap }}" data-pegawai-id="{{ $selectPeserta->id }}" type="button">
                                                                     <i class="fa fa-eye"></i>
                                                                 </button>
                                                             </div>
                                                             <div class="d-inline-block">
-                                                                <button class="btn btn-neon text-white mb-3 tambah-fasilitas"
-                                                                    data-bs-toggle="modal"
-                                                                    data-bs-target="#tambah_fasilitas_{{$selectPeserta->id}}"
-                                                                    data-nama="{{ $selectPeserta->nama_lengkap }}"
-                                                                    data-pegawai-id="{{ $selectPeserta->id }}"
-                                                                    type="button">
+                                                                <button class="btn btn-neon text-white mb-3 tambah-fasilitas" data-bs-toggle="modal" data-bs-target="#tambah_fasilitas_{{$selectPeserta->id}}" data-nama="{{ $selectPeserta->nama_lengkap }}" data-pegawai-id="{{ $selectPeserta->id }}" type="button">
                                                                     <i class="fa fa-plus"></i>
                                                                 </button>
                                                             </div>
@@ -138,22 +128,12 @@
                                                         <td class='text-center'>{{ $selectPesertasNonPegawai->status_pegawai }}</td>
                                                         <td class='text-center justify-content-center'>
                                                             <div class="d-inline-block">
-                                                                <button class="btn btn-primary text-white mb-3 lihat-nonPegawai-fasilitas"
-                                                                    data-bs-toggle="modal"
-                                                                    data-bs-target="#lihat_fasilitas_{{$selectPesertasNonPegawai->id}}"
-                                                                    data-nama="{{ $selectPesertasNonPegawai->nama_lengkap }}"
-                                                                    data-pegawai-id="{{ $selectPesertasNonPegawai->id }}"
-                                                                    type="button">
+                                                                <button class="btn btn-primary text-white mb-3 lihat-nonPegawai-fasilitas" data-bs-toggle="modal" data-bs-target="#lihat_fasilitas_{{$selectPesertasNonPegawai->id}}" data-nama="{{ $selectPesertasNonPegawai->nama_lengkap }}" data-pegawai-id="{{ $selectPesertasNonPegawai->id }}" type="button">
                                                                     <i class="fa fa-eye"></i>
                                                                 </button>
                                                             </div>
                                                             <div class="d-inline-block">
-                                                                <button class="btn btn-neon text-white mb-3 tambah-nonPegawai-fasilitas"
-                                                                    data-bs-toggle="modal"
-                                                                    data-bs-target="#tambah_fasilitas_{{$selectPesertasNonPegawai->id}}"
-                                                                    data-nama="{{ $selectPesertasNonPegawai->nama_lengkap }}"
-                                                                    data-pegawai-id="{{ $selectPesertasNonPegawai->id }}"
-                                                                    type="button">
+                                                                <button class="btn btn-neon text-white mb-3 tambah-nonPegawai-fasilitas" data-bs-toggle="modal" data-bs-target="#tambah_fasilitas_{{$selectPesertasNonPegawai->id}}" data-nama="{{ $selectPesertasNonPegawai->nama_lengkap }}" data-pegawai-id="{{ $selectPesertasNonPegawai->id }}" type="button">
                                                                     <i class="fa fa-plus"></i>
                                                                 </button>
                                                             </div>
@@ -179,69 +159,7 @@
                                 </div>
                             </div>
 
-                            <hr class="container" style="height: 3px; background-color: #fda10d; opacity: 1; border-color: #fda10d">
-                            {{-- informasi Fasilitas --}}
-                            <div class="row mb-3 text-secondary">
-                                <div class="col-md-12 mb-3">
-                                    <div class="card shadow rounded-0  border-0">
-                                        <div class="card-body">
-                                            @if ($fasilitas->isNotEmpty())
-                                            <div class="table-responsive">
-                                                <div class="d-flex justify-content-between">
-                                                    <div>
-                                                        <h6 class="fw-bold text-secondary">Fasilitas Yang Diperlukan</h6><br>
-                                                    </div>
-                                                    <div>
-                                                        <button class="btn btn-neon text-white mb-3" data-bs-toggle="modal" data-bs-target="#tambah_fasilitas" type="button">
-                                                            <i class="fa fa-plus"></i> Tambah Fasilitas
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                <table id="example" class="table table-bordered data-table mb-3" style="width: 100%">
-                                                    <thead>
-                                                        <tr class="small text-center">
-                                                            <th class="th-sm">No</th>
-                                                            <th class="th-md">Uraian Fasilitas</th>
-                                                            <th class="th-md">Jumlah Kebutuhan</th>
-                                                            <th class="th-md">Satuan</th>
-                                                            <th class="th-md">Tipe Pendanaan</th>
-                                                            <th class="th-md">Keterangan</th>
-                                                            <th class="th-lg-percent">Aksi</th>
-                                                        </tr>
-                                                    </thead>
-                                                    @foreach ($fasilitas as $fasilita)
-                                                    <tr>
-                                                        <td class='text-center'>{{ $loop->iteration }}</td>
-                                                        <td>{{ $fasilita->nama }}</td>
-                                                        <td class='text-center'>{{ $fasilita->jumlah_frekuensi }}</td>
-                                                        <td class='text-center'>{{ $fasilita->satuan }}</td>
-                                                        <td class='text-center'>{{ $fasilita->tipe_pendanaan }}</td>
-                                                        <td class='text-center'>{{ $fasilita->ket }}</td>
-                                                        <td class="text-center">
-                                                            <form action="{{url('/h_fasilitas_perjadin/' . $fasilita->idKebutuhan)}}" method="post">
-                                                                @method('delete')
-                                                                @csrf
-                                                                <input id="" type="hidden" value="{{ $perjadin->id }}" name="info_perjadinlangsung">
-                                                                <span>
-                                                                    <button class="text-decoration-none btn btn-danger btn-sm text-white" onclick="return confirm('Hapus Data Peserta?')"><i class="fa-solid fa-trash"></i></button>
-                                                                </span>
-                                                            </form>
-                                                        </td>
-                                                    </tr>
-                                                    @endforeach
-                                                </table>
-                                            </div>
-                                            @else
-                                            <div class="text-center">
-                                                <button class="btn btn-neon text-white mb-3" data-bs-toggle="modal" data-bs-target="#tambah_fasilitas" type="button">
-                                                    <i class="fa fa-plus"></i> Tambah Fasilitas
-                                                </button>
-                                            </div>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            
 
                             <hr class="container" style="height: 3px; background-color: #fda10d; opacity: 1; border-color: #fda10d">
                             {{-- Dokumen Pendukung --}}
@@ -259,7 +177,6 @@
                                                 </div>
 
                                                 <div class="row mb-3">
-
                                                     <div class="col-md-4 mb-3">
                                                         <label for="" class="form-label">Unggah Surat Undangan / Memo </span><span class="text-danger">*</span></label>
                                                         <input type="file" name="surat_undangan" id="" class="form-control" accept="application/pdf">
@@ -269,7 +186,6 @@
                                                         </div>
                                                         @enderror
                                                     </div>
-
                                                 </div>
 
                                             </div>
@@ -320,7 +236,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger text-white" data-bs-dismiss="modal">Batal</button>
-                <button type="submit"  name="action"  value="pegawai_id" class="btn btn-primary">Simpan</button>
+                <button type="submit" name="action" value="pegawai_id" class="btn btn-primary">Simpan</button>
             </div>
             </form>
         </div>
@@ -439,14 +355,14 @@
                                     </select>
                                 </div>
                                 <div class="col-md-3 mb-3">
-                                    <input type="number" class="form-control" id="jumlah_{{ $selectPeserta->id }}" name="jumlah" placeholder="Jumlah" required>
+                                    <input type="number" class="form-control" id="jumlah_{{ $selectPeserta->id }}" name="jumlah_frekuensi" placeholder="Jumlah" required>
                                 </div>
                                 <div class="col-md-3 mb-3">
                                     <input type="text" class="form-control" id="satuan_{{ $selectPeserta->id }}" name="satuan" placeholder="Satuan" readonly>
                                 </div>
                                 <div class="col-md-3 mb-3">
                                     <label for="pembayaran" class="form-label">Tipe Pembayaran<span class="text-danger">*</span></label>
-                                    <select class="form-select" id="pembayaran_{{ $selectPeserta->id }}" name="pembayaran" required>
+                                    <select class="form-select" id="pembayaran_{{ $selectPeserta->id }}" name="tipe_pendanaan" required>
                                         <option value="Bayar diawal">Bayar diawal</option>
                                         <option value="Reimburse">Reimburse</option>
                                     </select>
@@ -455,28 +371,6 @@
                                     <label for="keterangan" class="form-label">Keterangan<span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="keterangan_{{ $selectPeserta->id }}" name="keterangan" placeholder="Tambahkan Keterangan" required>
                                 </div>
-                                <div class="col-md-12 mb-3">
-                                    <button id="addFacilityButton_{{ $selectPeserta->id }}" class="btn btn-neon text-white" type="button">Tambahkan</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div id="facilityTable_{{ $selectPeserta->id }}" class="mt-3">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Nama Fasilitas</th>
-                                            <th>Jumlah</th>
-                                            <th>Satuan</th>
-                                            <th>Tipe Pembayaran</th>
-                                            <th>Keterangan</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- Tempat untuk menampilkan fasilitas yang ditambahkan -->
-                                    </tbody>
-                                </table>
                             </div>
                         </div>
                     </div>
@@ -504,41 +398,57 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{{ url('/c_fasilitasDetail') }}" method="post">
-                    @csrf
-                    <input type="hidden" value="{{ $perjadin->id }}" name="info_perjadinlangsung">
-                    <input type="hidden" value="{{ $selectPeserta->id }}" name="pegawai_id">
-                    <div class="row">
-                        <div class="col-md-12 mb-3">
-                            <label for="nama" class="form-label">Nama</label>
-                            <input type="text" class="form-control" id="nama" name="nama" readonly>
-                        </div>
-                        <div class="col-md-12">
-                            <div id="facilityTable_{{ $selectPeserta->id }}" class="mt-3">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Nama Fasilitas</th>
-                                            <th>Jumlah</th>
-                                            <th>Satuan</th>
-                                            <th>Tipe Pembayaran</th>
-                                            <th>Keterangan</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- Tempat untuk menampilkan fasilitas yang ditambahkan -->
-                                    </tbody>
-                                </table>
-                            </div>
+                <input type="hidden" value="{{ $perjadin->id }}" name="info_perjadinlangsung">
+                <input type="hidden" value="{{ $selectPeserta->id }}" name="pegawai_id">
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label for="nama" class="form-label">Nama</label>
+                        <input type="text" class="form-control" id="nama" name="nama" readonly>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="mt-3">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Nama Fasilitas</th>
+                                        <th>Jumlah</th>
+                                        <th>Satuan</th>
+                                        <th>Tipe Pembayaran</th>
+                                        <th>Keterangan</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($fasilitas as $fasilita)
+                                    @if ($fasilita->info_perjadinlangsung == $perjadin->id && $fasilita->data_perjadinlangsungs == $selectPeserta->id)
+                                    <tr>
+                                        <td>{{ $fasilita->nama }}</td>
+                                        <td>{{ $fasilita->jumlah_frekuensi }}</td>
+                                        <td>{{ $fasilita->satuan }}</td>
+                                        <td>{{ $fasilita->tipe_pendanaan }}</td>
+                                        <td>{{ $fasilita->ket }}</td>
+                                        <td>
+                                            <form action="{{ url('/h_fasilitas_perjadin/' . $fasilita->idKebutuhan) }}" method="post">
+                                                @method('delete')
+                                                @csrf
+                                                <input type="hidden" value="{{ $perjadin->id }}" name="info_perjadinlangsung">
+                                                <button type="submit" class="text-decoration-none btn btn-danger btn-sm text-white" onclick="return confirm('Hapus Data Peserta?')">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    @endif
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
+                </div>
 
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
-                    </div>
-                </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
+                </div>
             </div>
         </div>
     </div>
@@ -686,39 +596,39 @@
 @endif
 
 
-    <script>
-        $('.js-example-basic-single').select2({
-            placeholder: 'Pilih Pegawai',
-            dropdownParent: '#tambah_peserta'
-        });
+<script>
+    $('.js-example-basic-single').select2({
+        placeholder: 'Pilih Pegawai',
+        dropdownParent: '#tambah_peserta'
+    });
 
-        $('.js-example-basic-single-2').select2({
-            placeholder: 'Pilih Non-Pegawai',
-            dropdownParent: '#non_pegawai'
-        });
+    $('.js-example-basic-single-2').select2({
+        placeholder: 'Pilih Non-Pegawai',
+        dropdownParent: '#non_pegawai'
+    });
 
-        $('.js-example-basic-single-3').select2({
-            placeholder: 'Select an option',
-            dropdownParent: '#tambah_sapras'
-        });
-    </script>
-    <script>
-        document.getElementById("myForm").addEventListener("submit", function(event) {
-            var fileInput = document.getElementById("fileInput");
-            if (fileInput.files.length > 0) {
-                var fileSize = fileInput.files[0].size;
-                var maxSize = 3 * 1024 * 1024 * 1024;
-                if (fileSize > maxSize) {
-                    event.preventDefault();
-                    alert("Ukuran file tidak boleh lebih dari 2MB");
-                }
+    $('.js-example-basic-single-3').select2({
+        placeholder: 'Select an option',
+        dropdownParent: '#tambah_sapras'
+    });
+</script>
+<script>
+    document.getElementById("myForm").addEventListener("submit", function(event) {
+        var fileInput = document.getElementById("fileInput");
+        if (fileInput.files.length > 0) {
+            var fileSize = fileInput.files[0].size;
+            var maxSize = 3 * 1024 * 1024 * 1024;
+            if (fileSize > maxSize) {
+                event.preventDefault();
+                alert("Ukuran file tidak boleh lebih dari 2MB");
             }
-        });
-    </script>
+        }
+    });
+</script>
 
 <script>
-    $(document).ready(function () {
-        $(document).on('click', '.tambah-fasilitas', function () {
+    $(document).ready(function() {
+        $(document).on('click', '.tambah-fasilitas', function() {
             var namaPegawai = $(this).data('nama');
             var pegawaiId = $(this).data('pegawai-id');
             var fasilitasTerpilih = $(this).data('fasilitas') || [];
@@ -731,7 +641,7 @@
                 $('#uraian_' + pegawaiId + ' option[value="' + fasilitas.nama_fasilitas + '"]').prop('disabled', true);
             });
 
-            $('#tambah_fasilitas_' + pegawaiId).on('click', '#addFacilityButton_' + pegawaiId, function () {
+            $('#tambah_fasilitas_' + pegawaiId).on('click', '#addFacilityButton_' + pegawaiId, function() {
                 var namaFasilitas = $('#uraian_' + pegawaiId + ' option:selected').text();
                 var jumlahFasilitas = $('#jumlah_' + pegawaiId).val();
                 var satuanFasilitas = $('#satuan_' + pegawaiId).val();
@@ -765,7 +675,7 @@
                 }
             });
 
-            $('#tambah_fasilitas_' + pegawaiId).on('click', '.deleteFacilityButton', function () {
+            $('#tambah_fasilitas_' + pegawaiId).on('click', '.deleteFacilityButton', function() {
                 var row = $(this).closest('tr');
                 var fasilitasName = row.find('td:first').text();
                 var uniqueId = row.data('unique-id');
@@ -775,7 +685,7 @@
                 $('#lihat_fasilitas_' + pegawaiId + ' tr[data-unique-id="' + uniqueId + '"]').remove();
             });
 
-            $('#tambah_fasilitas_' + pegawaiId).on('change', '#uraian_' + pegawaiId, function () {
+            $('#tambah_fasilitas_' + pegawaiId).on('change', '#uraian_' + pegawaiId, function() {
                 var selectedValue = $(this).val();
                 var satuan = '';
 
@@ -805,11 +715,11 @@
             });
         });
     });
-    </script>
+</script>
 
 <script>
-    $(document).ready(function () {
-        $(document).on('click', '.lihat-fasilitas', function () {
+    $(document).ready(function() {
+        $(document).on('click', '.lihat-fasilitas', function() {
             var namaPegawai = $(this).data('nama');
             var pegawaiId = $(this).data('pegawai-id');
             var fasilitasTerpilih = $(this).data('fasilitas') || [];
@@ -822,7 +732,7 @@
                 $('#uraian_' + pegawaiId + ' option[value="' + fasilitas.nama_fasilitas + '"]').prop('disabled', true);
             });
 
-            $('#lihat_fasilitas_' + pegawaiId).on('click', '.deleteFacilityButton', function () {
+            $('#lihat_fasilitas_' + pegawaiId).on('click', '.deleteFacilityButton', function() {
                 var row = $(this).closest('tr');
                 var fasilitasName = row.find('td:first').text();
                 var uniqueId = row.data('unique-id');
@@ -832,7 +742,7 @@
                 $('#tambah_fasilitas_' + pegawaiId + ' tr[data-unique-id="' + uniqueId + '"]').remove();
             });
 
-            $('#lihat_fasilitas_' + pegawaiId).on('change', '#uraian_' + pegawaiId, function () {
+            $('#lihat_fasilitas_' + pegawaiId).on('change', '#uraian_' + pegawaiId, function() {
                 var selectedValue = $(this).val();
                 var satuan = '';
 
@@ -862,12 +772,12 @@
             });
         });
     });
-    </script>
+</script>
 
 
 <script>
-    $(document).ready(function () {
-        $(document).on('click', '.tambah-nonPegawai-fasilitas', function () {
+    $(document).ready(function() {
+        $(document).on('click', '.tambah-nonPegawai-fasilitas', function() {
             var namaPegawai = $(this).data('nama');
             var pegawaiId = $(this).data('pegawai-id');
             var fasilitasTerpilih = $(this).data('fasilitas') || [];
@@ -880,7 +790,7 @@
                 $('#uraian_' + pegawaiId + ' option[value="' + fasilitas.nama_fasilitas + '"]').prop('disabled', true);
             });
 
-            $('#tambah-nonPegawai_fasilitas_' + pegawaiId).on('click', '#addFacilityButton_' + pegawaiId, function () {
+            $('#tambah-nonPegawai_fasilitas_' + pegawaiId).on('click', '#addFacilityButton_' + pegawaiId, function() {
                 var namaFasilitas = $('#uraian_' + pegawaiId + ' option:selected').text();
                 var jumlahFasilitas = $('#jumlah_' + pegawaiId).val();
                 var satuanFasilitas = $('#satuan_' + pegawaiId).val();
@@ -914,7 +824,7 @@
                 }
             });
 
-            $('#tambah_fasilitas_' + pegawaiId).on('click', '.deleteFacilityButton', function () {
+            $('#tambah_fasilitas_' + pegawaiId).on('click', '.deleteFacilityButton', function() {
                 var row = $(this).closest('tr');
                 var fasilitasName = row.find('td:first').text();
                 var uniqueId = row.data('unique-id');
@@ -924,7 +834,7 @@
                 $('#lihat_fasilitas_' + pegawaiId + ' tr[data-unique-id="' + uniqueId + '"]').remove();
             });
 
-            $('#tambah_fasilitas_' + pegawaiId).on('change', '#uraian_' + pegawaiId, function () {
+            $('#tambah_fasilitas_' + pegawaiId).on('change', '#uraian_' + pegawaiId, function() {
                 var selectedValue = $(this).val();
                 var satuan = '';
 
@@ -954,11 +864,11 @@
             });
         });
     });
-    </script>
+</script>
 
 <script>
-    $(document).ready(function () {
-        $(document).on('click', '.lihat-fasilitas-nonPegawai', function () {
+    $(document).ready(function() {
+        $(document).on('click', '.lihat-fasilitas-nonPegawai', function() {
             var namaPegawai = $(this).data('nama');
             var pegawaiId = $(this).data('pegawai-id');
             var fasilitasTerpilih = $(this).data('fasilitas') || [];
@@ -971,7 +881,7 @@
                 $('#uraian_' + pegawaiId + ' option[value="' + fasilitas.nama_fasilitas + '"]').prop('disabled', true);
             });
 
-            $('#lihat-nonPegawai_fasilitas_' + pegawaiId).on('click', '.deleteFacilityButton', function () {
+            $('#lihat-nonPegawai_fasilitas_' + pegawaiId).on('click', '.deleteFacilityButton', function() {
                 var row = $(this).closest('tr');
                 var fasilitasName = row.find('td:first').text();
                 var uniqueId = row.data('unique-id');
@@ -981,7 +891,7 @@
                 $('#tambah_fasilitas_' + pegawaiId + ' tr[data-unique-id="' + uniqueId + '"]').remove();
             });
 
-            $('#lihat_fasilitas_' + pegawaiId).on('change', '#uraian_' + pegawaiId, function () {
+            $('#lihat_fasilitas_' + pegawaiId).on('change', '#uraian_' + pegawaiId, function() {
                 var selectedValue = $(this).val();
                 var satuan = '';
 
@@ -1011,32 +921,32 @@
             });
         });
     });
-    </script>
+</script>
 
-    <script>
-        /* Conditional Flihat Fasilitas*/
-        const uraian = document.getElementById('uraian');
-        const conditionalFieldsHotel = document.getElementById('conditionalFieldsHotel');
-        const conditionalFieldsTiketTransportasi = document.getElementById('conditionalFieldsTiketTransportasi');
-        const conditionalFieldsBBM = document.getElementById('conditionalFieldsBBM');
-        const conditionalFieldsTol = document.getElementById('conditionalFieldsTol');
-        const conditionalFieldsTransportasi_Online = document.getElementById('conditionalFieldsTransportasi_Online');
+<script>
+    /* Conditional Flihat Fasilitas*/
+    const uraian = document.getElementById('uraian');
+    const conditionalFieldsHotel = document.getElementById('conditionalFieldsHotel');
+    const conditionalFieldsTiketTransportasi = document.getElementById('conditionalFieldsTiketTransportasi');
+    const conditionalFieldsBBM = document.getElementById('conditionalFieldsBBM');
+    const conditionalFieldsTol = document.getElementById('conditionalFieldsTol');
+    const conditionalFieldsTransportasi_Online = document.getElementById('conditionalFieldsTransportasi_Online');
 
-        $(document).ready(function() {
+    $(document).ready(function() {
 
 
-            // Listen for changes in the select element
-            $('#uraian').change(function() {
-                // Get the selected value
-                var selectedValue = $(this).val();
+        // Listen for changes in the select element
+        $('#uraian').change(function() {
+            // Get the selected value
+            var selectedValue = $(this).val();
 
-                // Clear any existing content in conditional_fields
-                $('#conditional_fields').empty();
+            // Clear any existing content in conditional_fields
+            $('#conditional_fields').empty();
 
-                // Check the selected value and append elements accordingly
-                if (selectedValue === 'Akomodasi Hotel') {
-                    // Append elements for 'Akomodasi Hotel'
-                    $('#conditional_fields').append(`
+            // Check the selected value and append elements accordingly
+            if (selectedValue === 'Akomodasi Hotel') {
+                // Append elements for 'Akomodasi Hotel'
+                $('#conditional_fields').append(`
                <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="jumlah_kamar" class="form-label">Jumlah Kamar<span class="text-danger">*</span></label>
@@ -1062,9 +972,9 @@
                 </div>
               </div>
             `);
-                } else if (selectedValue === 'BBM') {
-                    // Append elements for 'BBM'
-                    $('#conditional_fields').append(`
+            } else if (selectedValue === 'BBM') {
+                // Append elements for 'BBM'
+                $('#conditional_fields').append(`
             <div class="row">
                         <div class="col-md-12 mb-3">
                             <label for="jumlah_tiket" class="detail-fields">Jumlah Pengisian <span class="text-danger">*</span></label>
@@ -1091,8 +1001,8 @@
                         </div>
                     </div>
             `);
-                } else if (selectedValue === 'Tiket Kereta') {
-                    $('#conditional_fields').append(`
+            } else if (selectedValue === 'Tiket Kereta') {
+                $('#conditional_fields').append(`
             <div class="row">
             <div class="col-md-12 mb-3">
                 <label for="jumlah_tiket" class="form-label">Jumlah Tiket<span class="text-danger">*</span></label>
@@ -1117,8 +1027,8 @@
             <input type="text" name="keterangan" id="" class="form-control" required>
         </div>
             `);
-                } else if (selectedValue === 'Tiket Pesawat') {
-                    $('#conditional_fields').append(`
+            } else if (selectedValue === 'Tiket Pesawat') {
+                $('#conditional_fields').append(`
             <div class="row">
             <div class="col-md-12 mb-3">
                 <label for="jumlah_tiket" class="form-label">Jumlah Tiket<span class="text-danger">*</span></label>
@@ -1143,8 +1053,8 @@
             <input type="text" name="keterangan" id="" class="form-control" required>
         </div>
             `);
-                } else if (selectedValue === 'Tiket Travel') {
-                    $('#conditional_fields').append(`
+            } else if (selectedValue === 'Tiket Travel') {
+                $('#conditional_fields').append(`
             <div class="row">
             <div class="col-md-12 mb-3">
                 <label for="jumlah_tiket" class="form-label">Jumlah Tiket<span class="text-danger">*</span></label>
@@ -1169,8 +1079,8 @@
             <input type="text" name="keterangan" id="" class="form-control" required>
         </div>
             `);
-                } else if (selectedValue === 'Transportasi Online') {
-                    $('#conditional_fields').append(`
+            } else if (selectedValue === 'Transportasi Online') {
+                $('#conditional_fields').append(`
             <div class="row">
             <div class="col-md-12 mb-3">
             <label for="jumlah_tiket" class="detail-fields">Jumlah Pejalanan <span class="text-danger">*</span></label>
@@ -1197,8 +1107,8 @@
             </div>
         </div>
             `);
-                } else if (selectedValue === 'Tol') {
-                    $('#conditional_fields').append(`
+            } else if (selectedValue === 'Tol') {
+                $('#conditional_fields').append(`
             <div class="row">
             <div class="col-md-12 mb-3">
                 <label for="jumlah_tiket" class="detail-fields">Jumlah Pengisian <span class="text-danger">*</span></label>
@@ -1225,8 +1135,8 @@
             </div>
         </div>
             `);
-                }
-            });
+            }
         });
-    </script>
-    @endsection
+    });
+</script>
+@endsection
