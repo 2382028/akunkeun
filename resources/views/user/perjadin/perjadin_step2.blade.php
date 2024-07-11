@@ -65,10 +65,10 @@
                                                         <tr class="text-center small">
                                                             <th class="th-sm">No</th>
                                                             <th class="th-md">Nama (Pegawai)</th>
-                                                            <th class="th-md">Pangkat/Golongan</th>
-                                                            <th class="th-md">Status</th>
-                                                            <th class="th-lg-percent">Fasilitas</th>
-                                                            <th class="th-lg-percent">Aksi</th>
+                                                            <th class="th-lg-percent">Pangkat/Golongan</th>
+                                                            <th class="th-lg-percent">Status</th>
+                                                            <th class="th-md">Fasilitas</th>
+                                                            <th class="th-md">Aksi</th>
                                                         </tr>
                                                     </thead>
                                                     @if ($selectPesertas->isNotEmpty())
@@ -78,23 +78,39 @@
                                                         <td class=''>{{ $selectPeserta->nama_lengkap }}</td>
                                                         <td class='text-center'>{{ $selectPeserta->golongan }}-{{ $selectPeserta->pangkat }}</td>
                                                         <td class='text-center'>{{$selectPeserta->status_pegawai}}</td>
-                                                        <td class='text-center'>
-                                                            <button class="btn btn-neon text-white mb-3 tambah-fasilitas"
+                                                        <td class='text-center justify-content-center'>
+                                                            <div class="d-inline-block">
+                                                                <button class="btn btn-primary text-white mb-3 tambah-fasilitas"
                                                                     data-bs-toggle="modal"
                                                                     data-bs-target="#tambah_fasilitas_{{$selectPeserta->id}}"
                                                                     data-nama="{{ $selectPeserta->nama_lengkap }}"
                                                                     data-pegawai-id="{{ $selectPeserta->id }}"
                                                                     type="button">
-                                                                <i class="fa fa-plus"></i>
-                                                            </button>
+                                                                    <i class="fa fa-eye"></i>
+                                                                </button>
+                                                            </div>
+                                                            <div class="d-inline-block">
+                                                                <button class="btn btn-neon text-white mb-3 tambah-fasilitas"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#tambah_fasilitas_{{$selectPeserta->id}}"
+                                                                    data-nama="{{ $selectPeserta->nama_lengkap }}"
+                                                                    data-pegawai-id="{{ $selectPeserta->id }}"
+                                                                    type="button">
+                                                                    <i class="fa fa-plus"></i>
+                                                                </button>
+                                                            </div>
                                                         </td>
-                                                        <td class='text-center d-flex justify-content-center'>
+
+                                                        <td class='text-center justify-content-center'>
+                                                            <div class="d-inline-block">
                                                             <form action="{{url('/c_status_peserta/' . $selectPeserta->id)}}" method="post">
                                                                 @method('PUT')
                                                                 @csrf
                                                                 <input id="" type="hidden" value="{{ $perjadin->id }}" name="info_perjadinlangsung">
                                                                 <button class="text-decoration-none btn btn-primary btn-sm text-white" onclick="return confirm('Yakin Jadikan PIC?')">Jadikan PIC</button>
                                                             </form>
+                                                            </div>
+                                                            <div class="d-inline-block">
                                                             <form action="{{url('/h_peserta/' . $selectPeserta->id)}}" method="post">
                                                                 @method('delete')
                                                                 @csrf
@@ -104,6 +120,7 @@
                                                                     <button class="text-decoration-none btn btn-danger btn-sm" style="color: #FFFFFF; margin-left: 5px;" onclick="return confirm('Hapus Data Peserta?')"><i class="fa-solid fa-trash"></i></button>
                                                                 </span>
                                                             </form>
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                     @endforeach
@@ -372,9 +389,9 @@
     </form>
 </div>
 
-
 <!-- Modal Tambah Fasilitas -->
 @if ($selectPesertas->isNotEmpty())
+@foreach ($selectPesertas as $selectPeserta)
 <div class="modal fade" id="tambah_fasilitas_{{ $selectPeserta->id }}" tabindex="-1" aria-labelledby="tambah_fasilitasLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -446,7 +463,9 @@
         </div>
     </div>
 </div>
+@endforeach
 @endif
+
 
     <script>
         $('.js-example-basic-single').select2({
@@ -478,14 +497,23 @@
         });
     </script>
     <script>
-    $(document).ready(function () {
+   $(document).ready(function () {
     // Event listener untuk tombol Tambahkan di setiap modal
     $(document).on('click', '.tambah-fasilitas', function () {
         var namaPegawai = $(this).data('nama');
         var pegawaiId = $(this).data('pegawai-id');
+        var fasilitasTerpilih = $(this).data('fasilitas') || [];
 
         // Memperbarui nilai input Nama dengan nama pegawai yang sesuai
         $('#tambah_fasilitas_' + pegawaiId + ' #nama').val(namaPegawai);
+
+        // Reset dropdown fasilitas
+        $('#uraian_' + pegawaiId + ' option').prop('disabled', false);
+
+        // Disable options yang sudah dipilih oleh pegawai terkait
+        fasilitasTerpilih.forEach(function(fasilitas) {
+            $('#uraian_' + pegawaiId + ' option[value="' + fasilitas.nama_fasilitas + '"]').prop('disabled', true);
+        });
 
         // Event listener untuk tombol Tambahkan di dalam modal
         $('#tambah_fasilitas_' + pegawaiId).on('click', '#addFacilityButton_' + pegawaiId, function () {
@@ -502,12 +530,15 @@
                         <td>${jumlahFasilitas}</td>
                         <td>${satuanFasilitas}</td>
                         <td>
-                            <button class="btn btn-danger btn-sm deleteFacilityButton" style="color: #FFFFFF; onclick="return confirm('Hapus Data Fasilitas?')">
+                            <button class="btn btn-danger btn-sm deleteFacilityButton" style="color: #FFFFFF;" onclick="return confirm('Hapus Data Fasilitas?')">
                                 <i class="fa fa-trash"></i>
                             </button>
                         </td>
                     </tr>
                 `);
+
+                // Disable selected option
+                $('#uraian_' + pegawaiId + ' option[value="' + selectedValue + '"]').prop('disabled', true);
 
                 // Reset input jumlah dan satuan di modal yang sesuai
                 $('#uraian_' + pegawaiId).val('');
@@ -519,6 +550,11 @@
         // Event listener untuk menghapus fasilitas di setiap modal
         $('#tambah_fasilitas_' + pegawaiId).on('click', '.deleteFacilityButton', function () {
             var row = $(this).closest('tr');
+            var fasilitasName = row.find('td:first').text();
+
+            // Enable kembali option yang dihapus
+            $('#uraian_' + pegawaiId + ' option:contains("' + fasilitasName + '")').prop('disabled', false);
+
             row.remove();
         });
 
@@ -553,6 +589,7 @@
         });
     });
 });
+
 
 
     </script>
