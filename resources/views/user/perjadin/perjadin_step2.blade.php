@@ -128,30 +128,22 @@
                                                         <td class='text-center'>{{ $selectPesertasNonPegawai->status_pegawai }}</td>
                                                         <td class='text-center justify-content-center'>
                                                             <div class="d-inline-block">
-<<<<<<< HEAD
                                                                 <button class="btn btn-primary text-white mb-3 lihat-nonPegawai-fasilitas"
                                                                     data-bs-toggle="modal"
                                                                     data-bs-target="#lihat-nonPegawai_fasilitas_{{$selectPesertasNonPegawai->id}}"
                                                                     data-nama="{{ $selectPesertasNonPegawai->nama_lengkap }}"
                                                                     data-pegawai-id="{{ $selectPesertasNonPegawai->id }}"
                                                                     type="button">
-=======
-                                                                <button class="btn btn-primary text-white mb-3 lihat-nonPegawai-fasilitas" data-bs-toggle="modal" data-bs-target="#lihat_fasilitas_{{$selectPesertasNonPegawai->id}}" data-nama="{{ $selectPesertasNonPegawai->nama_lengkap }}" data-pegawai-id="{{ $selectPesertasNonPegawai->id }}" type="button">
->>>>>>> a9065dc3d4a1c0a30c4893eca8e8f332bed54210
                                                                     <i class="fa fa-eye"></i>
                                                                 </button>
                                                             </div>
                                                             <div class="d-inline-block">
-<<<<<<< HEAD
                                                                 <button class="btn btn-neon text-white mb-3 tambah-nonPegawai-fasilitas"
                                                                     data-bs-toggle="modal"
                                                                     data-bs-target="#tambah-nonPegawai_fasilitas_{{$selectPesertasNonPegawai->id}}"
                                                                     data-nama="{{ $selectPesertasNonPegawai->nama_lengkap }}"
                                                                     data-pegawai-id="{{ $selectPesertasNonPegawai->id }}"
                                                                     type="button">
-=======
-                                                                <button class="btn btn-neon text-white mb-3 tambah-nonPegawai-fasilitas" data-bs-toggle="modal" data-bs-target="#tambah_fasilitas_{{$selectPesertasNonPegawai->id}}" data-nama="{{ $selectPesertasNonPegawai->nama_lengkap }}" data-pegawai-id="{{ $selectPesertasNonPegawai->id }}" type="button">
->>>>>>> a9065dc3d4a1c0a30c4893eca8e8f332bed54210
                                                                     <i class="fa fa-plus"></i>
                                                                 </button>
                                                             </div>
@@ -177,7 +169,7 @@
                                 </div>
                             </div>
 
-                            
+
 
                             <hr class="container" style="height: 3px; background-color: #fda10d; opacity: 1; border-color: #fda10d">
                             {{-- Dokumen Pendukung --}}
@@ -842,11 +834,7 @@
                 }
             });
 
-<<<<<<< HEAD
             $('#tambah-nonPegawai_fasilitas_' + pegawaiId).on('click', '.deleteFacilityButton', function () {
-=======
-            $('#tambah_fasilitas_' + pegawaiId).on('click', '.deleteFacilityButton', function() {
->>>>>>> a9065dc3d4a1c0a30c4893eca8e8f332bed54210
                 var row = $(this).closest('tr');
                 var fasilitasName = row.find('td:first').text();
                 var uniqueId = row.data('unique-id');
@@ -856,11 +844,7 @@
                 $('#lihat-nonPegawai_fasilitas_' + pegawaiId + ' tr[data-unique-id="' + uniqueId + '"]').remove();
             });
 
-<<<<<<< HEAD
             $('#tambah-nonPegawai_fasilitas_' + pegawaiId).on('change', '#uraian_' + pegawaiId, function () {
-=======
-            $('#tambah_fasilitas_' + pegawaiId).on('change', '#uraian_' + pegawaiId, function() {
->>>>>>> a9065dc3d4a1c0a30c4893eca8e8f332bed54210
                 var selectedValue = $(this).val();
                 var satuan = '';
 
@@ -893,13 +877,8 @@
 </script>
 
 <script>
-<<<<<<< HEAD
     $(document).ready(function () {
         $(document).on('click', '.lihat-nonPegawai-fasilitas', function () {
-=======
-    $(document).ready(function() {
-        $(document).on('click', '.lihat-fasilitas-nonPegawai', function() {
->>>>>>> a9065dc3d4a1c0a30c4893eca8e8f332bed54210
             var namaPegawai = $(this).data('nama');
             var pegawaiId = $(this).data('pegawai-id');
             var fasilitasTerpilih = $(this).data('fasilitas') || [];
@@ -922,11 +901,7 @@
                 $('#tambah_fasilitas_' + pegawaiId + ' tr[data-unique-id="' + uniqueId + '"]').remove();
             });
 
-<<<<<<< HEAD
             $('#lihat-nonPegawai_fasilitas_' + pegawaiId).on('change', '#uraian_' + pegawaiId, function () {
-=======
-            $('#lihat_fasilitas_' + pegawaiId).on('change', '#uraian_' + pegawaiId, function() {
->>>>>>> a9065dc3d4a1c0a30c4893eca8e8f332bed54210
                 var selectedValue = $(this).val();
                 var satuan = '';
 
