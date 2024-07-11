@@ -140,7 +140,7 @@
                                                             <div class="d-inline-block">
                                                                 <button class="btn btn-primary text-white mb-3 lihat-nonPegawai-fasilitas"
                                                                     data-bs-toggle="modal"
-                                                                    data-bs-target="#lihat_fasilitas_{{$selectPesertasNonPegawai->id}}"
+                                                                    data-bs-target="#lihat-nonPegawai_fasilitas_{{$selectPesertasNonPegawai->id}}"
                                                                     data-nama="{{ $selectPesertasNonPegawai->nama_lengkap }}"
                                                                     data-pegawai-id="{{ $selectPesertasNonPegawai->id }}"
                                                                     type="button">
@@ -150,7 +150,7 @@
                                                             <div class="d-inline-block">
                                                                 <button class="btn btn-neon text-white mb-3 tambah-nonPegawai-fasilitas"
                                                                     data-bs-toggle="modal"
-                                                                    data-bs-target="#tambah_fasilitas_{{$selectPesertasNonPegawai->id}}"
+                                                                    data-bs-target="#tambah-nonPegawai_fasilitas_{{$selectPesertasNonPegawai->id}}"
                                                                     data-nama="{{ $selectPesertasNonPegawai->nama_lengkap }}"
                                                                     data-pegawai-id="{{ $selectPesertasNonPegawai->id }}"
                                                                     type="button">
@@ -549,7 +549,7 @@
 
 <!-- Modal Tambah Fasilitas NonPegawai -->
 @if ($selectPesertasNonPegawais->isNotEmpty())
-@foreach ($selectPesertasNonPegawais as $selectPeserta)
+@foreach ($selectPesertasNonPegawais as $selectPesertasNonPegawai)
 <div class="modal fade" id="tambah-nonPegawai_fasilitas_{{ $selectPesertasNonPegawai->id }}" tabindex="-1" aria-labelledby="tambah-nonPegawai_fasilitasLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -571,7 +571,7 @@
                             <label for="uraian_{{ $selectPesertasNonPegawai->id }}" class="form-label">Nama Fasilitas <span class="text-secondary small"></span><span class="text-danger">*</span></label>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <select class="form-select" id="uraian_{{ $selectPeserta->id }}" name="uraian" required>
+                                    <select class="form-select" id="uraian_{{ $selectPesertasNonPegawai->id }}" name="uraian" required>
                                         <option value="" disabled selected>Pilih Jenis Fasilitas</option>
                                         <option value="Akomodasi Hotel">Akomodasi Hotel</option>
                                         <option value="BBM">BBM</option>
@@ -583,29 +583,29 @@
                                     </select>
                                 </div>
                                 <div class="col-md-3 mb-3">
-                                    <input type="number" class="form-control" id="jumlah_{{ $selectPeserta->id }}" name="jumlah" placeholder="Jumlah" required>
+                                    <input type="number" class="form-control" id="jumlah_{{ $selectPesertasNonPegawai->id }}" name="jumlah" placeholder="Jumlah" required>
                                 </div>
                                 <div class="col-md-3 mb-3">
-                                    <input type="text" class="form-control" id="satuan_{{ $selectPeserta->id }}" name="satuan" placeholder="Satuan" readonly>
+                                    <input type="text" class="form-control" id="satuan_{{ $selectPesertasNonPegawai->id }}" name="satuan" placeholder="Satuan" readonly>
                                 </div>
                                 <div class="col-md-3 mb-3">
                                     <label for="pembayaran" class="form-label">Tipe Pembayaran<span class="text-danger">*</span></label>
-                                    <select class="form-select" id="pembayaran_{{ $selectPeserta->id }}" name="pembayaran" required>
+                                    <select class="form-select" id="pembayaran_{{ $selectPesertasNonPegawai->id }}" name="pembayaran" required>
                                         <option value="Bayar diawal">Bayar diawal</option>
                                         <option value="Reimburse">Reimburse</option>
                                     </select>
                                 </div>
                                 <div class="col">
                                     <label for="keterangan" class="form-label">Keterangan<span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="keterangan_{{ $selectPeserta->id }}" name="keterangan" placeholder="Tambahkan Keterangan" required>
+                                    <input type="text" class="form-control" id="keterangan_{{ $selectPesertasNonPegawai->id }}" name="keterangan" placeholder="Tambahkan Keterangan" required>
                                 </div>
                                 <div class="col-md-12 mb-3">
-                                    <button id="addFacilityButton_{{ $selectPeserta->id }}" class="btn btn-neon text-white" type="button">Tambahkan</button>
+                                    <button id="addFacilityButton_{{ $selectPesertasNonPegawai->id }}" class="btn btn-neon text-white" type="button">Tambahkan</button>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-12">
-                            <div id="facilityTable_{{ $selectPeserta->id }}" class="mt-3">
+                            <div id="facilityTable_{{ $selectPesertasNonPegawai->id }}" class="mt-3">
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
@@ -644,7 +644,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="Lihat-nonPegawai_fasilitasLabel">Daftar Fasilitas</h1>
+                <h1 class="modal-title fs-5" id="lihat-nonPegawai_fasilitasLabel">Daftar Fasilitas</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -914,17 +914,17 @@
                 }
             });
 
-            $('#tambah_fasilitas_' + pegawaiId).on('click', '.deleteFacilityButton', function () {
+            $('#tambah-nonPegawai_fasilitas_' + pegawaiId).on('click', '.deleteFacilityButton', function () {
                 var row = $(this).closest('tr');
                 var fasilitasName = row.find('td:first').text();
                 var uniqueId = row.data('unique-id');
 
                 $('#uraian_' + pegawaiId + ' option:contains("' + fasilitasName + '")').prop('disabled', false);
                 row.remove();
-                $('#lihat_fasilitas_' + pegawaiId + ' tr[data-unique-id="' + uniqueId + '"]').remove();
+                $('#lihat-nonPegawai_fasilitas_' + pegawaiId + ' tr[data-unique-id="' + uniqueId + '"]').remove();
             });
 
-            $('#tambah_fasilitas_' + pegawaiId).on('change', '#uraian_' + pegawaiId, function () {
+            $('#tambah-nonPegawai_fasilitas_' + pegawaiId).on('change', '#uraian_' + pegawaiId, function () {
                 var selectedValue = $(this).val();
                 var satuan = '';
 
@@ -958,7 +958,7 @@
 
 <script>
     $(document).ready(function () {
-        $(document).on('click', '.lihat-fasilitas-nonPegawai', function () {
+        $(document).on('click', '.lihat-nonPegawai-fasilitas', function () {
             var namaPegawai = $(this).data('nama');
             var pegawaiId = $(this).data('pegawai-id');
             var fasilitasTerpilih = $(this).data('fasilitas') || [];
@@ -981,7 +981,7 @@
                 $('#tambah_fasilitas_' + pegawaiId + ' tr[data-unique-id="' + uniqueId + '"]').remove();
             });
 
-            $('#lihat_fasilitas_' + pegawaiId).on('change', '#uraian_' + pegawaiId, function () {
+            $('#lihat-nonPegawai_fasilitas_' + pegawaiId).on('change', '#uraian_' + pegawaiId, function () {
                 var selectedValue = $(this).val();
                 var satuan = '';
 
