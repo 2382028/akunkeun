@@ -65,10 +65,10 @@
                                                         <tr class="text-center small">
                                                             <th class="th-sm">No</th>
                                                             <th class="th-md">Nama (Pegawai)</th>
-                                                            <th class="th-lg-percent">Pangkat/Golongan</th>
+                                                            <th class="th-md">Pangkat/Golongan</th>
                                                             <th class="th-lg-percent">Status</th>
                                                             <th class="th-md">Fasilitas</th>
-                                                            <th class="th-md">Aksi</th>
+                                                            <th class="th-lg-percent">Aksi</th>
                                                         </tr>
                                                     </thead>
                                                     @if ($selectPesertas->isNotEmpty())
@@ -80,9 +80,9 @@
                                                         <td class='text-center'>{{$selectPeserta->status_pegawai}}</td>
                                                         <td class='text-center justify-content-center'>
                                                             <div class="d-inline-block">
-                                                                <button class="btn btn-primary text-white mb-3 tambah-fasilitas"
+                                                                <button class="btn btn-primary text-white mb-3 lihat-fasilitas"
                                                                     data-bs-toggle="modal"
-                                                                    data-bs-target="#tambah_fasilitas_{{$selectPeserta->id}}"
+                                                                    data-bs-target="#lihat_fasilitas_{{$selectPeserta->id}}"
                                                                     data-nama="{{ $selectPeserta->nama_lengkap }}"
                                                                     data-pegawai-id="{{ $selectPeserta->id }}"
                                                                     type="button">
@@ -102,15 +102,7 @@
                                                         </td>
 
                                                         <td class='text-center justify-content-center'>
-                                                            <div class="d-inline-block">
-                                                            <form action="{{url('/c_status_peserta/' . $selectPeserta->id)}}" method="post">
-                                                                @method('PUT')
-                                                                @csrf
-                                                                <input id="" type="hidden" value="{{ $perjadin->id }}" name="info_perjadinlangsung">
-                                                                <button class="text-decoration-none btn btn-primary btn-sm text-white" onclick="return confirm('Yakin Jadikan PIC?')">Jadikan PIC</button>
-                                                            </form>
-                                                            </div>
-                                                            <div class="d-inline-block">
+
                                                             <form action="{{url('/h_peserta/' . $selectPeserta->id)}}" method="post">
                                                                 @method('delete')
                                                                 @csrf
@@ -120,7 +112,6 @@
                                                                     <button class="text-decoration-none btn btn-danger btn-sm" style="color: #FFFFFF; margin-left: 5px;" onclick="return confirm('Hapus Data Peserta?')"><i class="fa-solid fa-trash"></i></button>
                                                                 </span>
                                                             </form>
-                                                            </div>
                                                         </td>
                                                     </tr>
                                                     @endforeach
@@ -134,7 +125,8 @@
                                                             <th class="th-sm">No</th>
                                                             <th class="th-md">Nama (Non-Pegawai)</th>
                                                             <th class="th-md">Pangkat/Golongan</th>
-                                                            <th class="th-md">Status</th>
+                                                            <th class="th-lg-percent">Status</th>
+                                                            <th class="th-md">Fasilitas</th>
                                                             <th class="th-lg-percent">Aksi</th>
                                                         </tr>
                                                     </thead>
@@ -144,6 +136,28 @@
                                                         <td class=''>{{ $selectPesertasNonPegawai->nama_lengkap }}</td>
                                                         <td class='text-center'>{{ $selectPesertasNonPegawai->golongan }}-{{ $selectPesertasNonPegawai->pangkat }}</td>
                                                         <td class='text-center'>{{ $selectPesertasNonPegawai->status_pegawai }}</td>
+                                                        <td class='text-center justify-content-center'>
+                                                            <div class="d-inline-block">
+                                                                <button class="btn btn-primary text-white mb-3 lihat-nonPegawai-fasilitas"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#lihat_fasilitas_{{$selectPesertasNonPegawai->id}}"
+                                                                    data-nama="{{ $selectPesertasNonPegawai->nama_lengkap }}"
+                                                                    data-pegawai-id="{{ $selectPesertasNonPegawai->id }}"
+                                                                    type="button">
+                                                                    <i class="fa fa-eye"></i>
+                                                                </button>
+                                                            </div>
+                                                            <div class="d-inline-block">
+                                                                <button class="btn btn-neon text-white mb-3 tambah-nonPegawai-fasilitas"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#tambah_fasilitas_{{$selectPesertasNonPegawai->id}}"
+                                                                    data-nama="{{ $selectPesertasNonPegawai->nama_lengkap }}"
+                                                                    data-pegawai-id="{{ $selectPesertasNonPegawai->id }}"
+                                                                    type="button">
+                                                                    <i class="fa fa-plus"></i>
+                                                                </button>
+                                                            </div>
+                                                        </td>
                                                         <td class='text-center'>
                                                             <form action="{{url('/h_peserta/' . $selectPesertasNonPegawai->id)}}" method="post">
                                                                 @method('delete')
@@ -393,10 +407,10 @@
 @if ($selectPesertas->isNotEmpty())
 @foreach ($selectPesertas as $selectPeserta)
 <div class="modal fade" id="tambah_fasilitas_{{ $selectPeserta->id }}" tabindex="-1" aria-labelledby="tambah_fasilitasLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="tambah_fasilitasLabel">Tambah Fasilitas untuk {{ $selectPeserta->nama_lengkap }}</h1>
+                <h1 class="modal-title fs-5" id="tambah_fasilitasLabel">Tambah Fasilitas</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -406,7 +420,7 @@
                     <input type="hidden" value="{{ $selectPeserta->id }}" name="pegawai_id">
                     <div class="row">
                         <div class="col-md-12 mb-3">
-                            <label for="nama" class="form-label">Nama<span class="text-danger">*</span></label>
+                            <label for="nama" class="form-label">Nama</label>
                             <input type="text" class="form-control" id="nama" name="nama" readonly>
                         </div>
                         <div class="col-md-12 mb-3">
@@ -430,6 +444,17 @@
                                 <div class="col-md-3 mb-3">
                                     <input type="text" class="form-control" id="satuan_{{ $selectPeserta->id }}" name="satuan" placeholder="Satuan" readonly>
                                 </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="pembayaran" class="form-label">Tipe Pembayaran<span class="text-danger">*</span></label>
+                                    <select class="form-select" id="pembayaran_{{ $selectPeserta->id }}" name="pembayaran" required>
+                                        <option value="Bayar diawal">Bayar diawal</option>
+                                        <option value="Reimburse">Reimburse</option>
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <label for="keterangan" class="form-label">Keterangan<span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="keterangan_{{ $selectPeserta->id }}" name="keterangan" placeholder="Tambahkan Keterangan" required>
+                                </div>
                                 <div class="col-md-12 mb-3">
                                     <button id="addFacilityButton_{{ $selectPeserta->id }}" class="btn btn-neon text-white" type="button">Tambahkan</button>
                                 </div>
@@ -443,6 +468,8 @@
                                             <th>Nama Fasilitas</th>
                                             <th>Jumlah</th>
                                             <th>Satuan</th>
+                                            <th>Tipe Pembayaran</th>
+                                            <th>Keterangan</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -457,6 +484,198 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
                         <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+@endif
+
+<!-- Modal Lihat Fasilitas -->
+@if ($selectPesertas->isNotEmpty())
+@foreach ($selectPesertas as $selectPeserta)
+<div class="modal fade" id="lihat_fasilitas_{{ $selectPeserta->id }}" tabindex="-1" aria-labelledby="lihat_fasilitasLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="Lihat_fasilitasLabel">Daftar Fasilitas</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ url('/c_fasilitasDetail') }}" method="post">
+                    @csrf
+                    <input type="hidden" value="{{ $perjadin->id }}" name="info_perjadinlangsung">
+                    <input type="hidden" value="{{ $selectPeserta->id }}" name="pegawai_id">
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label for="nama" class="form-label">Nama</label>
+                            <input type="text" class="form-control" id="nama" name="nama" readonly>
+                        </div>
+                        <div class="col-md-12">
+                            <div id="facilityTable_{{ $selectPeserta->id }}" class="mt-3">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Nama Fasilitas</th>
+                                            <th>Jumlah</th>
+                                            <th>Satuan</th>
+                                            <th>Tipe Pembayaran</th>
+                                            <th>Keterangan</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Tempat untuk menampilkan fasilitas yang ditambahkan -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+@endif
+
+
+<!-- Modal Tambah Fasilitas NonPegawai -->
+@if ($selectPesertasNonPegawais->isNotEmpty())
+@foreach ($selectPesertasNonPegawais as $selectPeserta)
+<div class="modal fade" id="tambah-nonPegawai_fasilitas_{{ $selectPesertasNonPegawai->id }}" tabindex="-1" aria-labelledby="tambah-nonPegawai_fasilitasLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="tambah-nonPegawai_fasilitasLabel">Tambah Fasilitas</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ url('/c_fasilitasDetail') }}" method="post">
+                    @csrf
+                    <input type="hidden" value="{{ $perjadin->id }}" name="info_perjadinlangsung">
+                    <input type="hidden" value="{{ $selectPesertasNonPegawai->id }}" name="pegawai_id">
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label for="nama" class="form-label">Nama</label>
+                            <input type="text" class="form-control" id="nama" name="nama" readonly>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label for="uraian_{{ $selectPesertasNonPegawai->id }}" class="form-label">Nama Fasilitas <span class="text-secondary small"></span><span class="text-danger">*</span></label>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <select class="form-select" id="uraian_{{ $selectPeserta->id }}" name="uraian" required>
+                                        <option value="" disabled selected>Pilih Jenis Fasilitas</option>
+                                        <option value="Akomodasi Hotel">Akomodasi Hotel</option>
+                                        <option value="BBM">BBM</option>
+                                        <option value="Tiket Kereta">Tiket Kereta</option>
+                                        <option value="Tiket Pesawat">Tiket Pesawat</option>
+                                        <option value="Tiket Travel">Tiket Travel</option>
+                                        <option value="Transportasi Online">Transportasi Online</option>
+                                        <option value="Tol">Tol</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <input type="number" class="form-control" id="jumlah_{{ $selectPeserta->id }}" name="jumlah" placeholder="Jumlah" required>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <input type="text" class="form-control" id="satuan_{{ $selectPeserta->id }}" name="satuan" placeholder="Satuan" readonly>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="pembayaran" class="form-label">Tipe Pembayaran<span class="text-danger">*</span></label>
+                                    <select class="form-select" id="pembayaran_{{ $selectPeserta->id }}" name="pembayaran" required>
+                                        <option value="Bayar diawal">Bayar diawal</option>
+                                        <option value="Reimburse">Reimburse</option>
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <label for="keterangan" class="form-label">Keterangan<span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="keterangan_{{ $selectPeserta->id }}" name="keterangan" placeholder="Tambahkan Keterangan" required>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <button id="addFacilityButton_{{ $selectPeserta->id }}" class="btn btn-neon text-white" type="button">Tambahkan</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div id="facilityTable_{{ $selectPeserta->id }}" class="mt-3">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Nama Fasilitas</th>
+                                            <th>Jumlah</th>
+                                            <th>Satuan</th>
+                                            <th>Tipe Pembayaran</th>
+                                            <th>Keterangan</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Tempat untuk menampilkan fasilitas yang ditambahkan -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+@endif
+
+<!-- Modal Lihat Fasilitas NonPegawai -->
+@if ($selectPesertasNonPegawais->isNotEmpty())
+@foreach ($selectPesertasNonPegawais as $selectPesertasNonPegawai)
+<div class="modal fade" id="lihat-nonPegawai_fasilitas_{{ $selectPesertasNonPegawai->id }}" tabindex="-1" aria-labelledby="lihat-nonPegawai_fasilitasLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="Lihat-nonPegawai_fasilitasLabel">Daftar Fasilitas</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ url('/c_fasilitasDetail') }}" method="post">
+                    @csrf
+                    <input type="hidden" value="{{ $perjadin->id }}" name="info_perjadinlangsung">
+                    <input type="hidden" value="{{ $selectPesertasNonPegawai->id }}" name="pegawai_id">
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label for="nama" class="form-label">Nama</label>
+                            <input type="text" class="form-control" id="nama" name="nama" readonly>
+                        </div>
+                        <div class="col-md-12">
+                            <div id="facilityTable_{{ $selectPesertasNonPegawai->id }}" class="mt-3">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Nama Fasilitas</th>
+                                            <th>Jumlah</th>
+                                            <th>Satuan</th>
+                                            <th>Tipe Pembayaran</th>
+                                            <th>Keterangan</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Tempat untuk menampilkan fasilitas yang ditambahkan -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -496,106 +715,306 @@
             }
         });
     </script>
-    <script>
-   $(document).ready(function () {
-    // Event listener untuk tombol Tambahkan di setiap modal
-    $(document).on('click', '.tambah-fasilitas', function () {
-        var namaPegawai = $(this).data('nama');
-        var pegawaiId = $(this).data('pegawai-id');
-        var fasilitasTerpilih = $(this).data('fasilitas') || [];
 
-        // Memperbarui nilai input Nama dengan nama pegawai yang sesuai
-        $('#tambah_fasilitas_' + pegawaiId + ' #nama').val(namaPegawai);
+<script>
+    $(document).ready(function () {
+        $(document).on('click', '.tambah-fasilitas', function () {
+            var namaPegawai = $(this).data('nama');
+            var pegawaiId = $(this).data('pegawai-id');
+            var fasilitasTerpilih = $(this).data('fasilitas') || [];
 
-        // Reset dropdown fasilitas
-        $('#uraian_' + pegawaiId + ' option').prop('disabled', false);
+            $('#tambah_fasilitas_' + pegawaiId + ' #nama').val(namaPegawai);
 
-        // Disable options yang sudah dipilih oleh pegawai terkait
-        fasilitasTerpilih.forEach(function(fasilitas) {
-            $('#uraian_' + pegawaiId + ' option[value="' + fasilitas.nama_fasilitas + '"]').prop('disabled', true);
-        });
+            $('#uraian_' + pegawaiId + ' option').prop('disabled', false);
 
-        // Event listener untuk tombol Tambahkan di dalam modal
-        $('#tambah_fasilitas_' + pegawaiId).on('click', '#addFacilityButton_' + pegawaiId, function () {
-            var namaFasilitas = $('#uraian_' + pegawaiId + ' option:selected').text();
-            var jumlahFasilitas = $('#jumlah_' + pegawaiId).val();
-            var satuanFasilitas = $('#satuan_' + pegawaiId).val();
-            var selectedValue = $('#uraian_' + pegawaiId).val();
+            fasilitasTerpilih.forEach(function(fasilitas) {
+                $('#uraian_' + pegawaiId + ' option[value="' + fasilitas.nama_fasilitas + '"]').prop('disabled', true);
+            });
 
-            if (namaFasilitas && jumlahFasilitas && satuanFasilitas) {
-                // Tambahkan data fasilitas ke dalam tabel pada modal yang sesuai
-                $('#facilityTable_' + pegawaiId + ' tbody').append(`
-                    <tr>
-                        <td>${namaFasilitas}</td>
-                        <td>${jumlahFasilitas}</td>
-                        <td>${satuanFasilitas}</td>
-                        <td>
-                            <button class="btn btn-danger btn-sm deleteFacilityButton" style="color: #FFFFFF;" onclick="return confirm('Hapus Data Fasilitas?')">
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `);
+            $('#tambah_fasilitas_' + pegawaiId).on('click', '#addFacilityButton_' + pegawaiId, function () {
+                var namaFasilitas = $('#uraian_' + pegawaiId + ' option:selected').text();
+                var jumlahFasilitas = $('#jumlah_' + pegawaiId).val();
+                var satuanFasilitas = $('#satuan_' + pegawaiId).val();
+                var pembayaranFasilitas = $('#pembayaran_' + pegawaiId).val();
+                var keteranganFasilitas = $('#keterangan_' + pegawaiId).val();
+                var selectedValue = $('#uraian_' + pegawaiId).val();
+                var uniqueId = Date.now();
 
-                // Disable selected option
-                $('#uraian_' + pegawaiId + ' option[value="' + selectedValue + '"]').prop('disabled', true);
+                if (namaFasilitas && jumlahFasilitas && satuanFasilitas && pembayaranFasilitas && keteranganFasilitas) {
+                    $('#facilityTable_' + pegawaiId + ' tbody').append(`
+                        <tr data-unique-id="${uniqueId}">
+                            <td>${namaFasilitas}</td>
+                            <td>${jumlahFasilitas}</td>
+                            <td>${satuanFasilitas}</td>
+                            <td>${pembayaranFasilitas}</td>
+                            <td>${keteranganFasilitas}</td>
+                            <td>
+                                <button class="btn btn-danger btn-sm deleteFacilityButton" style="color: #FFFFFF;" onclick="return confirm('Hapus Data Fasilitas?')">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `);
 
-                // Reset input jumlah dan satuan di modal yang sesuai
-                $('#uraian_' + pegawaiId).val('');
-                $('#jumlah_' + pegawaiId).val('');
-                $('#satuan_' + pegawaiId).val('');
-            }
-        });
+                    $('#uraian_' + pegawaiId + ' option[value="' + selectedValue + '"]').prop('disabled', true);
+                    $('#uraian_' + pegawaiId).val('');
+                    $('#jumlah_' + pegawaiId).val('');
+                    $('#pembayaran_' + pegawaiId).val("Bayar diawal");
+                    $('#keterangan_' + pegawaiId).val('');
+                    $('#satuan_' + pegawaiId).val('');
+                }
+            });
 
-        // Event listener untuk menghapus fasilitas di setiap modal
-        $('#tambah_fasilitas_' + pegawaiId).on('click', '.deleteFacilityButton', function () {
-            var row = $(this).closest('tr');
-            var fasilitasName = row.find('td:first').text();
+            $('#tambah_fasilitas_' + pegawaiId).on('click', '.deleteFacilityButton', function () {
+                var row = $(this).closest('tr');
+                var fasilitasName = row.find('td:first').text();
+                var uniqueId = row.data('unique-id');
 
-            // Enable kembali option yang dihapus
-            $('#uraian_' + pegawaiId + ' option:contains("' + fasilitasName + '")').prop('disabled', false);
+                $('#uraian_' + pegawaiId + ' option:contains("' + fasilitasName + '")').prop('disabled', false);
+                row.remove();
+                $('#lihat_fasilitas_' + pegawaiId + ' tr[data-unique-id="' + uniqueId + '"]').remove();
+            });
 
-            row.remove();
-        });
+            $('#tambah_fasilitas_' + pegawaiId).on('change', '#uraian_' + pegawaiId, function () {
+                var selectedValue = $(this).val();
+                var satuan = '';
 
-        // Event listener untuk mengubah satuan berdasarkan pilihan fasilitas di setiap modal
-        $('#tambah_fasilitas_' + pegawaiId).on('change', '#uraian_' + pegawaiId, function () {
-            var selectedValue = $(this).val();
-            var satuan = '';
+                switch (selectedValue) {
+                    case 'Akomodasi Hotel':
+                        satuan = 'Kamar';
+                        break;
+                    case 'BBM':
+                        satuan = 'Kali Pengisian';
+                        break;
+                    case 'Tiket Kereta':
+                    case 'Tiket Pesawat':
+                    case 'Tiket Travel':
+                        satuan = 'Tiket';
+                        break;
+                    case 'Transportasi Online':
+                        satuan = 'Kali Perjalanan';
+                        break;
+                    case 'Tol':
+                        satuan = 'Kali Pengisian';
+                        break;
+                    default:
+                        satuan = '';
+                }
 
-            switch (selectedValue) {
-                case 'Akomodasi Hotel':
-                    satuan = 'Kamar';
-                    break;
-                case 'BBM':
-                    satuan = 'Kali Pengisian';
-                    break;
-                case 'Tiket Kereta':
-                case 'Tiket Pesawat':
-                case 'Tiket Travel':
-                    satuan = 'Tiket';
-                    break;
-                case 'Transportasi Online':
-                    satuan = 'Kali Perjalanan';
-                    break;
-                case 'Tol':
-                    satuan = 'Kali Pengisian';
-                    break;
-                default:
-                    satuan = '';
-            }
-
-            $('#satuan_' + pegawaiId).val(satuan);
+                $('#satuan_' + pegawaiId).val(satuan);
+            });
         });
     });
-});
+    </script>
+
+<script>
+    $(document).ready(function () {
+        $(document).on('click', '.lihat-fasilitas', function () {
+            var namaPegawai = $(this).data('nama');
+            var pegawaiId = $(this).data('pegawai-id');
+            var fasilitasTerpilih = $(this).data('fasilitas') || [];
+
+            $('#lihat_fasilitas_' + pegawaiId + ' #nama').val(namaPegawai);
+
+            $('#uraian_' + pegawaiId + ' option').prop('disabled', false);
+
+            fasilitasTerpilih.forEach(function(fasilitas) {
+                $('#uraian_' + pegawaiId + ' option[value="' + fasilitas.nama_fasilitas + '"]').prop('disabled', true);
+            });
+
+            $('#lihat_fasilitas_' + pegawaiId).on('click', '.deleteFacilityButton', function () {
+                var row = $(this).closest('tr');
+                var fasilitasName = row.find('td:first').text();
+                var uniqueId = row.data('unique-id');
+
+                $('#uraian_' + pegawaiId + ' option:contains("' + fasilitasName + '")').prop('disabled', false);
+                row.remove();
+                $('#tambah_fasilitas_' + pegawaiId + ' tr[data-unique-id="' + uniqueId + '"]').remove();
+            });
+
+            $('#lihat_fasilitas_' + pegawaiId).on('change', '#uraian_' + pegawaiId, function () {
+                var selectedValue = $(this).val();
+                var satuan = '';
+
+                switch (selectedValue) {
+                    case 'Akomodasi Hotel':
+                        satuan = 'Kamar';
+                        break;
+                    case 'BBM':
+                        satuan = 'Kali Pengisian';
+                        break;
+                    case 'Tiket Kereta':
+                    case 'Tiket Pesawat':
+                    case 'Tiket Travel':
+                        satuan = 'Tiket';
+                        break;
+                    case 'Transportasi Online':
+                        satuan = 'Kali Perjalanan';
+                        break;
+                    case 'Tol':
+                        satuan = 'Kali Pengisian';
+                        break;
+                    default:
+                        satuan = '';
+                }
+
+                $('#satuan_' + pegawaiId).val(satuan);
+            });
+        });
+    });
+    </script>
 
 
+<script>
+    $(document).ready(function () {
+        $(document).on('click', '.tambah-nonPegawai-fasilitas', function () {
+            var namaPegawai = $(this).data('nama');
+            var pegawaiId = $(this).data('pegawai-id');
+            var fasilitasTerpilih = $(this).data('fasilitas') || [];
 
+            $('#tambah-nonPegawai_fasilitas_' + pegawaiId + ' #nama').val(namaPegawai);
+
+            $('#uraian_' + pegawaiId + ' option').prop('disabled', false);
+
+            fasilitasTerpilih.forEach(function(fasilitas) {
+                $('#uraian_' + pegawaiId + ' option[value="' + fasilitas.nama_fasilitas + '"]').prop('disabled', true);
+            });
+
+            $('#tambah-nonPegawai_fasilitas_' + pegawaiId).on('click', '#addFacilityButton_' + pegawaiId, function () {
+                var namaFasilitas = $('#uraian_' + pegawaiId + ' option:selected').text();
+                var jumlahFasilitas = $('#jumlah_' + pegawaiId).val();
+                var satuanFasilitas = $('#satuan_' + pegawaiId).val();
+                var pembayaranFasilitas = $('#pembayaran_' + pegawaiId).val();
+                var keteranganFasilitas = $('#keterangan_' + pegawaiId).val();
+                var selectedValue = $('#uraian_' + pegawaiId).val();
+                var uniqueId = Date.now();
+
+                if (namaFasilitas && jumlahFasilitas && satuanFasilitas && pembayaranFasilitas && keteranganFasilitas) {
+                    $('#facilityTable_' + pegawaiId + ' tbody').append(`
+                        <tr data-unique-id="${uniqueId}">
+                            <td>${namaFasilitas}</td>
+                            <td>${jumlahFasilitas}</td>
+                            <td>${satuanFasilitas}</td>
+                            <td>${pembayaranFasilitas}</td>
+                            <td>${keteranganFasilitas}</td>
+                            <td>
+                                <button class="btn btn-danger btn-sm deleteFacilityButton" style="color: #FFFFFF;" onclick="return confirm('Hapus Data Fasilitas?')">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `);
+
+                    $('#uraian_' + pegawaiId + ' option[value="' + selectedValue + '"]').prop('disabled', true);
+                    $('#uraian_' + pegawaiId).val('');
+                    $('#jumlah_' + pegawaiId).val('');
+                    $('#pembayaran_' + pegawaiId).val("Bayar diawal");
+                    $('#keterangan_' + pegawaiId).val('');
+                    $('#satuan_' + pegawaiId).val('');
+                }
+            });
+
+            $('#tambah_fasilitas_' + pegawaiId).on('click', '.deleteFacilityButton', function () {
+                var row = $(this).closest('tr');
+                var fasilitasName = row.find('td:first').text();
+                var uniqueId = row.data('unique-id');
+
+                $('#uraian_' + pegawaiId + ' option:contains("' + fasilitasName + '")').prop('disabled', false);
+                row.remove();
+                $('#lihat_fasilitas_' + pegawaiId + ' tr[data-unique-id="' + uniqueId + '"]').remove();
+            });
+
+            $('#tambah_fasilitas_' + pegawaiId).on('change', '#uraian_' + pegawaiId, function () {
+                var selectedValue = $(this).val();
+                var satuan = '';
+
+                switch (selectedValue) {
+                    case 'Akomodasi Hotel':
+                        satuan = 'Kamar';
+                        break;
+                    case 'BBM':
+                        satuan = 'Kali Pengisian';
+                        break;
+                    case 'Tiket Kereta':
+                    case 'Tiket Pesawat':
+                    case 'Tiket Travel':
+                        satuan = 'Tiket';
+                        break;
+                    case 'Transportasi Online':
+                        satuan = 'Kali Perjalanan';
+                        break;
+                    case 'Tol':
+                        satuan = 'Kali Pengisian';
+                        break;
+                    default:
+                        satuan = '';
+                }
+
+                $('#satuan_' + pegawaiId).val(satuan);
+            });
+        });
+    });
+    </script>
+
+<script>
+    $(document).ready(function () {
+        $(document).on('click', '.lihat-fasilitas-nonPegawai', function () {
+            var namaPegawai = $(this).data('nama');
+            var pegawaiId = $(this).data('pegawai-id');
+            var fasilitasTerpilih = $(this).data('fasilitas') || [];
+
+            $('#lihat-nonPegawai_fasilitas_' + pegawaiId + ' #nama').val(namaPegawai);
+
+            $('#uraian_' + pegawaiId + ' option').prop('disabled', false);
+
+            fasilitasTerpilih.forEach(function(fasilitas) {
+                $('#uraian_' + pegawaiId + ' option[value="' + fasilitas.nama_fasilitas + '"]').prop('disabled', true);
+            });
+
+            $('#lihat-nonPegawai_fasilitas_' + pegawaiId).on('click', '.deleteFacilityButton', function () {
+                var row = $(this).closest('tr');
+                var fasilitasName = row.find('td:first').text();
+                var uniqueId = row.data('unique-id');
+
+                $('#uraian_' + pegawaiId + ' option:contains("' + fasilitasName + '")').prop('disabled', false);
+                row.remove();
+                $('#tambah_fasilitas_' + pegawaiId + ' tr[data-unique-id="' + uniqueId + '"]').remove();
+            });
+
+            $('#lihat_fasilitas_' + pegawaiId).on('change', '#uraian_' + pegawaiId, function () {
+                var selectedValue = $(this).val();
+                var satuan = '';
+
+                switch (selectedValue) {
+                    case 'Akomodasi Hotel':
+                        satuan = 'Kamar';
+                        break;
+                    case 'BBM':
+                        satuan = 'Kali Pengisian';
+                        break;
+                    case 'Tiket Kereta':
+                    case 'Tiket Pesawat':
+                    case 'Tiket Travel':
+                        satuan = 'Tiket';
+                        break;
+                    case 'Transportasi Online':
+                        satuan = 'Kali Perjalanan';
+                        break;
+                    case 'Tol':
+                        satuan = 'Kali Pengisian';
+                        break;
+                    default:
+                        satuan = '';
+                }
+
+                $('#satuan_' + pegawaiId).val(satuan);
+            });
+        });
+    });
     </script>
 
     <script>
-        /* Conditional Form: Tambah Fasilitas*/
+        /* Conditional Flihat Fasilitas*/
         const uraian = document.getElementById('uraian');
         const conditionalFieldsHotel = document.getElementById('conditionalFieldsHotel');
         const conditionalFieldsTiketTransportasi = document.getElementById('conditionalFieldsTiketTransportasi');
