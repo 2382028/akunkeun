@@ -562,7 +562,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($fasilitas as $fasilita)
-                                    @if ($fasilita->info_perjadinlangsung == $perjadin->id && $fasilita->data_perjadinlangsungs == $selectPeserta->id)
+                                    @if ($fasilita->info_perjadinlangsung == $perjadin->id && $fasilita->data_perjadinlangsungs == $selectPesertasNonPegawai->id)
                                     <tr>
                                         <td>{{ $fasilita->nama }}</td>
                                         <td>{{ $fasilita->jumlah_frekuensi }}</td>
