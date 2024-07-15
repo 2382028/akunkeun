@@ -719,19 +719,31 @@ class PerjadinController extends Controller
     }
 
     public function destroyPeserta(Request $request, $id)
-    {
-        $id_perjadin = $request->info_perjadinlangsung;
-        DB::table('pegawais')
-            ->where('id', $request->peserta)
-            ->update([
-                'is_dinas' => '1'
-            ]);
+{
+    $id_perjadin = $request->info_perjadinlangsung;
 
-        Data_perjadinlangsung::destroy($id);
-        Keuangan_perjadinlangsung::where('data_perjadinlangsungs', $id)->delete();
+    // Update status pegawai
+    DB::table('pegawais')
+        ->where('id', $request->peserta)
+        ->update([
+            'is_dinas' => '1'
+        ]);
 
-        return redirect()->route('perjadin_step_2', ['id' => $id_perjadin])->with('success', 'Data peserta berhasil dihapus!');
-    }
+    // Hapus data di tabel Data_perjadinlangsung
+    Data_perjadinlangsung::destroy($id);
+
+    // Ambil semua kebutuhan_id dari Keuangan_perjadinlangsung yang akan dihapus
+    $kebutuhan_ids = Keuangan_perjadinlangsung::where('data_perjadinlangsungs', $id)->pluck('kebutuhan_id');
+
+    // Hapus data di tabel Keuangan_perjadinlangsung
+    Keuangan_perjadinlangsung::where('data_perjadinlangsungs', $id)->delete();
+
+    // Hapus data di tabel kebutuhans berdasarkan kebutuhan_id
+    DB::table('kebutuhans')->whereIn('id', $kebutuhan_ids)->delete();
+
+    return redirect()->route('perjadin_step_2', ['id' => $id_perjadin])->with('success', 'Data peserta berhasil dihapus!');
+}
+
 
 
     public function destroyPesertaDetail(Request $request, $id)
