@@ -360,6 +360,7 @@
                                 </div>
                                 <div class="col-md-3 mb-3">
                                     <input type="text" class="form-control" id="satuan_{{ $selectPeserta->id }}" name="satuan" placeholder="Satuan" readonly>
+                                    <input type="text" class="form-control mt-2" id="satuan_manual_{{ $selectPeserta->id }}" name="satuan_manual" placeholder="Satuan (Lainnya)" style="display: none;">
                                 </div>
                                 <div class="col-md-3 mb-3">
                                     <label for="pembayaran" class="form-label">Tipe Pembayaran<span class="text-danger">*</span></label>
@@ -500,6 +501,7 @@
                                 </div>
                                 <div class="col-md-3 mb-3">
                                     <input type="text" class="form-control" id="satuan_{{ $selectPesertasNonPegawai->id }}" name="satuan" placeholder="Satuan" readonly>
+                                    <input type="text" class="form-control mt-2" id="satuan_manual_{{ $selectPesertasNonPegawai->id }}" name="satuan_manual" placeholder="Satuan (Lainnya)" style="display: none;">
                                 </div>
                                 <div class="col-md-3 mb-3">
                                     <label for="pembayaran" class="form-label">Tipe Pembayaran<span class="text-danger">*</span></label>
@@ -645,7 +647,7 @@
             $('#tambah_fasilitas_' + pegawaiId).on('click', '#addFacilityButton_' + pegawaiId, function() {
                 var namaFasilitas = $('#uraian_' + pegawaiId + ' option:selected').text();
                 var jumlahFasilitas = $('#jumlah_' + pegawaiId).val();
-                var satuanFasilitas = $('#satuan_' + pegawaiId).val();
+                var satuanFasilitas = $('#satuan_' + pegawaiId).val() || $('#satuan_manual_' + pegawaiId).val();
                 var pembayaranFasilitas = $('#pembayaran_' + pegawaiId).val();
                 var keteranganFasilitas = $('#keterangan_' + pegawaiId).val();
                 var selectedValue = $('#uraian_' + pegawaiId).val();
@@ -653,19 +655,19 @@
 
                 if (namaFasilitas && jumlahFasilitas && satuanFasilitas && pembayaranFasilitas && keteranganFasilitas) {
                     $('#facilityTable_' + pegawaiId + ' tbody').append(`
-                        <tr data-unique-id="${uniqueId}">
-                            <td>${namaFasilitas}</td>
-                            <td>${jumlahFasilitas}</td>
-                            <td>${satuanFasilitas}</td>
-                            <td>${pembayaranFasilitas}</td>
-                            <td>${keteranganFasilitas}</td>
-                            <td>
-                                <button class="btn btn-danger btn-sm deleteFacilityButton" style="color: #FFFFFF;" onclick="return confirm('Hapus Data Fasilitas?')">
-                                    <i class="fa fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    `);
+                    <tr data-unique-id="${uniqueId}">
+                        <td>${namaFasilitas}</td>
+                        <td>${jumlahFasilitas}</td>
+                        <td>${satuanFasilitas}</td>
+                        <td>${pembayaranFasilitas}</td>
+                        <td>${keteranganFasilitas}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm deleteFacilityButton" style="color: #FFFFFF;" onclick="return confirm('Hapus Data Fasilitas?')">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `);
 
                     $('#uraian_' + pegawaiId + ' option[value="' + selectedValue + '"]').prop('disabled', true);
                     $('#uraian_' + pegawaiId).val('');
@@ -673,6 +675,8 @@
                     $('#pembayaran_' + pegawaiId).val("Bayar diawal");
                     $('#keterangan_' + pegawaiId).val('');
                     $('#satuan_' + pegawaiId).val('');
+                    $('#satuan_manual_' + pegawaiId).val('');
+                    $('#satuan_manual_' + pegawaiId).hide();
                 }
             });
 
@@ -708,8 +712,15 @@
                     case 'Tol':
                         satuan = 'Kali Pengisian';
                         break;
+                    case 'Lainnya':
+                        satuan = '';
+                        $('#satuan_manual_' + pegawaiId).show();
+                        $('#satuan_' + pegawaiId).hide();
+                        break;
                     default:
                         satuan = '';
+                        $('#satuan_manual_' + pegawaiId).hide();
+                        $('#satuan_' + pegawaiId).show();
                 }
 
                 $('#satuan_' + pegawaiId).val(satuan);
@@ -822,6 +833,8 @@
                     $('#pembayaran_' + pegawaiId).val("Bayar diawal");
                     $('#keterangan_' + pegawaiId).val('');
                     $('#satuan_' + pegawaiId).val('');
+                    $('#satuan_manual_' + pegawaiId).val('');
+                    $('#satuan_manual_' + pegawaiId).hide();
                 }
             });
 
@@ -857,8 +870,15 @@
                     case 'Tol':
                         satuan = 'Kali Pengisian';
                         break;
+                    case 'Lainnya':
+                        satuan = '';
+                        $('#satuan_manual_' + pegawaiId).show();
+                        $('#satuan_' + pegawaiId).hide();
+                        break;
                     default:
                         satuan = '';
+                        $('#satuan_manual_' + pegawaiId).hide();
+                        $('#satuan_' + pegawaiId).show();
                 }
 
                 $('#satuan_' + pegawaiId).val(satuan);

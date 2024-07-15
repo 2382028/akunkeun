@@ -448,11 +448,13 @@ class PerjadinController extends Controller
 
     public function storeFasilitasDetail(Request $request)
     {
+        $satuan = $request->satuan ? $request->satuan : $request->satuan_manual;
+
         DB::table('kebutuhans')->insert([
             'nama' => $request->uraian,
             'status' => 'Pengajuan',
             'jumlah_frekuensi' => $request->jumlah_frekuensi,
-            'satuan' => $request->satuan,
+            'satuan' => $satuan,
             'tipe_pendanaan' => $request->tipe_pendanaan,
             'ket' => $request->keterangan,
             'created_at' => now(),
