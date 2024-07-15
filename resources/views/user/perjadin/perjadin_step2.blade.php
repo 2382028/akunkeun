@@ -128,22 +128,12 @@
                                                         <td class='text-center'>{{ $selectPesertasNonPegawai->status_pegawai }}</td>
                                                         <td class='text-center justify-content-center'>
                                                             <div class="d-inline-block">
-                                                                <button class="btn btn-primary text-white mb-3 lihat-nonPegawai-fasilitas"
-                                                                    data-bs-toggle="modal"
-                                                                    data-bs-target="#lihat-nonPegawai_fasilitas_{{$selectPesertasNonPegawai->id}}"
-                                                                    data-nama="{{ $selectPesertasNonPegawai->nama_lengkap }}"
-                                                                    data-pegawai-id="{{ $selectPesertasNonPegawai->id }}"
-                                                                    type="button">
+                                                                <button class="btn btn-primary text-white mb-3 lihat-nonPegawai-fasilitas" data-bs-toggle="modal" data-bs-target="#lihat-nonPegawai_fasilitas_{{$selectPesertasNonPegawai->id}}" data-nama="{{ $selectPesertasNonPegawai->nama_lengkap }}" data-pegawai-id="{{ $selectPesertasNonPegawai->id }}" type="button">
                                                                     <i class="fa fa-eye"></i>
                                                                 </button>
                                                             </div>
                                                             <div class="d-inline-block">
-                                                                <button class="btn btn-neon text-white mb-3 tambah-nonPegawai-fasilitas"
-                                                                    data-bs-toggle="modal"
-                                                                    data-bs-target="#tambah-nonPegawai_fasilitas_{{$selectPesertasNonPegawai->id}}"
-                                                                    data-nama="{{ $selectPesertasNonPegawai->nama_lengkap }}"
-                                                                    data-pegawai-id="{{ $selectPesertasNonPegawai->id }}"
-                                                                    type="button">
+                                                                <button class="btn btn-neon text-white mb-3 tambah-nonPegawai-fasilitas" data-bs-toggle="modal" data-bs-target="#tambah-nonPegawai_fasilitas_{{$selectPesertasNonPegawai->id}}" data-nama="{{ $selectPesertasNonPegawai->nama_lengkap }}" data-pegawai-id="{{ $selectPesertasNonPegawai->id }}" type="button">
                                                                     <i class="fa fa-plus"></i>
                                                                 </button>
                                                             </div>
@@ -356,12 +346,13 @@
                                     <select class="form-select" id="uraian_{{ $selectPeserta->id }}" name="uraian" required>
                                         <option value="" disabled selected>Pilih Jenis Fasilitas</option>
                                         <option value="Akomodasi Hotel">Akomodasi Hotel</option>
-                                        <option value="BBM">BBM</option>
+                                        <!-- <option value="BBM">BBM</option> -->
                                         <option value="Tiket Kereta">Tiket Kereta</option>
                                         <option value="Tiket Pesawat">Tiket Pesawat</option>
                                         <option value="Tiket Travel">Tiket Travel</option>
                                         <option value="Transportasi Online">Transportasi Online</option>
-                                        <option value="Tol">Tol</option>
+                                        <option value="Lainnya">Lainnya</option>
+                                        <!-- <option value="Tol">Tol</option> -->
                                     </select>
                                 </div>
                                 <div class="col-md-3 mb-3">
@@ -397,7 +388,7 @@
 @endforeach
 @endif
 
-<!-- Modal Lihat Fasilitas -->
+<!-- Modal Lihat Fasilitas Pegawai -->
 @if ($selectPesertas->isNotEmpty())
 @foreach ($selectPesertas as $selectPeserta)
 <div class="modal fade" id="lihat_fasilitas_{{ $selectPeserta->id }}" tabindex="-1" aria-labelledby="lihat_fasilitasLabel" aria-hidden="true">
@@ -442,7 +433,8 @@
                                                 @method('delete')
                                                 @csrf
                                                 <input type="hidden" value="{{ $perjadin->id }}" name="info_perjadinlangsung">
-                                                <button type="submit" class="text-decoration-none btn btn-danger btn-sm text-white" onclick="return confirm('Hapus Data Peserta?')">
+                                                <input type="hidden" value="{{ $fasilita->data_perjadinlangsungs }}" name="data_perjadinlangsungs">
+                                                <button type="submit" class="text-decoration-none btn btn-danger btn-sm text-white" onclick="return confirm('Hapus Data Fasilitas?')">
                                                     <i class="fa fa-trash"></i>
                                                 </button>
                                             </form>
@@ -494,23 +486,24 @@
                                     <select class="form-select" id="uraian_{{ $selectPesertasNonPegawai->id }}" name="uraian" required>
                                         <option value="" disabled selected>Pilih Jenis Fasilitas</option>
                                         <option value="Akomodasi Hotel">Akomodasi Hotel</option>
-                                        <option value="BBM">BBM</option>
+                                        <!-- <option value="BBM">BBM</option> -->
                                         <option value="Tiket Kereta">Tiket Kereta</option>
                                         <option value="Tiket Pesawat">Tiket Pesawat</option>
                                         <option value="Tiket Travel">Tiket Travel</option>
                                         <option value="Transportasi Online">Transportasi Online</option>
-                                        <option value="Tol">Tol</option>
+                                        <option value="Lainnya">Lainnya</option>-
+                                        <!-- <option value="Tol">Tol</option> -->
                                     </select>
                                 </div>
                                 <div class="col-md-3 mb-3">
-                                    <input type="number" class="form-control" id="jumlah_{{ $selectPesertasNonPegawai->id }}" name="jumlah" placeholder="Jumlah" required>
+                                    <input type="number" class="form-control" id="jumlah_{{ $selectPesertasNonPegawai->id }}" name="jumlah_frekuensi" placeholder="Jumlah" required>
                                 </div>
                                 <div class="col-md-3 mb-3">
                                     <input type="text" class="form-control" id="satuan_{{ $selectPesertasNonPegawai->id }}" name="satuan" placeholder="Satuan" readonly>
                                 </div>
                                 <div class="col-md-3 mb-3">
                                     <label for="pembayaran" class="form-label">Tipe Pembayaran<span class="text-danger">*</span></label>
-                                    <select class="form-select" id="pembayaran_{{ $selectPesertasNonPegawai->id }}" name="pembayaran" required>
+                                    <select class="form-select" id="pembayaran_{{ $selectPesertasNonPegawai->id }}" name="tipe_pendanaan" required>
                                         <option value="Bayar diawal">Bayar diawal</option>
                                         <option value="Reimburse">Reimburse</option>
                                     </select>
@@ -519,28 +512,6 @@
                                     <label for="keterangan" class="form-label">Keterangan<span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="keterangan_{{ $selectPesertasNonPegawai->id }}" name="keterangan" placeholder="Tambahkan Keterangan" required>
                                 </div>
-                                <div class="col-md-12 mb-3">
-                                    <button id="addFacilityButton_{{ $selectPesertasNonPegawai->id }}" class="btn btn-neon text-white" type="button">Tambahkan</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div id="facilityTable_{{ $selectPesertasNonPegawai->id }}" class="mt-3">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Nama Fasilitas</th>
-                                            <th>Jumlah</th>
-                                            <th>Satuan</th>
-                                            <th>Tipe Pembayaran</th>
-                                            <th>Keterangan</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- Tempat untuk menampilkan fasilitas yang ditambahkan -->
-                                    </tbody>
-                                </table>
                             </div>
                         </div>
                     </div>
@@ -568,35 +539,55 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{{ url('/c_fasilitasDetail') }}" method="post">
-                    @csrf
-                    <input type="hidden" value="{{ $perjadin->id }}" name="info_perjadinlangsung">
-                    <input type="hidden" value="{{ $selectPesertasNonPegawai->id }}" name="pegawai_id">
-                    <div class="row">
-                        <div class="col-md-12 mb-3">
-                            <label for="nama" class="form-label">Nama</label>
-                            <input type="text" class="form-control" id="nama" name="nama" readonly>
-                        </div>
-                        <div class="col-md-12">
-                            <div id="facilityTable_{{ $selectPesertasNonPegawai->id }}" class="mt-3">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Nama Fasilitas</th>
-                                            <th>Jumlah</th>
-                                            <th>Satuan</th>
-                                            <th>Tipe Pembayaran</th>
-                                            <th>Keterangan</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- Tempat untuk menampilkan fasilitas yang ditambahkan -->
-                                    </tbody>
-                                </table>
-                            </div>
+
+                <input type="hidden" value="{{ $perjadin->id }}" name="info_perjadinlangsung">
+                <input type="hidden" value="{{ $selectPesertasNonPegawai->id }}" name="pegawai_id">
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label for="nama" class="form-label">Nama</label>
+                        <input type="text" class="form-control" id="nama" name="nama" readonly>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="mt-3">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Nama Fasilitas</th>
+                                        <th>Jumlah</th>
+                                        <th>Satuan</th>
+                                        <th>Tipe Pembayaran</th>
+                                        <th>Keterangan</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($fasilitas as $fasilita)
+                                    @if ($fasilita->info_perjadinlangsung == $perjadin->id && $fasilita->data_perjadinlangsungs == $selectPeserta->id)
+                                    <tr>
+                                        <td>{{ $fasilita->nama }}</td>
+                                        <td>{{ $fasilita->jumlah_frekuensi }}</td>
+                                        <td>{{ $fasilita->satuan }}</td>
+                                        <td>{{ $fasilita->tipe_pendanaan }}</td>
+                                        <td>{{ $fasilita->ket }}</td>
+                                        <td>
+                                            <form action="{{ url('/h_fasilitas_perjadin/' . $fasilita->idKebutuhan) }}" method="post">
+                                                @method('delete')
+                                                @csrf
+                                                <input type="hidden" value="{{ $perjadin->id }}" name="info_perjadinlangsung">
+                                                <input type="hidden" value="{{ $fasilita->data_perjadinlangsungs }}" name="data_perjadinlangsungs">
+                                                <button type="submit" class="text-decoration-none btn btn-danger btn-sm text-white" onclick="return confirm('Hapus Data Fasilitas?')">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    @endif
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
+                </div>
                 </form>
             </div>
         </div>
@@ -834,7 +825,7 @@
                 }
             });
 
-            $('#tambah-nonPegawai_fasilitas_' + pegawaiId).on('click', '.deleteFacilityButton', function () {
+            $('#tambah-nonPegawai_fasilitas_' + pegawaiId).on('click', '.deleteFacilityButton', function() {
                 var row = $(this).closest('tr');
                 var fasilitasName = row.find('td:first').text();
                 var uniqueId = row.data('unique-id');
@@ -844,7 +835,7 @@
                 $('#lihat-nonPegawai_fasilitas_' + pegawaiId + ' tr[data-unique-id="' + uniqueId + '"]').remove();
             });
 
-            $('#tambah-nonPegawai_fasilitas_' + pegawaiId).on('change', '#uraian_' + pegawaiId, function () {
+            $('#tambah-nonPegawai_fasilitas_' + pegawaiId).on('change', '#uraian_' + pegawaiId, function() {
                 var selectedValue = $(this).val();
                 var satuan = '';
 
@@ -877,8 +868,8 @@
 </script>
 
 <script>
-    $(document).ready(function () {
-        $(document).on('click', '.lihat-nonPegawai-fasilitas', function () {
+    $(document).ready(function() {
+        $(document).on('click', '.lihat-nonPegawai-fasilitas', function() {
             var namaPegawai = $(this).data('nama');
             var pegawaiId = $(this).data('pegawai-id');
             var fasilitasTerpilih = $(this).data('fasilitas') || [];
@@ -901,7 +892,7 @@
                 $('#tambah_fasilitas_' + pegawaiId + ' tr[data-unique-id="' + uniqueId + '"]').remove();
             });
 
-            $('#lihat-nonPegawai_fasilitas_' + pegawaiId).on('change', '#uraian_' + pegawaiId, function () {
+            $('#lihat-nonPegawai_fasilitas_' + pegawaiId).on('change', '#uraian_' + pegawaiId, function() {
                 var selectedValue = $(this).val();
                 var satuan = '';
 

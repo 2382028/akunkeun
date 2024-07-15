@@ -71,9 +71,9 @@ class PerjadinController extends Controller
 
         $kebutuhans = DB::table('keuangan_perjadinlangsungs')
             ->join('kebutuhans', 'keuangan_perjadinlangsungs.kebutuhan_id', '=', 'kebutuhans.id')
-            ->select('kebutuhans.id as idKebutuhan', 'kebutuhans.nama', 'kebutuhans.jumlah_frekuensi', 'kebutuhans.satuan', 'kebutuhans.tipe_pendanaan', 'kebutuhans.ket', 'keuangan_perjadinlangsungs.info_perjadinlangsung',  'keuangan_perjadinlangsungs.kebutuhan_id', 'keuangan_perjadinlangsungs.data_perjadinlangsungs','keuangan_perjadinlangsungs.kebutuhan_id', 'keuangan_perjadinlangsungs.status')
+            ->select('kebutuhans.id as idKebutuhan', 'kebutuhans.nama', 'kebutuhans.jumlah_frekuensi', 'kebutuhans.satuan', 'kebutuhans.tipe_pendanaan', 'kebutuhans.ket', 'keuangan_perjadinlangsungs.info_perjadinlangsung',  'keuangan_perjadinlangsungs.kebutuhan_id', 'keuangan_perjadinlangsungs.data_perjadinlangsungs', 'keuangan_perjadinlangsungs.kebutuhan_id', 'keuangan_perjadinlangsungs.status')
             ->where('keuangan_perjadinlangsungs.info_perjadinlangsung', $id)
-            ->groupBy('kebutuhans.id', 'kebutuhans.nama', 'kebutuhans.jumlah_frekuensi', 'kebutuhans.satuan', 'kebutuhans.tipe_pendanaan', 'kebutuhans.ket', 'keuangan_perjadinlangsungs.info_perjadinlangsung', 'keuangan_perjadinlangsungs.kebutuhan_id', 'keuangan_perjadinlangsungs.data_perjadinlangsungs','keuangan_perjadinlangsungs.status')
+            ->groupBy('kebutuhans.id', 'kebutuhans.nama', 'kebutuhans.jumlah_frekuensi', 'kebutuhans.satuan', 'kebutuhans.tipe_pendanaan', 'kebutuhans.ket', 'keuangan_perjadinlangsungs.info_perjadinlangsung', 'keuangan_perjadinlangsungs.kebutuhan_id', 'keuangan_perjadinlangsungs.data_perjadinlangsungs', 'keuangan_perjadinlangsungs.status')
             ->get();
 
         $pegawais = DB::table('pegawais')
@@ -283,16 +283,14 @@ class PerjadinController extends Controller
             'updated_at' => now(),
         ]);
 
-        $data_perjaidinlangsung_max = data_perjadinlangsung::max('id');
+        // $data_perjaidinlangsung_max = data_perjadinlangsung::max('id');
 
-        DB::table('keuangan_perjadinlangsungs')->insertOrIgnore([
-            'info_perjadinlangsung' => $request->info_perjadinlangsung,
-            'data_perjadinlangsungs' => $data_perjaidinlangsung_max,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-
+        // DB::table('keuangan_perjadinlangsungs')->insertOrIgnore([
+        //     'info_perjadinlangsung' => $request->info_perjadinlangsung,
+        //     'data_perjadinlangsungs' => $data_perjaidinlangsung_max,
+        //     'created_at' => now(),
+        //     'updated_at' => now(),
+        // ]);
 
         $id = $request->info_perjadinlangsung;
         return redirect()->route('perjadin_step_2', ['id' => $id])->with('success', 'Peserta baru berhasil ditambahkan!');
@@ -359,14 +357,14 @@ class PerjadinController extends Controller
             ]);
         }
 
-        $data_perjaidinlangsung_max = data_perjadinlangsung::max('id');
+        // $data_perjaidinlangsung_max = data_perjadinlangsung::max('id');
 
-        DB::table('keuangan_perjadinlangsungs')->insertOrIgnore([
-            'info_perjadinlangsung' => $request->info_perjadinlangsung,
-            'data_perjadinlangsungs' => $data_perjaidinlangsung_max,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        // DB::table('keuangan_perjadinlangsungs')->insertOrIgnore([
+        //     'info_perjadinlangsung' => $request->info_perjadinlangsung,
+        //     'data_perjadinlangsungs' => $data_perjaidinlangsung_max,
+        //     'created_at' => now(),
+        //     'updated_at' => now(),
+        // ]);
 
 
         $id = $request->info_perjadinlangsung;
@@ -762,9 +760,22 @@ class PerjadinController extends Controller
 
     public function destroyFasilitasPerjadin(Request $request, $id)
     {
+
+        // $id_perjadin = $request->info_perjadinlangsung;
+        // return redirect()->route('perjadin_step_2', ['id' => $id_perjadin])->with('success', 'Fasilitas berhasil dihapus!');
+        $info_perjadinlangsung = $request->info_perjadinlangsung;
+        $data_perjadinlangsungs = $request->data_perjadinlangsungs;
+
+        DB::table('keuangan_perjadinlangsungs')
+            ->where('info_perjadinlangsung', $info_perjadinlangsung)
+            ->where('data_perjadinlangsungs', $data_perjadinlangsungs)
+            ->where('kebutuhan_id', $id)
+            ->delete();
+
         Kebutuhan::destroy($id);
-        $id_perjadin = $request->info_perjadinlangsung;
-        return redirect()->route('perjadin_step_2', ['id' => $id_perjadin])->with('success', 'Fasilitas berhasil dihapus!');
+
+        return redirect()->route('perjadin_step_2', ['id' => $info_perjadinlangsung])
+            ->with('success', 'Data fasilitas berhasil dihapus!');
     }
 
 
