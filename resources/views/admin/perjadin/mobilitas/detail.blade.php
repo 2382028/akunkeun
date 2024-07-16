@@ -134,39 +134,42 @@ use Carbon\Carbon;
                     </div>
 
                     {{-- Informasi Peminjaman dengan Pengemudi --}}
-                    <div class="col-md-12 mb-3" id="divInformasiPeminjaman" style="display: none;">
-                        <form action="{{url('/c_tambahmobilitas')}}" method="post">
-                            @csrf
-                            <input type="hidden" name="idPerjadin" value="{{$perjadin->id}}">
-                            <h5 class="fw-bold">Informasi Peminjaman
-                                <button type="button" class="btn btn-primary" id="tambahMobilitasButton">+ Tambah Mobilitas</button>
-                            </h5>
-                        </form>
-                        <div class="table-responsive">
-                            <form action="{{url('/cu_perjadinmobilitas')}}" method="post">
-                                @csrf
-                                <input type="hidden" name="idPerjadin" value="{{$perjadin->id}}">
-                                <input type="hidden" name="perjadinStatus" value="{{$perjadin->is_acceptBMN}}">
+<div class="col-md-12 mb-3" id="divInformasiPeminjaman" style="display: none;">
+    <form action="{{url('/c_tambahmobilitas')}}" method="post">
+        @csrf
+        <input type="hidden" name="idPerjadin" value="{{$perjadin->id}}">
+        <h5 class="fw-bold">Informasi Peminjaman
+            <button type="button" class="btn btn-primary" id="tambahMobilitasButton">+ Tambah Mobilitas</button>
+        </h5>
+    </form>
+    <div class="table-responsive">
+        <form action="{{url('/cu_perjadinmobilitas')}}" method="post">
+            @csrf
+            <input type="hidden" name="idPerjadin" value="{{$perjadin->id}}">
+            <input type="hidden" name="perjadinStatus" value="{{$perjadin->is_acceptBMN}}">
 
-                                <table id="tablePeminjaman" class="table table-bordered" style="width: 100%">
-                                    <thead>
-                                        <tr class="text-center small">
-                                            <th class="th-sm">No</th>
-                                            <th class="th-md">Pengemudi</th>
-                                            <th class="th-md">Mobil</th>
-                                        </tr>
-                                    </thead>
-                                    {{-- <input type="hidden" name="numMobilitas" value="{{$nummobilitas}}"> --}}
-                                </table>
-                        </div>
-                        <div class="col-md-12 mb-3">
-                            <div class="d-grid gap-2 d-md-flex justify-content-center">
-                                <a href="{{url('/perjadin-mobilitas/' . 'pengajuan')}}" class="btn btn-dark">Batal</a>
-                                <button class="btn btn-success" type="submit" name="action" value="proses">Proses</button>
-                            </div>
-                            </form>
-                        </div>
-                    </div>
+            <table id="tablePeminjaman" class="table table-bordered" style="width: 100%">
+                <thead>
+                    <tr class="text-center small">
+                        <th class="th-sm">No</th>
+                        <th class="th-md">Pengemudi</th>
+                        <th class="th-md">Mobil</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{-- Baris akan ditambahkan secara dinamis di sini --}}
+                </tbody>
+            </table>
+            <input type="hidden" name="numMobilitas" id="numMobilitas" value="0">
+    </div>
+    <div class="col-md-12 mb-3">
+        <div class="d-grid gap-2 d-md-flex justify-content-center">
+            <a href="{{url('/perjadin-mobilitas/' . 'pengajuan')}}" class="btn btn-dark">Batal</a>
+            <button class="btn btn-success" type="submit" name="action" value="proses">Proses</button>
+        </div>
+        </form>
+    </div>
+</div>
 
 
                     <!-- Modal Tolak Mobilitas -->
@@ -198,91 +201,92 @@ use Carbon\Carbon;
                         </div>
                     </div>
 
-                    <!-- Modal Perlu Pengemudi -->
-                    <div class="modal fade" id="tambahMobilitasModal" tabindex="-1" aria-labelledby="tambahMobilitasModalLabel" aria-hidden="true">
-                        <div class="modal-dialog ">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                            <h5 class="modal-title" id="tambahMobilitasModalLabel">Apakah memerlukan Pengemudi?</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                            <button type="button" class="btn btn-primary" id="butuhPengemudi">Ya</button>
-                            <button type="button" class="btn btn-danger text-white" id="tidakButuhPengemudi">Tidak</button>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
+<!-- Modal Perlu Pengemudi -->
+<div class="modal fade" id="tambahMobilitasModal" tabindex="-1" aria-labelledby="tambahMobilitasModalLabel" aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="tambahMobilitasModalLabel">Apakah memerlukan Pengemudi?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <button type="button" class="btn btn-primary" id="butuhPengemudi">Ya</button>
+                <button type="button" class="btn btn-danger text-white" id="tidakButuhPengemudi">Tidak</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.getElementById('tambahMobilitasButton').addEventListener('click', function () {
+        // Tampilkan modal
+        var myModal = new bootstrap.Modal(document.getElementById('tambahMobilitasModal'));
+        myModal.show();
+    });
 
-                    <script>
-                        document.getElementById('tambahMobilitasButton').addEventListener('click', function () {
-                            // Tampilkan modal
-                            var myModal = new bootstrap.Modal(document.getElementById('tambahMobilitasModal'));
-                            myModal.show();
-                        });
+    document.getElementById('butuhPengemudi').addEventListener('click', function () {
+        // Tambahkan row dengan dropdown pengemudi asli
+        addRow(true);
+        // Tutup modal
+        var myModal = bootstrap.Modal.getInstance(document.getElementById('tambahMobilitasModal'));
+        myModal.hide();
+    });
 
-                        document.getElementById('butuhPengemudi').addEventListener('click', function () {
-                            // Tambahkan row dengan dropdown pengemudi asli
-                            addRow(true);
-                            // Tutup modal
-                            var myModal = bootstrap.Modal.getInstance(document.getElementById('tambahMobilitasModal'));
-                            myModal.hide();
-                        });
+    document.getElementById('tidakButuhPengemudi').addEventListener('click', function () {
+        // Tambahkan row dengan dropdown pengemudi custom
+        addRow(false);
+        // Tutup modal
+        var myModal = bootstrap.Modal.getInstance(document.getElementById('tambahMobilitasModal'));
+        myModal.hide();
+    });
 
-                        document.getElementById('tidakButuhPengemudi').addEventListener('click', function () {
-                            // Tambahkan row dengan dropdown pengemudi custom
-                            addRow(false);
-                            // Tutup modal
-                            var myModal = bootstrap.Modal.getInstance(document.getElementById('tambahMobilitasModal'));
-                            myModal.hide();
-                        });
+    function addRow(withDriver) {
+        var table = document.querySelector('#tablePeminjaman tbody');
+        var row = table.insertRow();
 
-                        function addRow(withDriver) {
-                            var table = document.querySelector('#tablePeminjaman');
-                            var row = table.insertRow();
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
 
-                            var cell1 = row.insertCell(0);
-                            var cell2 = row.insertCell(1);
-                            var cell3 = row.insertCell(2);
+        var numRows = table.rows.length;
 
-                            var numRows = table.rows.length;
+        cell1.innerHTML = numRows;
 
-                            cell1.innerHTML = numRows-1;
+        if (withDriver) {
+            cell2.innerHTML = `
+                <select class="form-select" name="supir_${numRows - 1}">
+                    @foreach ($pengemudis as $pengemudi)
+                    <option value="{{$pengemudi->id}}">{{$pengemudi->nama_lengkap}}</option>
+                    @endforeach
+                </select>`;
+        } else {
+            cell2.innerHTML = `
+                <select class="form-select" name="supir_${numRows - 1}">
+                    @foreach ($pesertaPegawais as $pesertaPegawai)
+                    <option value="{{$pesertaPegawai->id}}">{{$pesertaPegawai->nama_lengkap}}</option>
+                    @endforeach
+                    @foreach ($pesertaNonPegawais as $pesertaNonPegawai)
+                    <option value="{{$pesertaNonPegawai->id}}">{{$pesertaNonPegawai->nama_lengkap}}</option>
+                    @endforeach
+                </select>`;
+        }
 
-                            if (withDriver) {
-                                cell2.innerHTML = `
-                                    <select class="form-select" name="supir_${numRows - 1}">
-                                        @foreach ($pengemudis as $pengemudi)
-                                        <option value="{{$pengemudi->id}}">{{$pengemudi->nama_lengkap}}</option>
-                                        @endforeach
-                                    </select>`;
-                            } else {
-                                cell2.innerHTML = `
-                                    <select class="form-select" name="supir_${numRows - 1}">
-                                        @foreach ($pesertaPegawais as $pesertaPegawai)
-                                        <option value="{{$pesertaPegawai->id}}">{{$pesertaPegawai->nama_lengkap}}</option>
-                                        @endforeach
-                                        @foreach ($pesertaNonPegawais as $pesertaNonPegawai)
-                                        <option value="{{$pesertaNonPegawai->id}}">{{$pesertaNonPegawai->nama_lengkap}}</option>
-                                        @endforeach
+        cell3.innerHTML = `
+            <select class="form-select" name="mobil_${numRows - 1}">
+                @foreach ($kendaraans as $kendaraan)
+                <option value="{{$kendaraan->id}}">{{$kendaraan->merek}} [{{$kendaraan->no_polisi}}]</option>
+                @endforeach
+            </select>`;
 
-                                    </select>`;
-                            }
+        // Hidden inputs
+        row.innerHTML += `
+            <input type="hidden" name="status_${numRows - 1}" value="proses">
+            <input type="hidden" value="{{ $perjadin->tgl_keberangkatan }}" name="berangkat_${numRows - 1}">
+            <input type="hidden" value="{{ $perjadin->tgl_selesai }}" name="selesai_${numRows - 1}">`;
 
-                            cell3.innerHTML = `
-                                <select class="form-select" name="mobil_${numRows - 1}">
-                                    @foreach ($kendaraans as $kendaraan)
-                                    <option value="{{$kendaraan->id}}">{{$kendaraan->merek}} [{{$kendaraan->no_polisi}}]</option>
-                                    @endforeach
-                                </select>`;
-
-                            // Hidden inputs
-                            row.innerHTML += `
-                                <input type="hidden" name="status_${numRows - 1}" value="proses">
-                                <input type="hidden" value="{{ $perjadin->tgl_keberangkatan }}" name="berangkat_${numRows - 1}">
-                                <input type="hidden" value="{{ $perjadin->tgl_selesai }}" name="selesai_${numRows - 1}">`;
-                        }
-                        </script>
+        // Update jumlah mobilitas
+        document.getElementById('numMobilitas').value = numRows;
+    }
+    </script>
 
 
                     <script>
