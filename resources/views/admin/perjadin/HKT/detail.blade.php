@@ -126,7 +126,7 @@
                                 @foreach ($pengemudis as $pengemudi)
                                 <tr>
                                     <td>{{$pengemudi->nama_lengkap}}</td>
-                                    <td class="text-center">{{$pengemudi->nama_jabatan}}</td>
+                                    <td class="text-center">{{$pengemudi->status_pegawai}}</td>
                                 </tr>
                                 @endforeach
                             </table>

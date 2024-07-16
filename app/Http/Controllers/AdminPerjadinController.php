@@ -303,18 +303,21 @@ class AdminPerjadinController extends Controller
             ->join('pegawais', 'data_perjadinlangsungs.pegawai_id', '=', 'pegawais.id')
             ->select('pegawais.nama_lengkap', 'pegawais.pangkat', 'pegawais.golongan', 'data_perjadinlangsungs.status_pegawai')
             ->where('data_perjadinlangsungs.info_perjadinlangsung', $id)
+            ->where('data_perjadinlangsungs.status_pegawai', '!=', 'Supir')
             ->get();
         $pesertaNonPegawais = DB::table('data_perjadinlangsungs')
             ->join('non_pegawais', 'data_perjadinlangsungs.non_pegawai_id', '=', 'non_pegawais.id')
             ->select('non_pegawais.nama_lengkap', 'non_pegawais.pangkat', 'non_pegawais.golongan', 'data_perjadinlangsungs.status_pegawai')
             ->where('data_perjadinlangsungs.info_perjadinlangsung', $id)
+            ->where('data_perjadinlangsungs.status_pegawai', '!=', 'Supir')
             ->get();
         $pengemudi = DB::table('pegawais')
             ->join('jabatans', 'pegawais.jabatan_id', '=', 'jabatans.id')
             ->join('peminjaman_kendaraan_dinas', 'peminjaman_kendaraan_dinas.pegawai_id', '=', 'pegawais.id')
             ->join('info_perjadinlangsungs', 'peminjaman_kendaraan_dinas.info_perjadinlangsung', '=', 'info_perjadinlangsungs.id')
-            ->select('pegawais.id', 'pegawais.nama_lengkap', 'jabatans.nama_jabatan')
-            ->where('jabatans.nama_jabatan', 'Pengemudi')
+            ->join('data_perjadinlangsungs', 'info_perjadinlangsungs.id', '=', 'data_perjadinlangsungs.info_perjadinlangsung')
+            ->select('pegawais.id', 'pegawais.nama_lengkap', 'jabatans.nama_jabatan', 'data_perjadinlangsungs.status_pegawai')
+            ->where('data_perjadinlangsungs.status_pegawai', 'Supir')
             ->where('peminjaman_kendaraan_dinas.info_perjadinlangsung', $id)
             ->get();
 
