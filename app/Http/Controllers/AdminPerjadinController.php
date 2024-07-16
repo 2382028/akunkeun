@@ -129,12 +129,12 @@ class AdminPerjadinController extends Controller
 
         $pesertaPegawais = DB::table('data_perjadinlangsungs')
             ->join('pegawais', 'data_perjadinlangsungs.pegawai_id', '=', 'pegawais.id')
-            ->select('pegawais.nama_lengkap', 'pegawais.pangkat', 'pegawais.golongan', 'data_perjadinlangsungs.status_pegawai')
+            ->select('pegawais.id','pegawais.nama_lengkap', 'pegawais.pangkat', 'pegawais.golongan', 'data_perjadinlangsungs.status_pegawai')
             ->where('data_perjadinlangsungs.info_perjadinlangsung', $id)
             ->get();
         $pesertaNonPegawais = DB::table('data_perjadinlangsungs')
             ->join('non_pegawais', 'data_perjadinlangsungs.non_pegawai_id', '=', 'non_pegawais.id')
-            ->select('non_pegawais.nama_lengkap', 'non_pegawais.pangkat', 'non_pegawais.golongan', 'data_perjadinlangsungs.status_pegawai')
+            ->select('non_pegawais.id','non_pegawais.nama_lengkap', 'non_pegawais.pangkat', 'non_pegawais.golongan', 'data_perjadinlangsungs.status_pegawai')
             ->where('data_perjadinlangsungs.info_perjadinlangsung', $id)
             ->get();
         $pengemudi = DB::table('pegawais')
