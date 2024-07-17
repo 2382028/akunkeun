@@ -101,6 +101,9 @@ Route::get('/perjadin-bendahara/sppd/{id}', [AdminPerjadinController::class, 'Ce
 // POST
 Route::post('/cu_perjadinmobilitas', [AdminPerjadinController::class, 'store'])->middleware('auth:administrator');
 Route::post('/c_tambahmobilitas', [AdminPerjadinController::class, 'storeMobilitas'])->middleware('auth:administrator');
+Route::delete('/h_mobilitas/{id}', [AdminPerjadinController::class, 'deleteMobilitas']);
+
+
 Route::post('/cu_perjadin_keuangan', [AdminPerjadinController::class, 'storeKeuangan'])->middleware('auth:administrator');
 Route::post('/cu_perjadin_bendahara', [AdminPerjadinController::class, 'storeBendahara'])->middleware('auth:administrator');
 Route::post('/cu_perjadin_HKT', [AdminPerjadinController::class, 'storeSurtug'])->middleware('auth:administrator');
@@ -147,7 +150,7 @@ Route::post('/d_kendaraan/{id}', [AdminBMNController::class, 'destroyKendaraan']
 Route::post('/d_asset/{id}', [AdminBMNController::class, 'destroyAsset'])->middleware('auth:administrator');
 Route::post('/d_ruangan/{id}', [AdminBMNController::class, 'destroyRuangan'])->middleware('auth:administrator');
 
-// route BMN admin Transaksi 
+// route BMN admin Transaksi
 // get
 Route::get('/peminjaman_asset/{status}', [AdminBMNController::class, 'indexPeminjaman'])->name('peminjaman_asset')->middleware('auth:administrator');
 Route::get('/service/asset/{id}', [AdminBMNController::class, 'indexServiceAsset'])->middleware('auth:administrator');

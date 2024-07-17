@@ -184,6 +184,17 @@ class AdminPerjadinController extends Controller
         ]);
     }
 
+    public function deleteMobilitas($id)
+{
+    try {
+        DB::table('peminjaman_kendaraan_dinas')->where('id', $id)->delete();
+        return response()->json(['success' => true]);
+    } catch (\Exception $e) {
+        return response()->json(['success' => false, 'message' => $e->getMessage()]);
+    }
+}
+
+
     public function detail_perjadin_BMN($id)
     {
 
@@ -496,8 +507,10 @@ class AdminPerjadinController extends Controller
 
     public function storeMobilitas(Request $request)
     {
+        $needsDriver = $request->needs_driver ? 1 : 0;
         db::table('peminjaman_kendaraan_dinas')->insertOrIgnore([
             'info_perjadinlangsung' => $request->idPerjadin,
+            'needs_driver' => $needsDriver,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
