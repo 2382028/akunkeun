@@ -165,7 +165,7 @@
                         <th class="th-md">Sebagai</th>
                       </tr>
                     </thead>
-                    @foreach ($pesertaPegawais as $pesertaPegawai)
+                    @foreach ($pesertaPegawaiss as $pesertaPegawai)
                     <tr>
                       <td class="text-center">{{$pesertaPegawai->id}}</td>
                       <td>{{$pesertaPegawai->nama_lengkap}}</td>
@@ -186,7 +186,8 @@
               </div>
 
               <div class="col-md-12 mb-3">
-                @if($perjadin->is_acceptKeu == 'verifikasi-2' && $perjadin->is_acceptBend == 'approval-2')
+                <!-- sementara gini dulu yang ini -->
+                @if($perjadin->is_acceptKeu == 'verifikasi')
                 <div class="d-flex justify-content-between">
                   <h5 class="fw-bold">Informasi Peserta</h5>
                 </div>
@@ -235,7 +236,7 @@
                             <option value="{{$sbm->id}}" selected>[{{$sbm->kode_sbm}} | {{$sbm->satuan}}] {{$sbm->uraian}}</option>
                             @endif
                             <option value="{{$sbm->id}}" data-label="{{$sbm->biaya}}">[{{$sbm->kode_sbm}} | {{$sbm->satuan}}] {{$sbm->uraian}}</option>
-                            @endforeach
+                            @endforeach   
                           </select>
                         </td>
                         <td style="min-width: 200px">
@@ -302,7 +303,7 @@
                           <input type="number" class="result form-control" name="totalNon_{{$numnonpegawai}}" value="{{$pesertaNonPegawai->jumlah_harga}}">
                         </td>
                         <td style="min-width: 200px">
-                          @if (($perjadin->is_acceptKeu== 'verifikasi-1'))
+                          @if (($perjadin->is_acceptKeu == 'verifikasi-1'))
                           <input type="date" class="result form-control" name="tglbayarnon_{{$numnonpegawai}}" value="{{$pesertaNonPegawai->tgl_bayar}}" readonly>
                           @endif
                         </td>
@@ -405,7 +406,7 @@
           </div>
           @endif
 
-          @if (($perjadin->is_acceptKeu == 'verifikasi-2') || ($perjadin->is_acceptKeu == 'revisi') || ($perjadin->is_acceptKeu == 'selesai'))
+          @if (($perjadin->is_acceptBend == 'approval-2') || ($perjadin->is_acceptKeu == 'revisi') || ($perjadin->is_acceptKeu == 'selesai'))
           <div class="col-md-12 mb-3">
             <div class="table-responsive">
               <div class="d-flex justify-content-between">
@@ -547,7 +548,7 @@
               <label for="peserta" class="form-label">Nama Peserta</label>
               <select class="form-select mb-2" aria-label="Default select example" name="data_perjadinlangsungs">
                 @foreach($pesertaPegawais as $pesertaPegawai)
-                <option value="{{$pesertaPegawai->idPeserta}}" selected>{{$pesertaPegawai->nama_lengkap}}</option>
+                <option value="{{$pesertaPegawai->idData}}" selected>{{$pesertaPegawai->nama_lengkap}}</option>
                 @endforeach
               </select>
               <label for="uraian" class="form-label">Nama Fasilitas <span class="text-secondary small"></span><span class="text-danger">*</span></label>
