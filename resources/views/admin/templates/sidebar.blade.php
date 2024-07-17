@@ -29,7 +29,6 @@
   <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
   <script src="https://unpkg.com/file-saver"></script>
 
-
   <title> | Aplikasi Keuangan dan Urusan Kegiatan</title>
 </head>
 

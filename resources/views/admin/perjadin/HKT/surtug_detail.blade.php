@@ -152,7 +152,7 @@
         <!-- Template 6: Tanda Tangan -->
         <table width="500">
             <br>
-                <td align="left"><?php echo date('j F Y'); ?></td>
+                <td align="left">{!! \Carbon\Carbon::now()->translatedFormat('j F Y') !!}</td>
             <tr>   
                 <td width="310"></td>
                 <td align="left">Kepala Lembaga Layanan Pendidikan Tinggi Wilayah IV,<br><br><br><br><br><br>M. Samsuri<br>NIP 197901142003121001</td>
