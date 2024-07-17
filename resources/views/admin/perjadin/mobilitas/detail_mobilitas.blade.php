@@ -71,6 +71,28 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-12 mb-3" id="divInformasiPeserta">
+                                <h5 class="fw-bold">Informasi Pengemudi</h5>
+                                <div class="table-responsive">
+                                    <table id="example" class="table table-bordered" style="width: 100%">
+                                        <thead>
+                                            <tr class="text-center small">
+                                                <th class="th-md">Nama Lengkap</th>
+                                                <th class="th-md">Sebagai</th>
+                                                <th class="th-md">Mobil</th>
+                                            </tr>
+                                        </thead>
+                                        @foreach ($pengemudis as $pengemudi)
+                                        <tr>
+                                            <td>{{$pengemudi->nama_lengkap}}</td>
+                                            <td class="text-center">{{$pengemudi->status_pegawai}}</td>
+                                            <td class="text-center">{{$pengemudi->merek}} [{{$pengemudi->no_polisi}}]</td>
+                                        </tr>
+                                        @endforeach
+                                    </table>
+                                </div>
+                            </div>
+
                             <div class="col-md-12 mb-3">
                                 <div class="d-grid gap-2 d-md-flex justify-content-center">
                                     <a href="{{url('/perjadin-mobilitas/' . 'pengajuan')}}" class="btn btn-dark">Kembali</a>

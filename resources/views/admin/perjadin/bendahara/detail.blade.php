@@ -37,7 +37,6 @@
               <br>
             </div>
 
-
             <form action="{{url('/cu_perjadin_bendahara')}}" method="post" id="myForm">
               @csrf
               <input type="hidden" name="statusPerjadin" value="{{$perjadin->is_acceptBend}}">
@@ -160,6 +159,7 @@
                   <table id="example" class="table table-bordered" style="width: 100%">
                     <thead>
                       <tr class="text-center small">
+                        <th class="th-sm">ID</th>
                         <th class="th-md">Nama Lengkap</th>
                         <th class="th-md">Pangkat/Golongan</th>
                         <th class="th-md">Sebagai</th>
@@ -167,6 +167,7 @@
                     </thead>
                     @foreach ($pesertaPegawais as $pesertaPegawai)
                     <tr>
+                      <td class="text-center">{{$pesertaPegawai->id}}</td>
                       <td>{{$pesertaPegawai->nama_lengkap}}</td>
                       <td>{{$pesertaPegawai->pangkat}}-{{$pesertaPegawai->golongan}}</td>
                       <td class="text-center">{{$pesertaPegawai->status_pegawai}}</td>
@@ -174,6 +175,7 @@
                     @endforeach
                     @foreach ($pesertaNonPegawais as $pesertaNonPegawai)
                     <tr>
+                      <td class="text-center">{{$pesertaNonPegawai->id}}</td>
                       <td>{{$pesertaNonPegawai->nama_lengkap}}</td>
                       <td>{{$pesertaNonPegawai->pangkat}}-{{$pesertaNonPegawai->golongan}}</td>
                       <td>{{$pesertaNonPegawai->status_pegawai}}</td>
@@ -184,7 +186,7 @@
               </div>
 
               <div class="col-md-12 mb-3">
-                @if($perjadin->is_acceptBend == 'approval-3')
+                @if($perjadin->is_acceptKeu == 'verifikasi-2' && $perjadin->is_acceptBend == 'approval-2')
                 <div class="d-flex justify-content-between">
                   <h5 class="fw-bold">Informasi Peserta</h5>
                 </div>
@@ -234,7 +236,6 @@
                             @endif
                             <option value="{{$sbm->id}}" data-label="{{$sbm->biaya}}">[{{$sbm->kode_sbm}} | {{$sbm->satuan}}] {{$sbm->uraian}}</option>
                             @endforeach
-                                   
                           </select>
                         </td>
                         <td style="min-width: 200px">
@@ -345,6 +346,7 @@
                 <thead>
                   <tr class="text-center small">
                     <th>No</th>
+                    <th>Nama Peserta</th>
                     <th>Nama Fasilitas</th>
                     <th>Jumlah</th>
                     <th>Detail</th>
@@ -362,13 +364,14 @@
                   @foreach ($kebutuhans as $kebutuhan)
                   <tr>
                     <td class='text-center' style="min-width: 50px">{{$loop->iteration}} <input type="hidden" name="idKebutuhan_{{$numkebutuhan}}" value="{{$kebutuhan->idKebutuhan}}"></td>
+                    <td class="text-center" style="min-width: 150px;">{{$kebutuhan->nama_lengkap}}</td>
                     <td style="min-width: 150px">{{$kebutuhan->nama}}</td>
                     <td class='text-center' style="min-width: 50px">{{$kebutuhan->jumlah_frekuensi}}</td>
                     <td class='text-center' style="min-width: 100px">{{$kebutuhan->satuan}}</td>
                     <td class='text-center' style="min-width: 100px">{{$kebutuhan->tipe_pendanaan}}</td>
                     <td class='text-center' style="min-width: 100px">{{$kebutuhan->ket}}</td>
                     <td>
-                      <select class="js-example-basic-single-3 form-select" aria-label="Default select example" style="min-width: 300px" name="akunKebutuhan_{{$numkebutuhan}}">
+                      <select class="js-example-basic-single-3 form-select akun-dropdown" aria-label="Default select example" style="min-width: 300px" name="akunKebutuhan_{{$numkebutuhan}}">
                         @foreach ($akuns as $akun)
                         @if ($kebutuhan->akun_x_rkakl == $akun->idAkun)
                         <option value="{{$akun->idAkun}}" selected>[{{$akun->kode_satker}}.{{$akun->kode_program}}.{{$akun->kode_kegiatan}}.{{$akun->kode_output}}.{{$akun->kode_sub_output}}.{{$akun->kode_komponen}}.{{$akun->kode_sub_kegiatan}}.{{$akun->kode_akun}}] {{$akun->nama_sub_kegiatan}} - {{$akun->uraian}}</option>
@@ -402,7 +405,7 @@
           </div>
           @endif
 
-          @if (($perjadin->is_acceptBend == 'approval-2') || ($perjadin->is_acceptKeu == 'revisi') || ($perjadin->is_acceptKeu == 'selesai'))
+          @if (($perjadin->is_acceptKeu == 'verifikasi-2') || ($perjadin->is_acceptKeu == 'revisi') || ($perjadin->is_acceptKeu == 'selesai'))
           <div class="col-md-12 mb-3">
             <div class="table-responsive">
               <div class="d-flex justify-content-between">
@@ -541,6 +544,12 @@
           <input id="" type="hidden" value="{{ $perjadin->id }}" name="info_perjadinlangsung">
           <div class="row">
             <div class="col-md-12 mb-3">
+              <label for="peserta" class="form-label">Nama Peserta</label>
+              <select class="form-select mb-2" aria-label="Default select example" name="data_perjadinlangsungs">
+                @foreach($pesertaPegawais as $pesertaPegawai)
+                <option value="{{$pesertaPegawai->idPeserta}}" selected>{{$pesertaPegawai->nama_lengkap}}</option>
+                @endforeach
+              </select>
               <label for="uraian" class="form-label">Nama Fasilitas <span class="text-secondary small"></span><span class="text-danger">*</span></label>
               <select class="form-select" id="uraian" name="uraian" required>
                 <option value="" disabled selected>Pilih Jenis Fasilitas</option>
@@ -569,4 +578,22 @@
 </div>
 <!-- Akhir Dashboard - Kegiatan - Keuangan -->
 <script src="{{asset('public/assets/js/pdfselected.js')}}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+   $(document).ready(function() {
+    // Event listener for the first dropdown
+    $('select[name="akunKebutuhan_0"]').on('change', function() {
+      // Get the selected value
+      var selectedValue = $(this).val();
+      // Get the selected text
+      var selectedText = $(this).find("option:selected").text();
+
+      // Iterate over all other dropdowns and set the selected value
+      $('select[name^="akunKebutuhan_"]').not(this).each(function() {
+        $(this).val(selectedValue).trigger('change');
+        $(this).find("option:selected").text(selectedText);
+      });
+    });
+  });
+</script>
 @endsection
