@@ -266,19 +266,19 @@ class AdminPerjadinController extends Controller
 
     public function detail_perjadin_bendahara($id)
     {
-        $pesertaPegawais = DB::table('data_perjadinlangsungs')
-        ->join('pegawais', 'data_perjadinlangsungs.pegawai_id', '=', 'pegawais.id')
-        ->select('pegawais.nama_lengkap', 'pegawais.pangkat', 'pegawais.golongan', 'data_perjadinlangsungs.status_pegawai', 'pegawais.NIP_NIK', 'pegawais.id', 'pegawais.nama_lengkap','data_perjadinlangsungs.id as idPeserta', 'data_perjadinlangsungs.id as idData')
-        ->where('data_perjadinlangsungs.info_perjadinlangsung', $id)
-        ->where(function($query) {
-            $query->where('data_perjadinlangsungs.status_pegawai', '!=', 'Supir')
-                  ->orWhere(function($query) {
-                      $query->where('data_perjadinlangsungs.status_pegawai', '=', 'Supir')
-                            ->whereNotExists(function($query) {
+        $pesertaPegawaiss = DB::table('data_perjadinlangsungs')
+            ->join('pegawais', 'data_perjadinlangsungs.pegawai_id', '=', 'pegawais.id')
+            ->select('pegawais.nama_lengkap', 'pegawais.pangkat', 'pegawais.golongan', 'data_perjadinlangsungs.status_pegawai', 'pegawais.NIP_NIK', 'pegawais.id', 'pegawais.nama_lengkap', 'data_perjadinlangsungs.id as idPeserta')
+            ->where('data_perjadinlangsungs.info_perjadinlangsung', $id)
+            ->where(function ($query) {
+                $query->where('data_perjadinlangsungs.status_pegawai', '!=', 'Supir')
+                    ->orWhere(function ($query) {
+                        $query->where('data_perjadinlangsungs.status_pegawai', '=', 'Supir')
+                            ->whereNotExists(function ($query) {
                                 $query->select(DB::raw(1))
-                                      ->from('data_perjadinlangsungs as dp2')
-                                      ->whereColumn('dp2.pegawai_id', 'data_perjadinlangsungs.pegawai_id')
-                                      ->where('dp2.status_pegawai', '!=', 'Supir');
+                                    ->from('data_perjadinlangsungs as dp2')
+                                    ->whereColumn('dp2.pegawai_id', 'data_perjadinlangsungs.pegawai_id')
+                                    ->where('dp2.status_pegawai', '!=', 'Supir');
                             });
                   });
         })
@@ -287,7 +287,7 @@ class AdminPerjadinController extends Controller
         $pesertaNonPegawais = DB::table('data_perjadinlangsungs')
             ->join('non_pegawais', 'data_perjadinlangsungs.non_pegawai_id', '=', 'non_pegawais.id')
             ->join('keuangan_perjadinlangsungs', 'data_perjadinlangsungs.id', '=', 'keuangan_perjadinlangsungs.data_perjadinlangsungs')
-            ->select('keuangan_perjadinlangsungs.id  as idKeuangan','non_pegawais.id', 'non_pegawais.nama_lengkap', 'non_pegawais.pangkat', 'non_pegawais.golongan', 'data_perjadinlangsungs.status_pegawai', 'data_perjadinlangsungs.id as idData', 'keuangan_perjadinlangsungs.akun_x_rkakl', 'keuangan_perjadinlangsungs.ref_sbm', 'keuangan_perjadinlangsungs.uang_harian', 'keuangan_perjadinlangsungs.persen_pajak', 'keuangan_perjadinlangsungs.jumlah_harga', 'keuangan_perjadinlangsungs.status', 'keuangan_perjadinlangsungs.pph22', 'keuangan_perjadinlangsungs.pph23', 'keuangan_perjadinlangsungs.tgl_bayar', 'keuangan_perjadinlangsungs.ppn')
+            ->select('keuangan_perjadinlangsungs.id  as idKeuangan', 'non_pegawais.id', 'non_pegawais.nama_lengkap', 'non_pegawais.pangkat', 'non_pegawais.golongan', 'data_perjadinlangsungs.status_pegawai', 'data_perjadinlangsungs.id as idData', 'keuangan_perjadinlangsungs.akun_x_rkakl', 'keuangan_perjadinlangsungs.ref_sbm', 'keuangan_perjadinlangsungs.uang_harian', 'keuangan_perjadinlangsungs.persen_pajak', 'keuangan_perjadinlangsungs.jumlah_harga', 'keuangan_perjadinlangsungs.status', 'keuangan_perjadinlangsungs.pph22', 'keuangan_perjadinlangsungs.pph23', 'keuangan_perjadinlangsungs.tgl_bayar', 'keuangan_perjadinlangsungs.ppn')
             ->where('data_perjadinlangsungs.info_perjadinlangsung', $id)
             ->get();
 
@@ -295,7 +295,7 @@ class AdminPerjadinController extends Controller
             ->join('keuangan_perjadinlangsungs', 'kebutuhans.id', '=', 'keuangan_perjadinlangsungs.kebutuhan_id')
             ->join('data_perjadinlangsungs', 'keuangan_perjadinlangsungs.data_perjadinlangsungs', '=', 'data_perjadinlangsungs.id')
             ->join('pegawais', 'data_perjadinlangsungs.pegawai_id', '=', 'pegawais.id')
-            ->select('kebutuhans.id as idKebutuhan', 'pegawais.nama_lengkap','kebutuhans.nama', 'kebutuhans.jumlah_frekuensi', 'kebutuhans.satuan', 'kebutuhans.tipe_pendanaan', 'kebutuhans.ket', 'kebutuhans.status', 'keuangan_perjadinlangsungs.kebutuhan_id as idKeuangan', 'keuangan_perjadinlangsungs.info_perjadinlangsung', 'keuangan_perjadinlangsungs.uang_harian', 'keuangan_perjadinlangsungs.persen_pajak', 'keuangan_perjadinlangsungs.jumlah_harga', 'keuangan_perjadinlangsungs.akun_x_rkakl', 'keuangan_perjadinlangsungs.ref_sbm', 'keuangan_perjadinlangsungs.status as statusPembayaran', 'keuangan_perjadinlangsungs.pph22', 'keuangan_perjadinlangsungs.pph23', 'keuangan_perjadinlangsungs.tgl_bayar', 'keuangan_perjadinlangsungs.ppn')
+            ->select('kebutuhans.id as idKebutuhan', 'pegawais.nama_lengkap', 'kebutuhans.nama', 'kebutuhans.jumlah_frekuensi', 'kebutuhans.satuan', 'kebutuhans.tipe_pendanaan', 'kebutuhans.ket', 'kebutuhans.status', 'keuangan_perjadinlangsungs.kebutuhan_id as idKeuangan', 'keuangan_perjadinlangsungs.info_perjadinlangsung', 'keuangan_perjadinlangsungs.uang_harian', 'keuangan_perjadinlangsungs.persen_pajak', 'keuangan_perjadinlangsungs.jumlah_harga', 'keuangan_perjadinlangsungs.akun_x_rkakl', 'keuangan_perjadinlangsungs.ref_sbm', 'keuangan_perjadinlangsungs.status as statusPembayaran', 'keuangan_perjadinlangsungs.pph22', 'keuangan_perjadinlangsungs.pph23', 'keuangan_perjadinlangsungs.tgl_bayar', 'keuangan_perjadinlangsungs.ppn')
             ->where('keuangan_perjadinlangsungs.info_perjadinlangsung', $id)
             ->get();
 
@@ -320,6 +320,7 @@ class AdminPerjadinController extends Controller
             'perjadin' => Info_perjadinlangsung::find($id),
             'pesertaPegawais' => $pesertaPegawais,
             'pesertaNonPegawais' => $pesertaNonPegawais,
+            'pesertaPegawaiss' => $pesertaPegawaiss,
             'kebutuhans' => $kebutuhans,
             "sbms" => Ref_sbm::all(),
             'akuns' => $akuns,
