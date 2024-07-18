@@ -283,7 +283,7 @@ class AdminPerjadinController extends Controller
                   });
         })
         ->get();
-    
+
         $pesertaNonPegawais = DB::table('data_perjadinlangsungs')
             ->join('non_pegawais', 'data_perjadinlangsungs.non_pegawai_id', '=', 'non_pegawais.id')
             ->join('keuangan_perjadinlangsungs', 'data_perjadinlangsungs.id', '=', 'keuangan_perjadinlangsungs.data_perjadinlangsungs')
@@ -536,10 +536,9 @@ class AdminPerjadinController extends Controller
 
     public function storeMobilitas(Request $request)
     {
-        $needsDriver = $request->needs_driver ? 1 : 0;
         db::table('peminjaman_kendaraan_dinas')->insertOrIgnore([
             'info_perjadinlangsung' => $request->idPerjadin,
-            'needs_driver' => $needsDriver,
+            'status' => 'pengajuan',
             'created_at' => now(),
             'updated_at' => now(),
         ]);

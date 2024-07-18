@@ -143,200 +143,145 @@ use Carbon\Carbon;
                             <form action="{{url('/c_tambahmobilitas')}}" method="post">
                                 @csrf
                                 <input type="hidden" name="idPerjadin" value="{{$perjadin->id}}">
-                                <h5 class="fw-bold">Informasi Peminjaman
-                                    <button type="button" id="tambahMobilitasButton" class="btn btn-primary">+ Tambah Fasilitas</button>
-                                </h5>
+                                <h5 class="fw-bold">Informasi Peminjaman <button type="submit" class="btn btn-primary">+ Tambah Mobilitas</button></h5>
                             </form>
                             <div class="table-responsive">
                                 <form action="{{url('/cu_perjadinmobilitas')}}" method="post">
                                     @csrf
                                     <input type="hidden" name="idPerjadin" value="{{$perjadin->id}}">
                                     <input type="hidden" name="perjadinStatus" value="{{$perjadin->is_acceptBMN}}">
-                                    <input type="hidden" id="needsDriverInput" name="needsDriver" value="0">
 
-                                    <table id="tableMobilitas" class="table table-bordered" style="width: 100%">
+                                    <table id="example" class="table table-bordered" style="width: 100%">
                                         <thead>
                                             <tr class="text-center small">
                                                 <th class="th-sm">No</th>
                                                 <th class="th-md">Pengemudi</th>
-                                                <th class="th-md">Mobil</th>`
+                                                <th class="th-md">Mobil</th>
                                                 <th class="th-lg-percent">Aksi</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            @php
-                                            $nummobilitas = 0;
-                                            @endphp
-                                            @foreach ($mobilitass as $mobilitas)
-                                            <tr id="row_{{$mobilitas->id}}">
-                                                <td>{{$loop->iteration}} <input type="hidden" name="idMobilitas_{{$loop->iteration - 1}}" value="{{$mobilitas->id}}"></td>
-                                                <td>
-                                                    <select class="form-select" aria-label="Default select example" name="supir_{{$loop->iteration - 1}}">
-                                                        @if($mobilitas->needs_driver)
-                                                            @foreach($pengemudis as $pengemudi)
-                                                                <option value="{{$pengemudi->id}}" @if($pengemudi->id == $mobilitas->pegawai_id) selected @endif>{{$pengemudi->nama_lengkap}}</option>
-                                                            @endforeach
-                                                        @else
-                                                            @foreach($pesertaPegawais as $pesertaPegawai)
-                                                                <option value="{{$pesertaPegawai->id}}" @if($pesertaPegawai->id == $mobilitas->pegawai_id) selected @endif>{{$pesertaPegawai->nama_lengkap}}</option>
-                                                            @endforeach
-                                                            @foreach($pesertaNonPegawais as $pesertaNonPegawai)
-                                                                <option value="{{$pesertaNonPegawai->id}}" @if($pesertaNonPegawai->id == $mobilitas->pegawai_id) selected @endif>{{$pesertaNonPegawai->nama_lengkap}}</option>
-                                                            @endforeach
-                                                        @endif
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                    <select class="form-select" aria-label="Default select example" name="mobil_{{$loop->iteration - 1}}">
-                                                        @foreach($kendaraans as $kendaraan)
-                                                            <option value="{{$kendaraan->id}}" @if($kendaraan->id == $mobilitas->kendaraan) selected @endif>{{$kendaraan->merek}} [{{$kendaraan->no_polisi}}]</option>
-                                                        @endforeach
-                                                    </select>
-                                                </td>
-                                                <input type="hidden" name="status_{{$loop->iteration - 1}}" value="proses">
-                                                <input type="hidden" value="{{ $perjadin->tgl_keberangkatan }}" name="berangkat_{{$loop->iteration - 1}}">
-                                                <input type="hidden" value="{{ $perjadin->tgl_selesai }}" name="selesai_{{$loop->iteration - 1}}">
-                                                <td>
-                                                    <span>
-                                                        <button class="text-decoration-none btn btn-danger btn-sm text-white delete-button" data-id="{{ $mobilitas->id }}"><i class="fa-solid fa-trash"></i></button>
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                            <input type="hidden" name="numMobilitas" value="{{$mobilitass->count()}}">
+                                        @php
+                                        $nummobilitas = 0;
+                                        @endphp
+                                        @foreach ($mobilitass as $mobilitas)
+                                        <tr>
+                                            <td>{{$loop->iteration}} <input type="hidden" name="idMobilitas_{{$nummobilitas}}" value="{{$mobilitas->id}}"></td>
+                                            <td>
+                                                <select class="form-select" aria-label="Default select example" name="supir_{{$nummobilitas}}">
+                                                    @foreach($pesertaPegawais as $pesertaPegawai)
+                                                    <option value="{{$pesertaPegawai->id}}" selected>{{$pesertaPegawai->nama_lengkap}}</option>
+                                                    @endforeach
+                                                    @foreach($pesertaNonPegawais as $pesertaNonPegawai)
+                                                    <option value="{{$pesertaNonPegawai->id}}" selected>{{$pesertaNonPegawai->nama_lengkap}}</option>
 
-                                        </tbody>
+                                                    @endforeach
+                                                    @foreach ($pengemudis as $pengemudi)
+                                                    @if ($pengemudi->id == $mobilitas->pegawai_id)
+                                                    <option value="{{$pengemudi->id}}" selected>{{$pengemudi->nama_lengkap}}</option>
+                                                    @endif
+                                                    <option value="{{$pengemudi->id}}">{{$pengemudi->nama_lengkap}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select class="form-select" aria-label="Default select example" name="mobil_{{$nummobilitas}}">
+                                                    @foreach ($kendaraans as $kendaraan)
+                                                    @if ($kendaraan->id == $mobilitas->kendaraan)
+                                                    <option value="{{$kendaraan->id}}" selected>{{$kendaraan->merek}} [{{$kendaraan->no_polisi}}]</option>
+                                                    @endif
+                                                    <option value="{{$kendaraan->id}}" selected>{{$kendaraan->merek}} [{{$kendaraan->no_polisi}}]</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    <button class="text-decoration-none btn btn-danger btn-sm text-white delete-button" data-id="{{ $mobilitas->id }}"><i class="fa-solid fa-trash"></i></button>
+                                                </span>
+                                            </td>
+                                            <input type="hidden" name="status_{{$nummobilitas}}" value="proses">
+                                            <input id="" type="hidden" value="{{ $perjadin->tgl_keberangkatan }}" name="berangkat_{{$nummobilitas}}">
+                                            <input id="" type="hidden" value="{{ $perjadin->tgl_selesai }}" name="selesai_{{$nummobilitas}}">
+                                        </tr>
+                                        @php
+                                        $nummobilitas++;
+                                        @endphp
+                                        @endforeach
+                                        <input type="hidden" name="numMobilitas" value="{{$nummobilitas}}">
                                     </table>
-
-                                <div class="col-md-12 mb-3">
-                                    <div class="d-grid gap-2 d-md-flex justify-content-center">
-                                        <a href="{{url('/perjadin-mobilitas/' . 'pengajuan')}}" class="btn btn-dark">Batal</a>
-                                        <button class="btn btn-success" type="submit" name="action" value="proses">Proses</button>
-                                    </div>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <div class="d-grid gap-2 d-md-flex justify-content-center">
+                                    <a href="{{url('/perjadin-mobilitas/' . 'pengajuan')}}" class="btn btn-dark">Batal</a>
+                                    <button class="btn btn-success" type="submit" name="action" value="proses">Proses</button>
                                 </div>
+                            </div>
                             </form>
                         </div>
 
-                        <!-- Modal Perlu Pengemudi -->
-                        <div class="modal fade" id="tambahMobilitasModal" tabindex="-1" aria-labelledby="tambahMobilitasModalLabel" aria-hidden="true">
-                            <div class="modal-dialog ">
+                        <!-- Modal Tolak Mobilitas -->
+                        <div class="modal fade" id="tolak_mobilitas" tabindex="-1" aria-labelledby="tolak_mobilitasLabel" aria-hidden="true">
+                            <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="tambahMobilitasModalLabel">Apakah memerlukan Pengemudi?</h5>
+                                        <h1 class="modal-title fs-5" id="tolak_mobilitasLabel">Tolak Surat Tugas</h1>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <button type="button" class="btn btn-primary" id="butuhPengemudi">Ya</button>
-                                        <button type="button" class="btn btn-danger text-white" id="tidakButuhPengemudi">Tidak</button>
+                                        <form action="{{url('/cu_perjadinmobilitas')}}" method="post">
+                                            @csrf
+                                            <input type="hidden" name="idPerjadin" value="{{ isset($perjadin) ? $perjadin->id : '' }}">
+                                            <input type="hidden" name="perjadinStatus" value="{{ isset($perjadin) ? $perjadin->is_acceptBMN : '' }}">
+                                            <div class="row">
+                                                <div class="col-md-12 mb-3">
+                                                    <label for="uraian" class="form-label">Masukan Alasan<span class="text-secondary small"></span><span class="text-danger">*</span></label>
+                                                    <textarea id="tolak" name="alasan" class="form-control" placeholder="Alasan Penolakan" required=""></textarea>
+                                                </div>
+                                            </div>
                                     </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger text-white" data-bs-dismiss="modal">Batal</button>
+                                        <button type="submit" class="btn btn-primary" name="action" value="tolak">Simpan</button>
+                                    </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
 
-                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                         <script>
-
-                                function deleteMobilitas(id) {
-                                    if (confirm('Hapus Data ?')) {
-                                        $.ajax({
-                                            url: `/h_mobilitas/${id}`,
-                                            method: "DELETE",
-                                            data: {
-                                                _token: '{{ csrf_token() }}'
-                                            },
-                                            success: function(response) {
-                                                if (response.success) {
-                                                    $(`#row_${id}`).remove();
-                                                } else {
-                                                    alert('Gagal menghapus data.');
-                                                }
-                                            }
-                                        });
-                                    }
-                                }
-
-                                // Tambahkan event listener pada tombol delete
-                                $(document).on('click', '.delete-button', function(event) {
-                                    event.preventDefault();
-                                    event.stopPropagation();
-                                    var id = $(this).data('id');
-                                    deleteMobilitas(id);
-                                });
-
-                            $(document).ready(function() {
-                                $('#tambahMobilitasButton').click(function() {
-                                    $('#tambahMobilitasModal').modal('show');
-                                });
-
-                                $('#butuhPengemudi').click(function() {
-                                    addMobilitasRow(1);
-                                    $('#tambahMobilitasModal').modal('hide');
-                                });
-
-                                $('#tidakButuhPengemudi').click(function() {
-                                    addMobilitasRow(0);
-                                    $('#tambahMobilitasModal').modal('hide');
-                                });
-
-
-
-
-                                function addMobilitasRow(needsDriver) {
+                            function deleteMobilitas(id) {
+                                if (confirm('Hapus Data ?')) {
                                     $.ajax({
-                                        url: "{{ url('/c_tambahmobilitas') }}",
-                                        method: "POST",
+                                        url: `/h_mobilitas/${id}`,
+                                        method: "DELETE",
                                         data: {
-                                            _token: '{{ csrf_token() }}',
-                                            idPerjadin: '{{ $perjadin->id }}',
-                                            needs_driver: needsDriver
+                                            _token: '{{ csrf_token() }}'
                                         },
                                         success: function(response) {
-                                            let rowCount = $('#tableMobilitas tbody tr').length;
-                                            let newRow = `<tr id="row_${response.id}">
-                                                            <td>${rowCount + 1} <input type="hidden" name="idMobilitas_${rowCount}" value="${response.id}"></td>
-                                                            <td>
-                                                                <select class="form-select" aria-label="Default select example" name="supir_${rowCount}">`;
-
-                                            if (needsDriver) {
-                                                @foreach($pengemudis as $pengemudi)
-                                                    newRow += `<option value="{{ $pengemudi->id }}">{{ $pengemudi->nama_lengkap }}</option>`;
-                                                @endforeach
+                                            if (response.success) {
+                                                $(`#row_${id}`).remove();
                                             } else {
-                                                @foreach($pesertaPegawais as $pesertaPegawai)
-                                                    newRow += `<option value="{{ $pesertaPegawai->id }}">{{ $pesertaPegawai->nama_lengkap }}</option>`;
-                                                @endforeach
-                                                @foreach($pesertaNonPegawais as $pesertaNonPegawai)
-                                                    newRow += `<option value="{{ $pesertaNonPegawai->id }}">{{ $pesertaNonPegawai->nama_lengkap }}</option>`;
-                                                @endforeach
+                                                alert('Gagal menghapus data.');
                                             }
-
-                                            newRow += `</select>
-                                                        </td>
-                                                        <td>
-                                                            <select class="form-select" aria-label="Default select example" name="mobil_${rowCount}">
-                                                                @foreach($kendaraans as $kendaraan)
-                                                                    <option value="{{ $kendaraan->id }}">{{ $kendaraan->merek }} [{{ $kendaraan->no_polisi }}]</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </td>
-                                                        <input type="hidden" name="status_${rowCount}" value="proses">
-                                                        <input type="hidden" value="{{ $perjadin->tgl_keberangkatan }}" name="berangkat_${rowCount}">
-                                                        <input type="hidden" value="{{ $perjadin->tgl_selesai }}" name="selesai_${rowCount}">
-                                                        <td>
-                                                            <span>
-                                                                <button class="text-decoration-none btn btn-danger btn-sm text-white delete-button" data-id="{{ $mobilitas->id }}"><i class="fa-solid fa-trash"></i></button>
-                                                            </span>
-                                                        </td>
-                                                    </tr>`;
-
-                                            $('#tableMobilitas tbody').append(newRow);
-                                            $('input[name="numMobilitas"]').val(rowCount + 1);
+                                        },
+                                        error: function(error) {
+                                            console.log(error);  // Debug log
+                                            alert('Terjadi kesalahan saat menghapus data.');
                                         }
                                     });
                                 }
+                            }
+
+                            // Tambahkan event listener pada tombol delete
+                            $(document).on('click', '.delete-button', function(event) {
+                                event.preventDefault();
+                                event.stopPropagation();
+                                var id = $(this).data('id');
+                                console.log('Delete button clicked, id:', id);  // Debug log
+                                deleteMobilitas(id);
+                                return false; // Tambahkan ini untuk memastikan tidak ada event bubbling
                             });
 
-                        </script>
+                            </script>
 
 
                         <script>

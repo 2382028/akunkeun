@@ -243,7 +243,6 @@ class PerjadinController extends Controller
                 'info_perjadinlangsung' => $perjadin, //menerima id info terakhir
                 'kendaraan' => $request->fasilitas_perjadinn,
                 'status' => 'pengajuan',
-                'needs_driver' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
