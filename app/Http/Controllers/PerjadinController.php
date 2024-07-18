@@ -115,6 +115,18 @@ class PerjadinController extends Controller
             ->select('info_perjadinlangsungs.id as idPerjadin', 'info_perjadinlangsungs.nama_kegiatan', 'info_perjadinlangsungs.tgl_keberangkatan', 'info_perjadinlangsungs.status_pengajuan', 'info_perjadinlangsungs.status_pengajuan_detail', 'data_perjadinlangsungs.pegawai_id', 'pegawais.id')
             ->where('pegawais.id', auth('pegawai')->user()->id)
             ->where('info_perjadinlangsungs.status_pengajuan', $status)
+            ->where(function ($query) {
+                $query->where('data_perjadinlangsungs.status_pegawai', '!=', 'Supir')
+                    ->orWhere(function ($query) {
+                        $query->where('data_perjadinlangsungs.status_pegawai', '=', 'Supir')
+                            ->whereNotExists(function ($query) {
+                                $query->select(DB::raw(1))
+                                    ->from('data_perjadinlangsungs as dp2')
+                                    ->whereColumn('dp2.pegawai_id', 'data_perjadinlangsungs.pegawai_id')
+                                    ->where('dp2.status_pegawai', '!=', 'Supir');
+                            });
+                    });
+            })
             ->get();
 
         return view(
@@ -134,6 +146,18 @@ class PerjadinController extends Controller
             ->join('pegawais', 'pegawai_id', '=', 'pegawais.id')
             ->select('data_perjadinlangsungs.id as idPeserta', 'data_perjadinlangsungs.status_persetujuan', 'data_perjadinlangsungs.id', 'data_perjadinlangsungs.status_pegawai', 'pegawais.nama_lengkap', 'pegawais.pangkat', 'pegawais.golongan')
             ->where('data_perjadinlangsungs.info_perjadinlangsung', $id)
+            ->where(function ($query) {
+                $query->where('data_perjadinlangsungs.status_pegawai', '!=', 'Supir')
+                    ->orWhere(function ($query) {
+                        $query->where('data_perjadinlangsungs.status_pegawai', '=', 'Supir')
+                            ->whereNotExists(function ($query) {
+                                $query->select(DB::raw(1))
+                                    ->from('data_perjadinlangsungs as dp2')
+                                    ->whereColumn('dp2.pegawai_id', 'data_perjadinlangsungs.pegawai_id')
+                                    ->where('dp2.status_pegawai', '!=', 'Supir');
+                            });
+                    });
+            })
             ->get();
 
         $selectPeserta_nonPegawai = DB::table('data_perjadinlangsungs')

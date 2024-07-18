@@ -132,6 +132,48 @@ use Carbon\Carbon;
                                 </table>
                             </div>
                         </div>
+
+                        <div class="col-md-12 mb-3">
+                            <div class="table-responsive">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h5 class="fw-bold">Informasi Fasilitas</h5>
+                                    </div>
+                                </div>
+                                <table id="calculationTable2" name="Fasilitas" class="table table-bordered calculationTable" style="width: 100%">
+                                    <thead>
+                                        <tr class="text-center small">
+                                            <th>No</th>
+                                            <th>Nama Fasilitas</th>
+                                            <th>Jumlah</th>
+                                            <th>Detail</th>
+                                            <th>Tipe Pendanaan</th>
+                                            <th>Keterangan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php
+                                        $numkebutuhan = 0;
+                                        @endphp
+                                        @foreach ($kebutuhans as $kebutuhan)
+                                        <tr>
+                                            <td class='text-center' style="min-width: 50px">{{$loop->iteration}} <input type="hidden" name="idKebutuhan_{{$numkebutuhan}}" value="{{$kebutuhan->idKebutuhan}}"></td>
+                                            <td style="min-width: 150px">{{$kebutuhan->nama}}</td>
+                                            <td class='text-center' style="min-width: 50px">{{$kebutuhan->jumlah_frekuensi}}</td>
+                                            <td class='text-center' style="min-width: 100px">{{$kebutuhan->satuan}}</td>
+                                            <td class='text-center' style="min-width: 100px">{{$kebutuhan->tipe_pendanaan}}</td>
+                                            <td class='text-center' style="min-width: 100px">{{$kebutuhan->ket}}</td>
+                                        </tr>
+                                        @php
+                                        $numkebutuhan++;
+                                        @endphp
+
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
                         <div class="col-md-12 mb-3">
                             <div class="d-grid gap-2 d-md-flex justify-content-center">
                                 <button class="btn btn-success" type="submit" id="btnSetujui">Setujui</button>
