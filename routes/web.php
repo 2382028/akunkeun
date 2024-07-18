@@ -101,7 +101,7 @@ Route::get('/perjadin-bendahara/sppd/{id}', [AdminPerjadinController::class, 'Ce
 // POST
 Route::post('/cu_perjadinmobilitas', [AdminPerjadinController::class, 'store'])->middleware('auth:administrator');
 Route::post('/c_tambahmobilitas', [AdminPerjadinController::class, 'storeMobilitas'])->middleware('auth:administrator');
-Route::delete('/h_mobilitas/{id}', [AdminPerjadinController::class, 'deleteMobilitas']);
+Route::delete('/h_mobilitas/{id}', [AdminPerjadinController::class, 'deleteMobilitas'])->middleware('auth:administrator');
 
 
 Route::post('/cu_perjadin_keuangan', [AdminPerjadinController::class, 'storeKeuangan'])->middleware('auth:administrator');

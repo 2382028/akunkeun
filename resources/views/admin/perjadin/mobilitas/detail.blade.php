@@ -6,6 +6,7 @@ use Carbon\Carbon;
 @extends('admin.templates.sidebar')
 
 @section('contain')
+
 <head>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
@@ -201,8 +202,8 @@ use Carbon\Carbon;
                                             <tr class="text-center small">
                                                 <th class="th-sm">No</th>
                                                 <th class="th-md">Pengemudi</th>
-                                                <th class="th-md">Mobil</th>
-                                                <th class="th-lg-percent">Tanggal</th>
+                                                <th class="th-lg-percent">Mobil</th>
+                                                <th class="th-md">Tanggal</th>
                                                 <th class="th-lg-percent">Keterangan</th>
                                                 <th class="th-lg-percent">Aksi</th>
                                             </tr>
@@ -247,14 +248,21 @@ use Carbon\Carbon;
                                                     <option value="Jemput">Jemput</option>
                                                 </select>
                                             </td>
-                                            <td>
-                                                <span>
-                                                    <button type="button" class="text-decoration-none btn btn-danger btn-sm text-white delete-button" data-id="{{ $mobilitas->id }}"><i class="fa-solid fa-trash"></i></button>
-                                                </span>
+                                            <td class='text-center'>
+                                                <form action="{{url('/h_mobilitas/' . $mobilitas->id)}}" method="post">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <input type="hidden" name="info_perjadinlangsung" value="{{ $perjadin->id }}">
+                                                    <span>
+                                                        <button type="submit" class="text-decoration-none btn btn-danger btn-sm text-white" onclick="return confirm('Hapus Data Mobilitas?')">
+                                                            <i class="fa-solid fa-trash"></i>
+                                                        </button>
+                                                    </span>
+                                                </form>
                                             </td>
                                             <input type="hidden" name="status_{{$nummobilitas}}" value="proses">
-                                            <input id="berangkat_{{$nummobilitas}}" type="hidden" value="{{ Carbon::parse($perjadin->tgl_keberangkatan)->format('d-m-Y H:i') }}" name="berangkat_{{$nummobilitas}}">
-                                            <input id="selesai_{{$nummobilitas}}" type="hidden" value="{{ Carbon::parse($perjadin->tgl_selesai)->format('d-m-Y H:i') }}" name="selesai_{{$nummobilitas}}">
+                                            <input id="" type="hidden" value="{{ Carbon::parse($perjadin->tgl_keberangkatan)->format('d-m-Y H:i') }}" name="berangkat_{{$nummobilitas}}">
+                                            <input id="" type="hidden" value="{{ Carbon::parse($perjadin->tgl_selesai)->format('d-m-Y H:i') }}" name="selesai_{{$nummobilitas}}">
                                         </tr>
                                         @php
                                         $nummobilitas++;
@@ -271,8 +279,6 @@ use Carbon\Carbon;
                             </div>
                             </form>
                         </div>
-
-
 
 
                         <!-- Modal Tolak Mobilitas -->
@@ -305,51 +311,26 @@ use Carbon\Carbon;
                         </div>
 
                         <script>
-                            document.addEventListener('DOMContentLoaded', (event) => {
-                                    document.querySelectorAll('.keterangan-dropdown').forEach(dropdown => {
-                                        dropdown.addEventListener('change', (e) => {
-                                            let index = e.target.getAttribute('data-index');
-                                            let selectedValue = e.target.value;
-                                            let tanggalElement = document.getElementById('tanggal_' + index);
-                                            let berangkatValue = document.getElementById('berangkat_' + index).value;
-                                            let selesaiValue = document.getElementById('selesai_' + index).value;
+                            // Ambil semua dropdown keterangan
+                            var keteranganDropdowns = document.querySelectorAll('.keterangan-dropdown');
 
-                                            if (selectedValue === 'Antar') {
-                                                tanggalElement.textContent = berangkatValue;
-                                            } else if (selectedValue === 'Jemput') {
-                                                tanggalElement.textContent = selesaiValue;
-                                            }
-                                        });
-                                    });
+                            // Loop melalui setiap dropdown
+                            keteranganDropdowns.forEach(function(dropdown) {
+                                dropdown.addEventListener('change', function() {
+                                    var index = dropdown.getAttribute('data-index');
+                                    var selectedOption = dropdown.value;
+                                    var tanggalElement = document.getElementById('tanggal_' + index);
 
-                                    document.querySelectorAll('.delete-button').forEach(button => {
-                                        button.addEventListener('click', (e) => {
-                                            e.preventDefault();
-                                            let mobilitasId = e.target.closest('.delete-button').getAttribute('data-id');
-                                            if (confirm('Apakah Anda yakin ingin menghapus mobilitas ini?')) {
-                                                fetch(`/h_mobilitas/${mobilitasId}`, {
-                                                    method: 'DELETE',
-                                                    headers: {
-                                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                                                        'Content-Type': 'application/json'
-                                                    },
-                                                }).then(response => {
-                                                    if (response.ok) {
-                                                        alert('Mobilitas berhasil dihapus');
-                                                        location.reload(); // Refresh halaman setelah penghapusan berhasil
-                                                    } else {
-                                                        alert('Terjadi kesalahan saat menghapus mobilitas');
-                                                    }
-                                                }).catch(error => {
-                                                    console.error('Error:', error);
-                                                    alert('Terjadi kesalahan saat menghapus mobilitas');
-                                                });
-                                            }
-                                        });
-                                    });
+                                    // Setel nilai tanggal berdasarkan pilihan dropdown
+                                    if (selectedOption === 'Antar') {
+                                        tanggalElement.textContent = "{{ Carbon::parse($perjadin->tgl_keberangkatan)->format('d-m-Y H:i') }}";
+                                    } else if (selectedOption === 'Jemput') {
+                                        tanggalElement.textContent = "{{ Carbon::parse($perjadin->tgl_selesai)->format('d-m-Y H:i') }}";
+                                    }
                                 });
+                            });
+                        </script>
 
-                            </script>
 
 
                         <script>

@@ -184,16 +184,16 @@ class AdminPerjadinController extends Controller
         ]);
     }
 
-    public function deleteMobilitas($id)
-{
-    try {
+    public function deleteMobilitas(Request $request, $id)
+    {
         DB::table('peminjaman_kendaraan_dinas')->where('id', $id)->delete();
-        return response()->json(['success' => true]);
-    } catch (\Exception $e) {
-        return response()->json(['success' => false, 'message' => $e->getMessage()]);
-    }
-}
 
+        // Mendapatkan ID perjadin dari request
+        $id_perjadin = $request->info_perjadinlangsung;
+
+        // Mengarahkan ke route 'detail-perjadin' dengan pesan sukses
+        return redirect()->route('detail-mobilitas-perjadin', ['id' => $id_perjadin])->with('success', 'Data mobilitas berhasil dihapus!');
+    }
 
     public function detail_perjadin_BMN($id)
     {
@@ -280,9 +280,16 @@ class AdminPerjadinController extends Controller
                                     ->whereColumn('dp2.pegawai_id', 'data_perjadinlangsungs.pegawai_id')
                                     ->where('dp2.status_pegawai', '!=', 'Supir');
                             });
-                  });
-        })
-        ->get();
+                    });
+            })
+            ->get();
+
+        $pesertaPegawais = DB::table('data_perjadinlangsungs')
+            ->join('pegawais', 'data_perjadinlangsungs.pegawai_id', '=', 'pegawais.id')
+            ->join('keuangan_perjadinlangsungs', 'data_perjadinlangsungs.id', '=', 'keuangan_perjadinlangsungs.data_perjadinlangsungs')
+            ->select('pegawais.id', 'keuangan_perjadinlangsungs.id as idKeuangan', 'pegawais.nama_lengkap', 'pegawais.pangkat', 'pegawais.golongan', 'data_perjadinlangsungs.status_pegawai', 'data_perjadinlangsungs.id as idData', 'keuangan_perjadinlangsungs.akun_x_rkakl', 'keuangan_perjadinlangsungs.ref_sbm', 'keuangan_perjadinlangsungs.uang_harian', 'keuangan_perjadinlangsungs.uang_harian_fullday', 'keuangan_perjadinlangsungs.uang_harian_fullboard', 'keuangan_perjadinlangsungs.uang_representasi', 'keuangan_perjadinlangsungs.persen_pajak', 'keuangan_perjadinlangsungs.jumlah_harga', 'keuangan_perjadinlangsungs.status', 'keuangan_perjadinlangsungs.pph22', 'keuangan_perjadinlangsungs.pph23', 'keuangan_perjadinlangsungs.tgl_bayar', 'keuangan_perjadinlangsungs.ppn')
+            ->where('data_perjadinlangsungs.info_perjadinlangsung', $id)
+            ->get();
 
         $pesertaNonPegawais = DB::table('data_perjadinlangsungs')
             ->join('non_pegawais', 'data_perjadinlangsungs.non_pegawai_id', '=', 'non_pegawais.id')
@@ -539,7 +546,6 @@ class AdminPerjadinController extends Controller
     {
         db::table('peminjaman_kendaraan_dinas')->insertOrIgnore([
             'info_perjadinlangsung' => $request->idPerjadin,
-            'status' => 'pengajuan',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
