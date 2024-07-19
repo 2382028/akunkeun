@@ -484,6 +484,18 @@ class AdminPerjadinController extends Controller
                     ]);
 
                 if ($request->$status == 'proses') {
+                    DB::table('info_perjadinlangsungs')
+                    ->where('id', $request->idPerjadin)
+                    ->update([
+                        'is_acceptBMN' => 'proses',
+                        'is_acceptHKT' => 'pengajuan',
+                        'status_pengajuan'  => 'proses',
+                        'status_pengajuan_detail' => 'Verifikasi-HKT',
+                        'admin_BMN' => auth('administrator')->user()->id,
+                        'updated_at' => now(),
+
+                    ]);
+
                     DB::table('data_perjadinlangsungs')->insertOrIgnore([
                         'status_pegawai' => 'Supir',
                         'info_perjadinlangsung' => $request->idPerjadin,
@@ -513,19 +525,11 @@ class AdminPerjadinController extends Controller
                     //     'updated_at' => now(),
                     // ]);
                 }
+
+
             }
 
-            DB::table('info_perjadinlangsungs')
-                ->where('id', $request->idPerjadin)
-                ->update([
-                    'is_acceptBMN' => 'proses',
-                    'is_acceptHKT' => 'pengajuan',
-                    'status_pengajuan'  => 'proses',
-                    'status_pengajuan_detail' => 'Verifikasi-HKT',
-                    'admin_BMN' => auth('administrator')->user()->id,
-                    'updated_at' => now(),
 
-                ]);
             return redirect()->route('mobilitas-perjadin', ['status' => $request->perjadinStatus])->with('success', 'Data telah diperbaharui!');
         } elseif ($action === 'tolak') {
             DB::table('info_perjadinlangsungs')
@@ -553,7 +557,7 @@ class AdminPerjadinController extends Controller
         DB::table('info_perjadinlangsungs')
             ->where('id', $request->idPerjadin)
             ->update([
-                'is_acceptBMN' => 'proses',
+                'is_acceptBMN' => 'pengajuan',
                 'admin_Keu' => auth('administrator')->user()->id,
                 'updated_at' => now(),
             ]);
