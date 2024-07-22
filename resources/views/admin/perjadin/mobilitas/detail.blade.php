@@ -6,6 +6,10 @@ use Carbon\Carbon;
 @extends('admin.templates.sidebar')
 
 @section('contain')
+
+<head>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+</head>
 <!-- Awal Dashboard - Kegiatan - Keuangan -->
 <div class="container-fluid">
     <div class="row">
@@ -190,7 +194,8 @@ use Carbon\Carbon;
                             </form>
 
                             <div class="table-responsive">
-                                <form action="{{url('/cu_perjadinmobilitas')}}" method="post">
+                                <!-- Form utama untuk mengupdate mobilitas -->
+                                <form id="mobilitasForm" action="{{url('/cu_perjadinmobilitas')}}" method="post">
                                     @csrf
                                     <input type="hidden" name="idPerjadin" value="{{$perjadin->id}}">
                                     <input type="hidden" name="perjadinStatus" value="{{$perjadin->is_acceptBMN}}">
@@ -200,8 +205,8 @@ use Carbon\Carbon;
                                             <tr class="text-center small">
                                                 <th class="th-sm">No</th>
                                                 <th class="th-md">Pengemudi</th>
-                                                <th class="th-md">Mobil</th>
-                                                <th class="th-md" style="min-width: 200px;">Tanggal</th>
+                                                <th class="th-lg-percent">Mobil</th>
+                                                <th class="th-md">Tanggal</th>
                                                 <th class="th-lg-percent">Keterangan</th>
                                                 <th class="th-lg-percent">Aksi</th>
                                             </tr>
@@ -216,6 +221,9 @@ use Carbon\Carbon;
                                                 <select class="form-select" aria-label="Default select example" name="supir_{{$nummobilitas}}">
                                                     @foreach($pesertaPegawais as $pesertaPegawai)
                                                     <option value="{{$pesertaPegawai->id}}" selected>{{$pesertaPegawai->nama_lengkap}}</option>
+                                                    @endforeach
+                                                    @foreach($pesertaNonPegawais as $pesertaNonPegawai)
+                                                    <option value="{{$pesertaNonPegawai->id}}" selected>{{$pesertaNonPegawai->nama_lengkap}}</option>
                                                     @endforeach
                                                     @foreach ($pengemudis as $pengemudi)
                                                     @if ($pengemudi->id == $mobilitas->pegawai_id)
@@ -235,30 +243,24 @@ use Carbon\Carbon;
                                                     @endforeach
                                                 </select>
                                             </td>
-                                            <td class='text-center' id="tanggal_{{$nummobilitas}}">
-                                                <input id="berangkat_{{$nummobilitas}}" type="hidden" value="{{ $perjadin->tgl_keberangkatan }}" name="berangkat_{{$nummobilitas}}">
-                                                <input id="selesai_{{$nummobilitas}}" type="hidden" value="{{ $perjadin->tgl_selesai }}" name="selesai_{{$nummobilitas}}">
-                                                {{ Carbon::parse($perjadin->tgl_keberangkatan)->format('d-m-Y') }}
-                                            </td>
+                                            <td class='text-center' style="min-width: 100px" id="tanggal_{{$nummobilitas}}">{{ Carbon::parse($perjadin->tgl_keberangkatan)->format('d-m-Y H:i') }}</td>
                                             <td>
                                                 <select class="form-select keterangan-dropdown" aria-label="Default select example" name="ket_{{$nummobilitas}}" data-index="{{$nummobilitas}}">
                                                     <option value="Antar">Antar</option>
                                                     <option value="Jemput">Jemput</option>
-                                                    <option value="Antar-Jemput">Antar - Jemput</option>
-                                                    <option value="Lainnya">Lainnya</option>
                                                 </select>
                                             </td>
                                             <td class='text-center'>
-                                                <!-- <form action="{{url('/h_mobilitas/'.$mobilitas->id)}}" method="post" onsubmit="return confirm('Hapus Data Mobilitas?')"> -->
-
-                                                <!-- <input type="hidden" name="info_perjadinlangsung" value="{{ $perjadin->id }}"> -->
-                                                <button type="submit" class="btn btn-danger btn-sm text-white">
-                                                    <i class="fa-solid fa-trash"></i>
-                                                </button>
-                                                <!-- </form> -->
+                                                <input type="hidden" name="info_perjadinlangsung" value="{{ $perjadin->id }}">
+                                                <span>
+                                                    <button type="button" class="text-decoration-none btn btn-danger btn-sm text-white delete-mobilitas" data-id="{{$mobilitas->id}}">
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </button>
+                                                </span>
                                             </td>
                                             <input type="hidden" name="status_{{$nummobilitas}}" value="proses">
-
+                                            <input id="" type="hidden" value="{{ Carbon::parse($perjadin->tgl_keberangkatan)->format('d-m-Y H:i') }}" name="berangkat_{{$nummobilitas}}">
+                                            <input id="" type="hidden" value="{{ Carbon::parse($perjadin->tgl_selesai)->format('d-m-Y H:i') }}" name="selesai_{{$nummobilitas}}">
                                         </tr>
                                         @php
                                         $nummobilitas++;
@@ -275,6 +277,9 @@ use Carbon\Carbon;
                             </div>
                             </form>
                         </div>
+
+
+
 
                         <!-- Modal Tolak Mobilitas -->
                         <div class="modal fade" id="tolak_mobilitas" tabindex="-1" aria-labelledby="tolak_mobilitasLabel" aria-hidden="true">
@@ -306,6 +311,46 @@ use Carbon\Carbon;
                         </div>
 
                         <script>
+                            document.addEventListener('DOMContentLoaded', function () {
+                                // Tambahkan event listener pada tombol trash
+                                document.querySelectorAll('.delete-mobilitas').forEach(function (button) {
+                                    button.addEventListener('click', function () {
+                                        // Dapatkan ID mobilitas dari atribut data-id
+                                        var mobilitasId = this.getAttribute('data-id');
+                                        var perjadinId = document.querySelector('input[name="info_perjadinlangsung"]').value;
+
+                                        if (confirm('Hapus Data Mobilitas?')) {
+                                            // Kirim AJAX request ke server untuk menghapus mobilitas
+                                            fetch(`/h_mobilitas/${mobilitasId}`, {
+                                                method: 'DELETE',
+                                                headers: {
+                                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                                    'Content-Type': 'application/json'
+                                                },
+                                                body: JSON.stringify({ info_perjadinlangsung: perjadinId })
+                                            })
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                if (data.success) {
+                                                    // Jika sukses, hapus row dari tabel
+                                                    // this.closest('tr').remove();
+                                                    // Refresh halaman
+                                                    window.location.reload();
+                                                } else {
+                                                    alert('Gagal menghapus data mobilitas.');
+                                                }
+                                            })
+                                            .catch(error => {
+                                                console.error('Error:', error);
+                                                alert('Terjadi kesalahan saat menghapus data mobilitas.');
+                                            });
+                                        }
+                                    });
+                                });
+                            });
+                        </script>
+
+                        <script>
                             // Ambil semua dropdown keterangan
                             var keteranganDropdowns = document.querySelectorAll('.keterangan-dropdown');
 
@@ -315,26 +360,19 @@ use Carbon\Carbon;
                                     var index = dropdown.getAttribute('data-index');
                                     var selectedOption = dropdown.value;
                                     var tanggalElement = document.getElementById('tanggal_' + index);
-                                    var berangkatInput = document.getElementById('berangkat_' + index);
-                                    var selesaiInput = document.getElementById('selesai_' + index);
 
                                     // Setel nilai tanggal berdasarkan pilihan dropdown
                                     if (selectedOption === 'Antar') {
-                                        tanggalElement.textContent = "{{ Carbon::parse($perjadin->tgl_keberangkatan)->format('d-m-Y') }}";
-                                        berangkatInput.value = "{{ $perjadin->tgl_keberangkatan }}";
-                                        selesaiInput.value = "";
+                                        tanggalElement.textContent = "{{ Carbon::parse($perjadin->tgl_keberangkatan)->format('d-m-Y H:i') }}";
                                     } else if (selectedOption === 'Jemput') {
-                                        tanggalElement.textContent = "{{ Carbon::parse($perjadin->tgl_selesai)->format('d-m-Y') }}";
-                                        berangkatInput.value = "";
-                                        selesaiInput.value = "{{ $perjadin->tgl_selesai }}";
-                                    } else if (selectedOption === 'Antar-Jemput' || selectedOption === 'Lainnya') {
-                                        tanggalElement.textContent = "{{ Carbon::parse($perjadin->tgl_keberangkatan)->format('d-m-Y') }}" + " s.d. " + "{{ Carbon::parse($perjadin->tgl_selesai)->format('d-m-Y') }}";
-                                        berangkatInput.value = "{{ $perjadin->tgl_keberangkatan }}";
-                                        selesaiInput.value = "{{ $perjadin->tgl_selesai }}";
+                                        tanggalElement.textContent = "{{ Carbon::parse($perjadin->tgl_selesai)->format('d-m-Y H:i') }}";
                                     }
                                 });
                             });
                         </script>
+
+
+
 
                         <script>
                             // Tangani klik tombol "Setujui"
