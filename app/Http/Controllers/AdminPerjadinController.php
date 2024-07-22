@@ -268,6 +268,7 @@ class AdminPerjadinController extends Controller
         $kendaraan = DB::table('kendaraans')
             ->select('kendaraans.*')
             ->where('kendaraans.status', '=', 'baik')
+            ->where('kendaraans.tipe', '=', 'Roda Empat')
             ->whereNotExists(function ($query) use ($tanggalAwal, $tanggalAkhir) {
                 $query->select(DB::raw(1))
                     ->from('peminjaman_kendaraan_dinas')
@@ -574,6 +575,7 @@ class AdminPerjadinController extends Controller
                 $status = 'status_' . $i;
                 $berangkat = 'berangkat_' . $i;
                 $selesai = 'selesai_' . $i;
+                $ketMobilitas = 'ket_' . $i;
                 DB::table('peminjaman_kendaraan_dinas')
                     ->where('id', $request->$idMobilitas)
                     ->update([
@@ -582,6 +584,7 @@ class AdminPerjadinController extends Controller
                         'status' => $request->$status,
                         'tgl_keberangkatan' => $request->$berangkat,
                         'tgl_selesai' => $request->$selesai,
+                        'ket_mobilitas' => $request->$ketMobilitas,
                         'updated_at' => now(),
                     ]);
                 DB::table('kendaraans')
@@ -592,17 +595,7 @@ class AdminPerjadinController extends Controller
                     ]);
 
                 if ($request->$status == 'proses') {
-                    DB::table('info_perjadinlangsungs')
-                    ->where('id', $request->idPerjadin)
-                    ->update([
-                        'is_acceptBMN' => 'proses',
-                        'is_acceptHKT' => 'pengajuan',
-                        'status_pengajuan'  => 'proses',
-                        'status_pengajuan_detail' => 'Verifikasi-HKT',
-                        'admin_BMN' => auth('administrator')->user()->id,
-                        'updated_at' => now(),
 
-                    ]);
 
                     DB::table('data_perjadinlangsungs')->insertOrIgnore([
                         'status_pegawai' => 'Supir',
@@ -633,10 +626,19 @@ class AdminPerjadinController extends Controller
                     //     'updated_at' => now(),
                     // ]);
                 }
-
-
             }
 
+            DB::table('info_perjadinlangsungs')
+                ->where('id', $request->idPerjadin)
+                ->update([
+                    'is_acceptBMN' => 'proses',
+                    'is_acceptHKT' => 'pengajuan',
+                    'status_pengajuan'  => 'proses',
+                    'status_pengajuan_detail' => 'Verifikasi-HKT',
+                    'admin_BMN' => auth('administrator')->user()->id,
+                    'updated_at' => now(),
+
+                ]);
 
             return redirect()->route('mobilitas-perjadin', ['status' => $request->perjadinStatus])->with('success', 'Data telah diperbaharui!');
         } elseif ($action === 'tolak') {
@@ -666,7 +668,7 @@ class AdminPerjadinController extends Controller
             ->where('id', $request->idPerjadin)
             ->update([
                 'is_acceptBMN' => 'pengajuan',
-                'admin_Keu' => auth('administrator')->user()->id,
+                'admin_BMN' => auth('administrator')->user()->id,
                 'updated_at' => now(),
             ]);
 
