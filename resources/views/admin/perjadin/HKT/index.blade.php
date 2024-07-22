@@ -99,10 +99,10 @@
                                 <a href="{{url('/perjadin-HKT/surtug/preview/' . $perjadin->id) }}" target="_blank" class="btn btn-dark"><i class="fa-solid fa-print"></i> Cetak Surat Tugas</a>
                             </span>
                             <span class="p-1">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#upload_surat">Upload<i class="fa-solid fa-upload"></i></button>
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#upload_surat" data-id-perjadin="{{ $perjadin->id }}">Upload <i class="fa-solid fa-upload"></i></button>
                             </span>
                             <span class="p-1">
-                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#tolak_surat"><i class="fa-solid fa-exclamation-circle"></i> Tolak Surat</button>
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#tolak_surat" data-id-perjadin="{{ $perjadin->id }}><i class="fa-solid fa-exclamation-circle"></i> Tolak Surat</button>
                             </span>
                         @endif
                       @endif
@@ -114,7 +114,7 @@
                         <a href="{{url('/perjadin-HKT/surtug/preview/' . $perjadin->id) }}" target="_blank" class="btn btn-dark"><i class="fa-solid fa-print"></i> Cetak Surat Tugas</a>
                       </span>
                       <span class="p-1">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#upload_surat">Upload<i class="fa-solid fa-upload"></i></button>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#upload_surat" data-id-perjadin="{{ $perjadin->id }}">Upload<i class="fa-solid fa-upload"></i></button>
                       </span>
                       @endif
                       @if (($perjadin->is_acceptHKT == 'selesai'))
@@ -149,73 +149,94 @@
   </div>
 </div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var uploadModal = document.getElementById('upload_surat');
+      uploadModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget; // Button that triggered the modal
+        var idPerjadin = button.getAttribute('data-id-perjadin'); // Extract info from data-* attributes
+        var modal = this;
+        modal.querySelector('#upload_id_perjadin').value = idPerjadin;
+      });
+
+      var tolakModal = document.getElementById('tolak_surat');
+      tolakModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget; // Button that triggered the modal
+        var idPerjadin = button.getAttribute('data-id-perjadin'); // Extract info from data-* attributes
+        var modal = this;
+        modal.querySelector('#tolak_id_perjadin').value = idPerjadin;
+      });
+    });
+  </script>
+
+
+
 <!-- Modal upload surtug -->
 <div class="modal fade" id="upload_surat" tabindex="-1" aria-labelledby="upload_suratLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="upload_suratLabel">Upload Surat Tugas</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form action="{{url('/u_perjadin_HKT')}}" method="post" enctype="multipart/form-data">
-          @csrf
-          <input type="hidden" name="idPerjadin" value="{{ isset($perjadin) ? $perjadin->id : '' }}">
-          <input type="hidden" name="perjadinStatus" value="{{ isset($perjadin) ? $perjadin->is_acceptHKT : '' }}">
-          <div class="row">
-            <div class="col-md-12 mb-3">
-              <label for="uraian" class="form-label">Masukan Nomor Surat Tugas<span class="text-secondary small"></span><span class="text-danger">*</span></label>
-              <input type="text" class="form-control mt-1" name="nomor_surtug" placeholder="Masukan Nomor Surat Tugas">
-            </div>
-            <div class="col-md-12 mb-3">
-              <label for="uraian" class="form-label">Masukan Tanggal Surat<span class="text-secondary small"></span><span class="text-danger">*</span></label>
-              <input type="date" class="form-control mt-1" name="tgl_dibuat">
-            </div>
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="upload_suratLabel">Upload Surat Tugas</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="{{url('/u_perjadin_HKT')}}" method="post" enctype="multipart/form-data">
+            @csrf
+            <input type="hidden" name="idPerjadin" id="upload_id_perjadin" value="">
+            <input type="hidden" name="perjadinStatus" id="upload_perjadin_status" value="">
+            <div class="row">
+              <div class="col-md-12 mb-3">
+                <label for="uraian" class="form-label">Masukan Nomor Surat Tugas<span class="text-secondary small"></span><span class="text-danger">*</span></label>
+                <input type="text" class="form-control mt-1" name="nomor_surtug" placeholder="Masukan Nomor Surat Tugas">
+              </div>
+              <div class="col-md-12 mb-3">
+                <label for="uraian" class="form-label">Masukan Tanggal Surat<span class="text-secondary small"></span><span class="text-danger">*</span></label>
+                <input type="date" class="form-control mt-1" name="tgl_dibuat">
+              </div>
 
-            <div class="col-md-12 mb-3">
-              <label for="uraian" class="form-label">Masukan Surat Tugas<span class="text-secondary small"></span><span class="text-danger">*</span></label>
-              <input type="file" name="surat_tugas" id="fileInput" class="form-control" accept="application/pdf" required="">
+              <div class="col-md-12 mb-3">
+                <label for="uraian" class="form-label">Masukan Surat Tugas<span class="text-secondary small"></span><span class="text-danger">*</span></label>
+                <input type="file" name="surat_tugas" id="fileInput" class="form-control" accept="application/pdf" required="">
+              </div>
             </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-danger text-white" data-bs-dismiss="modal">Batal</button>
-            <button type="submit" class="btn btn-primary">Simpan</button>
-          </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger text-white" data-bs-dismiss="modal">Batal</button>
+              <button type="submit" class="btn btn-primary">Simpan</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Tolak Surtug -->
+  <div class="modal fade" id="tolak_surat" tabindex="-1" aria-labelledby="tolak_suratLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="tolak_suratLabel">Tolak Surat Tugas</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="{{url('/t_perjadin_HKT')}}" method="post">
+            @csrf
+            <input type="hidden" name="idPerjadin" id="tolak_id_perjadin" value="">
+            <input type="hidden" name="perjadinStatus" id="tolak_perjadin_status" value="">
+            <div class="row">
+              <div class="col-md-12 mb-3">
+                <label for="uraian" class="form-label">Masukan Alasan<span class="text-secondary small"></span><span class="text-danger">*</span></label>
+                <input type="text" id="tolak" name="alasan" class="form-control" placeholder="Alasan Penolakan" required="">
+              </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger text-white" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan</button>
+        </div>
         </form>
       </div>
     </div>
   </div>
-</div>
-
-
-<!-- Modal Tolak Surtug -->
-<div class="modal fade" id="tolak_surat" tabindex="-1" aria-labelledby="tolak_suratLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="tolak_suratLabel">Tolak Surat Tugas</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form action="{{url('/t_perjadin_HKT')}}" method="post">
-          @csrf
-          <input type="hidden" name="idPerjadin" value="{{ isset($perjadin) ? $perjadin->id : '' }}">
-          <input type="hidden" name="perjadinStatus" value="{{ isset($perjadin) ? $perjadin->is_acceptHKT : '' }}">
-          <div class="row">
-            <div class="col-md-12 mb-3">
-              <label for="uraian" class="form-label">Masukan Alasan<span class="text-secondary small"></span><span class="text-danger">*</span></label>
-              <input type="text" id="tolak" name="alasan" class="form-control" placeholder="Alasan Penolakan" required="">
-            </div>
-          </div>
-      </div>
-
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger text-white" data-bs-dismiss="modal">Batal</button>
-        <button type="submit" class="btn btn-primary">Simpan</button>
-      </div>
-      </form>
-    </div>
-  </div>
-</div>
 
 @endsection
