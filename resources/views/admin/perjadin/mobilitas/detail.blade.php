@@ -186,12 +186,15 @@ use Carbon\Carbon;
                         </div>
 
                         <div class="col-md-12 mb-3" id="divInformasiPeminjaman" style="display: none;">
+                            <!-- Form untuk menambah mobilitas -->
                             <form action="{{url('/c_tambahmobilitas')}}" method="post">
                                 @csrf
                                 <input type="hidden" name="idPerjadin" value="{{$perjadin->id}}">
                                 <h5 class="fw-bold">Informasi Peminjaman <button type="submit" class="btn btn-primary">+ Tambah Mobilitas</button></h5>
                             </form>
+
                             <div class="table-responsive">
+                                <!-- Form utama untuk mengupdate mobilitas -->
                                 <form id="mobilitasForm" action="{{url('/cu_perjadinmobilitas')}}" method="post">
                                     @csrf
                                     <input type="hidden" name="idPerjadin" value="{{$perjadin->id}}">
@@ -221,7 +224,6 @@ use Carbon\Carbon;
                                                     @endforeach
                                                     @foreach($pesertaNonPegawais as $pesertaNonPegawai)
                                                     <option value="{{$pesertaNonPegawai->id}}" selected>{{$pesertaNonPegawai->nama_lengkap}}</option>
-
                                                     @endforeach
                                                     @foreach ($pengemudis as $pengemudi)
                                                     @if ($pengemudi->id == $mobilitas->pegawai_id)
@@ -279,6 +281,8 @@ use Carbon\Carbon;
                             </div>
                             </form>
                         </div>
+
+
 
 
                         <!-- Modal Tolak Mobilitas -->

@@ -7,6 +7,12 @@ use Carbon\Carbon;
 
 
 @section('contain')
+<style>
+    .tambah-mobilitas-btn {
+    width: auto; /* Adjust the width to fit the content */
+}
+
+</style>
 <div class="container-fluid px-4 py-4">
   <div class="row">
     <div class="col-md-12">
@@ -26,13 +32,20 @@ use Carbon\Carbon;
     </div>
   </div>
 
+
   <div class="row">
     <div class="col-md-12 mb-3">
       <div class="card">
+
         <div class="card-body content">
+
 
           <!-- BMN Kendaraan - Pengajuan -->
           <div class="row page_content card-style">
+            <div class="d-flex justify-content-between mb-3">
+                <div></div> <!-- Empty div to fill the left side -->
+                <a href="{{ route('bmn_mobilitas_only') }}" class="btn btn-primary tambah-mobilitas-btn">+ Tambah Mobilitas</a>
+            </div>
             <div class="table-responsive">
               <table id="example" class="table table-bordered data-table" style="width: 100%">
                 <thead>

@@ -78,6 +78,9 @@ Route::post('/cu_kegiatan_bendahara', [AdminKegiatanController::class, 'storeBen
 Route::post('/up_peminjaman_sapras', [AdminKegiatanController::class, 'updateSapras'])->middleware('auth:administrator');
 
 // route perjalanan dinas ~admin
+Route::get('/bmn_mobilitas_only', [AdminPerjadinController::class, 'showBmnMobilitasOnly'])->name('bmn_mobilitas_only');
+Route::post('/bmn_mobilitas_only/store', [AdminPerjadinController::class, 'storeMobilitasOnly'])->name('store_mobilitas_only');
+
 Route::get('/perjadin-mobilitas/{status}', [AdminPerjadinController::class, 'index'])->name('mobilitas-perjadin')->middleware('auth:administrator');
 Route::get('/perjadin-mobilitas/detail/{id}', [AdminPerjadinController::class, 'detail_mobilitas'])->name('detail-mobilitas-perjadin')->middleware('auth:administrator');
 Route::get('/perjadin-mobilitas/detail_mobilitas/{id}', [AdminPerjadinController::class, 'detail_perjadin_BMN'])->name('detail-perjadin-BMN')->middleware('auth:administrator');

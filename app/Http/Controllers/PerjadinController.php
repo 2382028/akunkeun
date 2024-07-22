@@ -543,6 +543,9 @@ class PerjadinController extends Controller
         return redirect()->route('riwayat', ['status' => 'pengajuan'])->with('success', 'Perjalanan dinas berhasil diajukan. Silakan tunggu persetujuan dari pihak Keuangan!');
     }
 
+
+    
+
     public function storeLaporanPerjadin(Request $request)
     {
         DB::table('dokumens')

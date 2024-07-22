@@ -373,9 +373,9 @@
   </div>
   @endif
   <!-- Awal Dashboard -->
-  <main class="mt-5 pt-5" style="background: #D9D9D9;">
+  <main class="mt-5 pt-5 @yield('main-class')" style="background: #D9D9D9;">
     @yield('contain')
-  </main>
+</main>
   <!-- Akhir Dashboard -->
 
   <!-- Awal Footer -->
