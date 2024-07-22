@@ -67,7 +67,7 @@ class AdminPerjadinController extends Controller
             'provinsi' => $request->provinsi,
             'kabupaten_kota' => $request->kabupaten_kota,
             'alamat' => $request->alamat,
-            'mobilitas' => "Kendaraan Only",
+            'mobilitas' => "Kendaraan Dinas",
             'pemberi_undangan' => "-",
             'tanggal_surat' => "-",
             'keterangan_mobilitas' => "Kendaraan Only",
@@ -78,7 +78,7 @@ class AdminPerjadinController extends Controller
         ]);
 
         $perjadin = Info_perjadinlangsung::max('id'); // mengambil nilai id terakhir yang diinputkan
-        $status = 'status_'.$perjadin;
+        $status = 'status_' . $perjadin;
         DB::table('peminjaman_kendaraan_dinas')->insertOrIgnore([
             'info_perjadinlangsung' => $perjadin, //menerima id info terakhir
             'kendaraan' => $request->kendaraan,
@@ -86,38 +86,40 @@ class AdminPerjadinController extends Controller
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
+        DB::table('dokumens')->insert([
+            'info_perjadinlangsung_id' => $perjadin,
+            'status_persetujuan' => 'pengajuan',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
         DB::table('info_perjadinlangsungs')
-                ->where('id', $perjadin)
-                ->update([
-                    'is_acceptHKT' => 'pengajuan',
-                    'is_acceptBMN' => 'proses',
-                    'status_pengajuan_detail' => 'Verifikasi-HKT',
-                    'status_pengajuan' => 'pengajuan',
-                    'updated_at' => now(),
-                ]);
-            $mobilitas = DB::table('peminjaman_kendaraan_dinas')
-                ->join('info_perjadinlangsungs', 'peminjaman_kendaraan_dinas.info_perjadinlangsung', '=', 'info_perjadinlangsungs.id')
-                ->select('info_perjadinlangsungs.id as idPerjadin', 'info_perjadinlangsungs.nama_kegiatan', 'info_perjadinlangsungs.kabupaten_kota', 'info_perjadinlangsungs.tgl_keberangkatan', 'info_perjadinlangsungs.is_acceptBMN')
-                ->where('info_perjadinlangsungs.versi_id', session('versi'))
-                ->where('info_perjadinlangsungs.is_acceptBMN', $status)
-                ->get();
+            ->where('id', $perjadin)
+            ->update([
+                'is_acceptHKT' => 'pengajuan',
+                'is_acceptBMN' => 'proses',
+                'status_pengajuan_detail' => 'Verifikasi-HKT',
+                'status_pengajuan' => 'pengajuan',
+                'updated_at' => now(),
+            ]);
 
-                DB::table('data_perjadinlangsungs')->insertOrIgnore([
-                    'status_pegawai' => 'Supir',
-                    'info_perjadinlangsung' => $perjadin,
-                    'pegawai_id' => $request->pengemudi,
-                    'tgl_keberangkatan' => $request->tgl_keberangkatan,
-                    'tgl_selesai' => $request->tgl_selesai,
-                    // 'non_pegawai_id' => $request->peserta_non_pegawai,
-                    'status_persetujuan' => 'Proses Persetujuan',
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
+        DB::table('data_perjadinlangsungs')->insertOrIgnore([
+            'status_pegawai' => 'Supir',
+            'info_perjadinlangsung' => $perjadin,
+            'pegawai_id' => $request->pengemudi,
+            'tgl_keberangkatan' => $request->tgl_keberangkatan,
+            'tgl_selesai' => $request->tgl_selesai,
+            // 'non_pegawai_id' => $request->peserta_non_pegawai,
+            'status_persetujuan' => 'Proses Persetujuan',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
 
 
-            // Redirect ke URL tertentu
-            return redirect()->to(url('/perjadin-mobilitas/pengajuan'));
+        // Redirect ke URL tertentu
+        return redirect()->to(url('/perjadin-mobilitas/pengajuan'));
     }
 
     public function showBmnMobilitasOnly()
@@ -137,7 +139,7 @@ class AdminPerjadinController extends Controller
             // })
             ->distinct()
             ->get();
-            $kendaraan = DB::table('kendaraans')
+        $kendaraan = DB::table('kendaraans')
             ->select('kendaraans.*')
             ->where('kendaraans.status', '=', 'baik')
             // ->whereNotExists(function ($query) use ($tanggalAwal, $tanggalAkhir) {
@@ -151,11 +153,13 @@ class AdminPerjadinController extends Controller
             // })
             ->distinct()
             ->get();
-       return view('admin.perjadin.mobilitas.bmn_mobilitas_only',
-        [
-            'pengemudis' => $pengemudi,
-            'kendaraans' => $kendaraan,
-        ]);
+        return view(
+            'admin.perjadin.mobilitas.bmn_mobilitas_only',
+            [
+                'pengemudis' => $pengemudi,
+                'kendaraans' => $kendaraan,
+            ]
+        );
     }
 
     public function keuanganIndex($status = 'verifikasi-1')

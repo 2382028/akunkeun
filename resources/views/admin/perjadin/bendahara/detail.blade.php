@@ -159,7 +159,6 @@
                   <table id="example" class="table table-bordered" style="width: 100%">
                     <thead>
                       <tr class="text-center small">
-                        <th class="th-sm">ID</th>
                         <th class="th-md">Nama Lengkap</th>
                         <th class="th-md">Pangkat/Golongan</th>
                         <th class="th-md">Sebagai</th>
@@ -167,7 +166,6 @@
                     </thead>
                     @foreach ($pesertaPegawaiss as $pesertaPegawai)
                     <tr>
-                      <td class="text-center">{{$pesertaPegawai->id}}</td>
                       <td>{{$pesertaPegawai->nama_lengkap}}</td>
                       <td>{{$pesertaPegawai->pangkat}}-{{$pesertaPegawai->golongan}}</td>
                       <td class="text-center">{{$pesertaPegawai->status_pegawai}}</td>
@@ -385,7 +383,7 @@
                       <input type="number" class="form-control num1 prevent-submit" min="0" name="nominalKebutuhan_{{$numkebutuhan}}" value="{{$kebutuhan->uang_harian}}" readonly>
                     </td>
                     <td style="min-width: 200px">
-                      <input type="number" class="result form-control" name="totalKebutuhan_{{$numkebutuhan}}" value="{{$kebutuhan->jumlah_harga}}">
+                      <input type="number" class="result form-control" min="0" name="totalKebutuhan_{{$numkebutuhan}}" value="{{$kebutuhan->jumlah_harga}}">
                     </td>
                   </tr>
                   @php
