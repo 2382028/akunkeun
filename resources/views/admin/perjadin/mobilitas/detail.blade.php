@@ -205,8 +205,8 @@ use Carbon\Carbon;
                                             <tr class="text-center small">
                                                 <th class="th-sm">No</th>
                                                 <th class="th-md">Pengemudi</th>
-                                                <th class="th-lg-percent">Mobil</th>
-                                                <th class="th-md">Tanggal</th>
+                                                <th class="th-md">Mobil</th>
+                                                <th class="th-md" style="min-width: 300px;">Tanggal</th>
                                                 <th class="th-lg-percent">Keterangan</th>
                                                 <th class="th-lg-percent">Aksi</th>
                                             </tr>
@@ -248,6 +248,8 @@ use Carbon\Carbon;
                                                 <select class="form-select keterangan-dropdown" aria-label="Default select example" name="ket_{{$nummobilitas}}" data-index="{{$nummobilitas}}">
                                                     <option value="Antar">Antar</option>
                                                     <option value="Jemput">Jemput</option>
+                                                    <option value="Antar-Jemput">Antar-Jemput</option>
+                                                    <option value="Lainnya">Lainnya</option>
                                                 </select>
                                             </td>
                                             <td class='text-center'>
@@ -311,10 +313,10 @@ use Carbon\Carbon;
                         </div>
 
                         <script>
-                            document.addEventListener('DOMContentLoaded', function () {
+                            document.addEventListener('DOMContentLoaded', function() {
                                 // Tambahkan event listener pada tombol trash
-                                document.querySelectorAll('.delete-mobilitas').forEach(function (button) {
-                                    button.addEventListener('click', function () {
+                                document.querySelectorAll('.delete-mobilitas').forEach(function(button) {
+                                    button.addEventListener('click', function() {
                                         // Dapatkan ID mobilitas dari atribut data-id
                                         var mobilitasId = this.getAttribute('data-id');
                                         var perjadinId = document.querySelector('input[name="info_perjadinlangsung"]').value;
@@ -322,28 +324,30 @@ use Carbon\Carbon;
                                         if (confirm('Hapus Data Mobilitas?')) {
                                             // Kirim AJAX request ke server untuk menghapus mobilitas
                                             fetch(`/h_mobilitas/${mobilitasId}`, {
-                                                method: 'DELETE',
-                                                headers: {
-                                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                                                    'Content-Type': 'application/json'
-                                                },
-                                                body: JSON.stringify({ info_perjadinlangsung: perjadinId })
-                                            })
-                                            .then(response => response.json())
-                                            .then(data => {
-                                                if (data.success) {
-                                                    // Jika sukses, hapus row dari tabel
-                                                    // this.closest('tr').remove();
-                                                    // Refresh halaman
-                                                    window.location.reload();
-                                                } else {
-                                                    alert('Gagal menghapus data mobilitas.');
-                                                }
-                                            })
-                                            .catch(error => {
-                                                console.error('Error:', error);
-                                                alert('Terjadi kesalahan saat menghapus data mobilitas.');
-                                            });
+                                                    method: 'DELETE',
+                                                    headers: {
+                                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                                        'Content-Type': 'application/json'
+                                                    },
+                                                    body: JSON.stringify({
+                                                        info_perjadinlangsung: perjadinId
+                                                    })
+                                                })
+                                                .then(response => response.json())
+                                                .then(data => {
+                                                    if (data.success) {
+                                                        // Jika sukses, hapus row dari tabel
+                                                        // this.closest('tr').remove();
+                                                        // Refresh halaman
+                                                        window.location.reload();
+                                                    } else {
+                                                        alert('Gagal menghapus data mobilitas.');
+                                                    }
+                                                })
+                                                .catch(error => {
+                                                    console.error('Error:', error);
+                                                    alert('Terjadi kesalahan saat menghapus data mobilitas.');
+                                                });
                                         }
                                     });
                                 });
@@ -366,13 +370,12 @@ use Carbon\Carbon;
                                         tanggalElement.textContent = "{{ Carbon::parse($perjadin->tgl_keberangkatan)->format('d-m-Y H:i') }}";
                                     } else if (selectedOption === 'Jemput') {
                                         tanggalElement.textContent = "{{ Carbon::parse($perjadin->tgl_selesai)->format('d-m-Y H:i') }}";
+                                    } else if (selectedOption === 'Antar-Jemput' || selectedOption === 'Lainnya') {
+                                        tanggalElement.textContent = "{{ Carbon::parse($perjadin->tgl_keberangkatan)->format('d-m-Y H:i') }} s.d {{ Carbon::parse($perjadin->tgl_selesai)->format('d-m-Y H:i') }}";
                                     }
                                 });
                             });
                         </script>
-
-
-
 
                         <script>
                             // Tangani klik tombol "Setujui"
@@ -385,10 +388,7 @@ use Carbon\Carbon;
                             });
                         </script>
 
-
-
                         <script src="{{asset('public/assets/js/pdfselected.js')}}"></script>
-
 
                         <!-- Akhir Dashboard - Kegiatan - Keuangan -->
                         @endsection
