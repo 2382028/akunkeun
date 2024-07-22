@@ -382,7 +382,7 @@
                       </select>
                     </td>
                     <td style="min-width: 200px">
-                      <input type="number" class="form-control num1 prevent-submit" min="0" name="nominalKebutuhan_{{$numkebutuhan}}" value="{{$kebutuhan->uang_harian}}">
+                      <input type="number" class="form-control num1 prevent-submit" min="0" name="nominalKebutuhan_{{$numkebutuhan}}" value="{{$kebutuhan->uang_harian}}" readonly>
                     </td>
                     <td style="min-width: 200px">
                       <input type="number" class="result form-control" name="totalKebutuhan_{{$numkebutuhan}}" value="{{$kebutuhan->jumlah_harga}}">
