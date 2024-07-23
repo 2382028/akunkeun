@@ -110,8 +110,8 @@ class AdminPerjadinController extends Controller
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
-    
-            $perjadin = Info_perjadinlangsung::max('id');// mengambil nilai id dari perjadinSebelumnya
+
+            $perjadin = Info_perjadinlangsung::max('id'); // mengambil nilai id dari perjadinSebelumnya
         }
 
         $status = 'status_' . $perjadin;
@@ -175,16 +175,10 @@ class AdminPerjadinController extends Controller
 
         // Mobilitass
         $mobilitass = DB::table('info_perjadinlangsungs')
-            ->leftJoin('peminjaman_kendaraan_dinas', function ($join) {
-                $join->on('info_perjadinlangsungs.id', '=', 'peminjaman_kendaraan_dinas.info_perjadinlangsung')
-                    ->where('peminjaman_kendaraan_dinas.ket_mobilitas', '!=', 'Antar-Jemput');
-            })
-            ->whereNull('peminjaman_kendaraan_dinas.id')
-            ->orWhere(function ($query) {
-                $query->whereNotNull('peminjaman_kendaraan_dinas.id')
-                    ->where('peminjaman_kendaraan_dinas.ket_mobilitas', '!=', 'Antar-Jemput');
-            })
+            ->join('peminjaman_kendaraan_dinas', 'info_perjadinlangsungs.id', '=', 'peminjaman_kendaraan_dinas.info_perjadinlangsung')
             ->select('info_perjadinlangsungs.*')
+            ->where('info_perjadinlangsungs.pemberi_undangan', '!=', '-')
+            ->where('peminjaman_kendaraan_dinas.ket_mobilitas', '!=', 'Antar-Jemput')
             ->orderByDesc('info_perjadinlangsungs.id')
             ->limit(10)
             ->get();
