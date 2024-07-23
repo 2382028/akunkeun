@@ -66,10 +66,15 @@ class AdminPerjadinController extends Controller
     $selesai = $selesaiDate . ' ' . substr($selesaiTime, 0, 5);
     $tgl_selesai = Carbon::createFromFormat('Y-m-d H:i', $selesai);
 
-    if (empty($request->perjadinSebelumnya)) {
-        $versi = Versi::where('status', 'aktif')->get();
+    // if (empty($request->perjadinSebelumnya)) {
+
+    // } else {
+    //     $perjadin = $request->perjadinSebelumnya; // mengambil nilai id dari perjadinSebelumnya
+    // }
+
+    $versi = Versi::where('status', 'aktif')->get();
         DB::table('info_perjadinlangsungs')->insertOrIgnore([
-            'nama_kegiatan' => $request->nama_kegiatan,
+            'nama_kegiatan' => $request->ket_mobilitas . $request->nama_kegiatan,
             'tgl_mulai' => $tgl_keberangkatan,
             'tgl_selesai' => $tgl_selesai,
             'tgl_keberangkatan' => $tgl_keberangkatan,
@@ -88,9 +93,6 @@ class AdminPerjadinController extends Controller
         ]);
 
         $perjadin = Info_perjadinlangsung::max('id'); // mengambil nilai id terakhir yang diinputkan
-    } else {
-        $perjadin = $request->perjadinSebelumnya; // mengambil nilai id dari perjadinSebelumnya
-    }
 
     $status = 'status_' . $perjadin;
     DB::table('peminjaman_kendaraan_dinas')->insertOrIgnore([
@@ -99,8 +101,8 @@ class AdminPerjadinController extends Controller
         'status' => 'pengajuan',
         'pegawai_id' => $request->pengemudi,
         'ket_mobilitas' => $request->ket_mobilitas,
-            'tgl_selesai' => $tgl_selesai,
-            'tgl_keberangkatan' => $tgl_keberangkatan,
+        'tgl_selesai' => $tgl_selesai,
+        'tgl_keberangkatan' => $tgl_keberangkatan,
         'created_at' => now(),
         'updated_at' => now(),
     ]);
