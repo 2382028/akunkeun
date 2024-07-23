@@ -8,6 +8,7 @@ use App\Models\Kendaraan;
 use App\Models\Peminjaman_kendaraan_dinas;
 use App\Models\Kebutuhan;
 use App\Models\Non_pegawai;
+use Illuminate\Support\Facades\Log;
 use App\Models\Versi;
 use App\Models\Pegawai;
 use App\Models\Ref_sbm;
@@ -52,11 +53,20 @@ class AdminPerjadinController extends Controller
     }
 
     public function storeMobilitasOnly(Request $request)
-    {
-        // Gabungkan tanggal dan waktu keberangkatan
-        $tgl_keberangkatan = Carbon::createFromFormat('Y-m-d H:i', $request->tgl_keberangkatan . ' ' . $request->jam_keberangkatan);
-        $tgl_selesai = Carbon::createFromFormat('Y-m-d H:i', $request->tgl_selesai . ' ' . $request->jam_selesai);
+{
+    // Gabungkan tanggal dan waktu keberangkatan
+    $keberangkatanDate = $request->tgl_keberangkatan; // Asumsikan '2024-07-22'
+    $keberangkatanTime = $request->jam_keberangkatan; // Asumsikan '14:13:00'
+    $keberangkatan = $keberangkatanDate . ' ' . substr($keberangkatanTime, 0, 5); // '2024-07-22 14:13'
 
+    $tgl_keberangkatan = Carbon::createFromFormat('Y-m-d H:i', $keberangkatan);
+
+    $selesaiDate = $request->tgl_selesai;
+    $selesaiTime = $request->jam_selesai;
+    $selesai = $selesaiDate . ' ' . substr($selesaiTime, 0, 5);
+    $tgl_selesai = Carbon::createFromFormat('Y-m-d H:i', $selesai);
+
+    if (empty($request->perjadinSebelumnya)) {
         $versi = Versi::where('status', 'aktif')->get();
         DB::table('info_perjadinlangsungs')->insertOrIgnore([
             'nama_kegiatan' => $request->nama_kegiatan,
@@ -70,7 +80,7 @@ class AdminPerjadinController extends Controller
             'mobilitas' => "Kendaraan Dinas",
             'pemberi_undangan' => "-",
             'tanggal_surat' => "-",
-            'keterangan_mobilitas' => "Kendaraan Only",
+            'ket_mobilitas' => $request->ket_mobilitas, // Tambahkan ini
             'status_pengajuan' => 'Draf-pengajuan',
             'versi_id' => $versi[0]->id,
             'created_at' => now(),
@@ -78,89 +88,93 @@ class AdminPerjadinController extends Controller
         ]);
 
         $perjadin = Info_perjadinlangsung::max('id'); // mengambil nilai id terakhir yang diinputkan
-        $status = 'status_' . $perjadin;
-        DB::table('peminjaman_kendaraan_dinas')->insertOrIgnore([
-            'info_perjadinlangsung' => $perjadin, //menerima id info terakhir
-            'kendaraan' => $request->kendaraan,
-            'status' => 'pengajuan',
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        DB::table('dokumens')->insert([
-            'info_perjadinlangsung_id' => $perjadin,
-            'status_persetujuan' => 'pengajuan',
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        DB::table('info_perjadinlangsungs')
-            ->where('id', $perjadin)
-            ->update([
-                'is_acceptHKT' => 'pengajuan',
-                'is_acceptBMN' => 'proses',
-                'status_pengajuan_detail' => 'Verifikasi-HKT',
-                'status_pengajuan' => 'pengajuan',
-                'updated_at' => now(),
-            ]);
-
-        DB::table('data_perjadinlangsungs')->insertOrIgnore([
-            'status_pegawai' => 'Supir',
-            'info_perjadinlangsung' => $perjadin,
-            'pegawai_id' => $request->pengemudi,
-            'tgl_keberangkatan' => $request->tgl_keberangkatan,
-            'tgl_selesai' => $request->tgl_selesai,
-            // 'non_pegawai_id' => $request->peserta_non_pegawai,
-            'status_persetujuan' => 'Proses Persetujuan',
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-
-
-        // Redirect ke URL tertentu
-        return redirect()->to(url('/perjadin-mobilitas/pengajuan'));
+    } else {
+        $perjadin = $request->perjadinSebelumnya; // mengambil nilai id dari perjadinSebelumnya
     }
+
+    $status = 'status_' . $perjadin;
+    DB::table('peminjaman_kendaraan_dinas')->insertOrIgnore([
+        'info_perjadinlangsung' => $perjadin, //menerima id info terakhir
+        'kendaraan' => $request->kendaraan,
+        'status' => 'pengajuan',
+        'pegawai_id' => $request->pengemudi,
+        'ket_mobilitas' => $request->ket_mobilitas,
+            'tgl_selesai' => $tgl_selesai,
+            'tgl_keberangkatan' => $tgl_keberangkatan,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    DB::table('info_perjadinlangsungs')
+        ->where('id', $perjadin)
+        ->update([
+            'is_acceptHKT' => 'pengajuan',
+            'is_acceptBMN' => 'proses',
+            'status_pengajuan_detail' => 'Verifikasi-HKT',
+            'status_pengajuan' => 'pengajuan',
+            'updated_at' => now(),
+        ]);
+
+    DB::table('data_perjadinlangsungs')->insertOrIgnore([
+        'status_pegawai' => 'Supir',
+        'info_perjadinlangsung' => $perjadin,
+        'pegawai_id' => $request->pengemudi,
+        'tgl_keberangkatan' => $request->tgl_keberangkatan,
+        'tgl_selesai' => $request->tgl_selesai,
+        // 'non_pegawai_id' => $request->peserta_non_pegawai,
+        'status_persetujuan' => 'Proses Persetujuan',
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    // Redirect ke URL tertentu
+    return redirect()->to(url('/perjadin-mobilitas/pengajuan'));
+}
+
 
     public function showBmnMobilitasOnly()
-    {
-        $pengemudi = DB::table('pegawais')
-            ->join('jabatans', 'pegawais.jabatan_id', '=', 'jabatans.id')
-            ->select('pegawais.id', 'pegawais.nama_lengkap', 'jabatans.nama_jabatan')
-            ->where('jabatans.nama_jabatan', 'Pengemudi')
-            // ->whereNotExists(function ($query) use ($tanggalAwal, $tanggalAkhir) {
-            //     $query->select(DB::raw(1))
-            //         ->from('data_perjadinlangsungs')
-            //         ->whereRaw('pegawais.id = data_perjadinlangsungs.pegawai_id')
-            //         ->where(function ($subquery) use ($tanggalAwal, $tanggalAkhir) {
-            //             $subquery->where('data_perjadinlangsungs.tgl_keberangkatan', '<=', $tanggalAkhir->format('Y-m-d'))
-            //                 ->where('data_perjadinlangsungs.tgl_selesai', '>=', $tanggalAwal->format('Y-m-d'));
-            //         });
-            // })
-            ->distinct()
-            ->get();
-        $kendaraan = DB::table('kendaraans')
-            ->select('kendaraans.*')
-            ->where('kendaraans.status', '=', 'baik')
-            // ->whereNotExists(function ($query) use ($tanggalAwal, $tanggalAkhir) {
-            //     $query->select(DB::raw(1))
-            //         ->from('peminjaman_kendaraan_dinas')
-            //         ->whereRaw('kendaraans.id = peminjaman_kendaraan_dinas.kendaraan')
-            //         ->where(function ($subquery) use ($tanggalAwal, $tanggalAkhir) {
-            //             $subquery->where('peminjaman_kendaraan_dinas.tgl_keberangkatan', '<', $tanggalAkhir->format('Y-m-d'))
-            //                 ->where('peminjaman_kendaraan_dinas.tgl_selesai', '>', $tanggalAwal->format('Y-m-d'));
-            //         });
-            // })
-            ->distinct()
-            ->get();
-        return view(
-            'admin.perjadin.mobilitas.bmn_mobilitas_only',
-            [
-                'pengemudis' => $pengemudi,
-                'kendaraans' => $kendaraan,
-            ]
-        );
-    }
+{
+    // Pengemudi
+    $pengemudi = DB::table('pegawais')
+        ->join('jabatans', 'pegawais.jabatan_id', '=', 'jabatans.id')
+        ->select('pegawais.id', 'pegawais.nama_lengkap', 'jabatans.nama_jabatan')
+        ->where('jabatans.nama_jabatan', 'Pengemudi')
+        ->distinct()
+        ->get();
+
+    // Kendaraan
+    $kendaraan = DB::table('kendaraans')
+        ->select('kendaraans.*')
+        ->where('kendaraans.status', '=', 'baik')
+        ->distinct()
+        ->get();
+
+    // Mobilitass
+    $mobilitass = DB::table('info_perjadinlangsungs')
+        ->leftJoin('peminjaman_kendaraan_dinas', function($join) {
+            $join->on('info_perjadinlangsungs.id', '=', 'peminjaman_kendaraan_dinas.info_perjadinlangsung')
+                ->where('peminjaman_kendaraan_dinas.ket_mobilitas', '!=', 'Antar-Jemput');
+        })
+        ->whereNull('peminjaman_kendaraan_dinas.id')
+        ->orWhere(function($query) {
+            $query->whereNotNull('peminjaman_kendaraan_dinas.id')
+                  ->where('peminjaman_kendaraan_dinas.ket_mobilitas', '!=', 'Antar-Jemput');
+        })
+        ->select('info_perjadinlangsungs.*')
+        ->orderByDesc('info_perjadinlangsungs.id')
+        ->limit(10)
+        ->get();
+
+    return view(
+        'admin.perjadin.mobilitas.bmn_mobilitas_only',
+        [
+            'pengemudis' => $pengemudi,
+            'kendaraans' => $kendaraan,
+            'mobilitass' => $mobilitass,
+        ]
+    );
+}
+
 
     public function keuanganIndex($status = 'verifikasi-1')
     {
