@@ -51,6 +51,7 @@ use Carbon\Carbon;
                 <thead>
                   <tr class="text-center small">
                     <th class="th-sm">No</th>
+                    <th class="th-sm">ID Perjadin</th>
                     <th class="th-md">Nama Kegiatan</th>
                     <th class="th-md">Tujuan</th>
                     <th class="th-md">Berangkat</th>
@@ -61,6 +62,7 @@ use Carbon\Carbon;
                 @foreach ($mobilitass as $mobilitas)
                 <tr>
                   <td class="text-center">{{$loop->iteration}}</td>
+                  <td class="text-center">{{$mobilitas->idPerjadin}}</td>
                   <td>{{$mobilitas->nama_kegiatan}}</td>
                   <td class="text-center">{{$mobilitas->kabupaten_kota}}</td>
                   <td class="text-center">{{ Carbon::parse($mobilitas->tgl_keberangkatan)->format('d-m-Y H:i') }}</td>
