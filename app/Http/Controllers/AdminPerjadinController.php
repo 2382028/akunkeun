@@ -114,7 +114,6 @@ class AdminPerjadinController extends Controller
             $perjadin = Info_perjadinlangsung::max('id'); // mengambil nilai id dari perjadinSebelumnya
         }
 
-        $status = 'status_' . $perjadin;
         DB::table('peminjaman_kendaraan_dinas')->insertOrIgnore([
             'info_perjadinlangsung' => $perjadin, //menerima id info terakhir
             'kendaraan' => $request->kendaraan,
@@ -123,6 +122,13 @@ class AdminPerjadinController extends Controller
             'ket_mobilitas' => $request->ket_mobilitas,
             'tgl_selesai' => $tgl_selesai,
             'tgl_keberangkatan' => $tgl_keberangkatan,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        DB::table('dokumens')->insert([
+            'info_perjadinlangsung_id' => $perjadin,
+            'status_persetujuan' => 'pengajuan',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -411,9 +417,10 @@ class AdminPerjadinController extends Controller
 
     public function detail_perjadin_bendahara($id)
     {
-        $pesertaPegawaiss = DB::table('data_perjadinlangsungs')
+        $pesertaPegawais = DB::table('data_perjadinlangsungs')
             ->join('pegawais', 'data_perjadinlangsungs.pegawai_id', '=', 'pegawais.id')
-            ->select('pegawais.nama_lengkap', 'pegawais.pangkat', 'pegawais.golongan', 'data_perjadinlangsungs.status_pegawai', 'pegawais.NIP_NIK', 'pegawais.id', 'pegawais.nama_lengkap', 'data_perjadinlangsungs.id as idPeserta')
+            ->join('keuangan_perjadinlangsungs', 'data_perjadinlangsungs.id', '=', 'keuangan_perjadinlangsungs.data_perjadinlangsungs')
+            ->select('pegawais.nama_lengkap', 'pegawais.pangkat', 'pegawais.golongan', 'data_perjadinlangsungs.status_pegawai', 'pegawais.NIP_NIK', 'pegawais.id', 'pegawais.nama_lengkap', 'data_perjadinlangsungs.id as idPeserta', 'keuangan_perjadinlangsungs.id as idKeuangan', 'keuangan_perjadinlangsungs.akun_x_rkakl', 'keuangan_perjadinlangsungs.ref_sbm', 'keuangan_perjadinlangsungs.uang_harian', 'keuangan_perjadinlangsungs.uang_harian_fullday', 'keuangan_perjadinlangsungs.uang_harian_fullboard', 'keuangan_perjadinlangsungs.uang_representasi', 'keuangan_perjadinlangsungs.persen_pajak', 'keuangan_perjadinlangsungs.jumlah_harga', 'keuangan_perjadinlangsungs.status', 'keuangan_perjadinlangsungs.pph22', 'keuangan_perjadinlangsungs.pph23', 'keuangan_perjadinlangsungs.tgl_bayar', 'keuangan_perjadinlangsungs.ppn')
             ->where('data_perjadinlangsungs.info_perjadinlangsung', $id)
             ->where(function ($query) {
                 $query->where('data_perjadinlangsungs.status_pegawai', '!=', 'Supir')
@@ -427,13 +434,6 @@ class AdminPerjadinController extends Controller
                             });
                     });
             })
-            ->get();
-
-        $pesertaPegawais = DB::table('data_perjadinlangsungs')
-            ->join('pegawais', 'data_perjadinlangsungs.pegawai_id', '=', 'pegawais.id')
-            ->join('keuangan_perjadinlangsungs', 'data_perjadinlangsungs.id', '=', 'keuangan_perjadinlangsungs.data_perjadinlangsungs')
-            ->select('pegawais.id', 'keuangan_perjadinlangsungs.id as idKeuangan', 'pegawais.nama_lengkap', 'pegawais.pangkat', 'pegawais.golongan', 'data_perjadinlangsungs.status_pegawai', 'data_perjadinlangsungs.id as idData', 'keuangan_perjadinlangsungs.akun_x_rkakl', 'keuangan_perjadinlangsungs.ref_sbm', 'keuangan_perjadinlangsungs.uang_harian', 'keuangan_perjadinlangsungs.uang_harian_fullday', 'keuangan_perjadinlangsungs.uang_harian_fullboard', 'keuangan_perjadinlangsungs.uang_representasi', 'keuangan_perjadinlangsungs.persen_pajak', 'keuangan_perjadinlangsungs.jumlah_harga', 'keuangan_perjadinlangsungs.status', 'keuangan_perjadinlangsungs.pph22', 'keuangan_perjadinlangsungs.pph23', 'keuangan_perjadinlangsungs.tgl_bayar', 'keuangan_perjadinlangsungs.ppn')
-            ->where('data_perjadinlangsungs.info_perjadinlangsung', $id)
             ->get();
 
         $pesertaNonPegawais = DB::table('data_perjadinlangsungs')
@@ -472,7 +472,6 @@ class AdminPerjadinController extends Controller
             'perjadin' => Info_perjadinlangsung::find($id),
             'pesertaPegawais' => $pesertaPegawais,
             'pesertaNonPegawais' => $pesertaNonPegawais,
-            'pesertaPegawaiss' => $pesertaPegawaiss,
             'kebutuhans' => $kebutuhans,
             "sbms" => Ref_sbm::all(),
             'akuns' => $akuns,

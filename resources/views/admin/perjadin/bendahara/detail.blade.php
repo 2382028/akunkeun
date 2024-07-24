@@ -164,7 +164,7 @@
                         <th class="th-md">Sebagai</th>
                       </tr>
                     </thead>
-                    @foreach ($pesertaPegawaiss as $pesertaPegawai)
+                    @foreach ($pesertaPegawais as $pesertaPegawai)
                     <tr>
                       <td>{{$pesertaPegawai->nama_lengkap}}</td>
                       <td>{{$pesertaPegawai->pangkat}}-{{$pesertaPegawai->golongan}}</td>
@@ -185,7 +185,7 @@
 
               <div class="col-md-12 mb-3">
                 <!-- sementara gini dulu yang ini -->
-                @if($perjadin->is_acceptKeu == 'verifikasi')
+                @if($perjadin->is_acceptKeu == 'selesai')
                 <div class="d-flex justify-content-between">
                   <h5 class="fw-bold">Informasi Peserta</h5>
                 </div>
@@ -199,7 +199,7 @@
                         <th>Akun</th>
                         <th>SBM</th>
                         <th>Uang Harian</th>
-                        <th>Uang Harian Fullday</th>
+                        <th>Uang Harian Halfday/Fullday</th>
                         <th>Uang Harian Fullboard</th>
                         <th>Uang Representasi</th>
                         <th>Total Pembayaran Bersih</th>
@@ -214,7 +214,7 @@
                       @endphp
                       @foreach ($pesertaPegawais as $pesertaPegawai)
                       <tr>
-                        <td style="min-width: 150px">{{$pesertaPegawai->nama_lengkap}} <input type="hidden" name="idPegawai_{{$numpegawai}}" value="{{$pesertaPegawai->idData}}"></td>
+                        <td style="min-width: 150px">{{$pesertaPegawai->nama_lengkap}} <input type="hidden" name="idPegawai_{{$numpegawai}}" value="{{$pesertaPegawai->idPeserta}}"></td>
                         <td style="min-width: 150px">{{$pesertaPegawai->pangkat}}-{{$pesertaPegawai->golongan}}</td>
                         <td style="min-width: 120px">{{$pesertaPegawai->status_pegawai}}</td>
                         <td>
@@ -546,7 +546,7 @@
               <label for="peserta" class="form-label">Nama Peserta</label>
               <select class="form-select mb-2" aria-label="Default select example" name="data_perjadinlangsungs">
                 @foreach($pesertaPegawais as $pesertaPegawai)
-                <option value="{{$pesertaPegawai->idData}}" selected>{{$pesertaPegawai->nama_lengkap}}</option>
+                <option value="{{$pesertaPegawai->idPeserta}}" selected>{{$pesertaPegawai->nama_lengkap}}</option>
                 @endforeach
               </select>
               <label for="uraian" class="form-label">Nama Fasilitas <span class="text-secondary small"></span><span class="text-danger">*</span></label>
