@@ -48,7 +48,7 @@
                                                 data-nama_kegiatan="{{$mobilitas->nama_kegiatan}}"
                                                 data-tgl_keberangkatan="{{$mobilitas->tgl_keberangkatan}}"
                                                 data-tgl_selesai="{{$mobilitas->tgl_selesai}}"
-                                                data-tgl_mulai="{{$mobilitas->tgl_mulai}}"
+                                                data-tgl_mulai2="{{$mobilitas->tgl_mulai}}"
                                                 data-provinsi="{{$mobilitas->provinsi}}"
                                                 data-kabupaten_kota="{{$mobilitas->kabupaten_kota}}"
                                                 data-alamat="{{$mobilitas->alamat}}"
@@ -94,8 +94,8 @@
                                     <input type="time" name="jam_selesai" id="jam_selesai" class="form-control" required>
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                    <label for="tgl_mulai" class="form-label">Tanggal Acara</label>
-                                    <input type="date" name="tgl_mulai" id="tgl_mulai" class="form-control" readonly>
+                                    <label for="tgl_mulai2" class="form-label">Tanggal Acara</label>
+                                    <input type="date" name="tgl_mulai" id="tgl_mulai2" class="form-control" readonly>
                                 </div>
                             </div>
                             <div class="row">
@@ -157,7 +157,7 @@
     const jamKeberangkatan = document.getElementById('jam_keberangkatan');
     const tglSelesai = document.getElementById('tgl_selesai');
     const jamSelesai = document.getElementById('jam_selesai');
-    const tglMulai = document.getElementById('tgl_mulai');
+    const tglMulai = document.getElementById('tgl_mulai2');
     const provinsi = document.getElementById('provinsi');
     const kabupatenKota = document.getElementById('kabupaten_kota');
     const alamat = document.getElementById('alamat');
@@ -218,7 +218,7 @@
 
             const tglKeberangkatanData = splitDateTime(selectedOption.getAttribute('data-tgl_keberangkatan'));
             const tglSelesaiData = splitDateTime(selectedOption.getAttribute('data-tgl_selesai'));
-            const tglMulaiData = splitDateTime(selectedOption.getAttribute('data-tgl_mulai'));
+            const tglMulaiData = splitDateTime(selectedOption.getAttribute('data-tgl_mulai2'));
 
             console.log('Keberangkatan Data:', tglKeberangkatanData);
             console.log('Selesai Data:', tglSelesaiData);
@@ -271,6 +271,46 @@
         });
     });
     </script>
+<script>
+    var konfirmasiRadio = document.querySelectorAll('input[name="konfirmasi"]');
+    var tglKeberangkatanInput = document.getElementById('tgl_keberangkatan');
+    var tglSelesaiInput = document.getElementById('tgl_selesai');
+    var tidakRadio = document.getElementById('tidak');
 
+    // Tambahkan event listener untuk setiap radio button
+    konfirmasiRadio.forEach(function (radio) {
+        radio.addEventListener('change', function () {
+            if (radio.value === 'ya') {
+                // Jika user memilih 'Ya', salin nilai dari satu input ke input yang lain
+                tglSelesaiInput.value = tglKeberangkatanInput.value;
+            }
+        });
+    });
+
+    // Tambahkan event listener untuk input tanggal keberangkatan
+    tglKeberangkatanInput.addEventListener('change', function () {
+        if (document.querySelector('input[name="konfirmasi"]:checked').value === 'ya') {
+            // Jika user memilih 'Ya', salin nilai tanggal keberangkatan ke tanggal mulai acara
+            tglSelesaiInput.value = tglKeberangkatanInput.value;
+        }
+    });
+
+    // Tambahkan event listener untuk input tanggal mulai acara
+    tglSelesaiInput.addEventListener('change', function () {
+        if (document.querySelector('input[name="konfirmasi"]:checked').value === 'ya') {
+            // Jika user memilih 'Ya', salin nilai tanggal mulai acara ke tanggal keberangkatan
+            tglKeberangkatanInput.value = tglSelesaiInput.value;
+        }
+    });
+
+    // Tambahkan event listener untuk radio button 'Tidak'
+    tidakRadio.addEventListener('change', function () {
+        if (tidakRadio.checked) {
+            // Jika user memilih 'Tidak', hapus nilai dari kedua input tanggal
+            tglKeberangkatanInput.value = '';
+            tglSelesaiInput     .value = '';
+        }
+    });
+</script>
 
 
