@@ -433,18 +433,7 @@ class AdminPerjadinController extends Controller
             ->join('keuangan_perjadinlangsungs', 'data_perjadinlangsungs.id', '=', 'keuangan_perjadinlangsungs.data_perjadinlangsungs')
             ->select('pegawais.nama_lengkap', 'pegawais.pangkat', 'pegawais.golongan', 'data_perjadinlangsungs.status_pegawai', 'pegawais.NIP_NIK', 'pegawais.id', 'pegawais.nama_lengkap', 'data_perjadinlangsungs.id as idPeserta', 'keuangan_perjadinlangsungs.id as idKeuangan', 'keuangan_perjadinlangsungs.akun_x_rkakl', 'keuangan_perjadinlangsungs.ref_sbm', 'keuangan_perjadinlangsungs.uang_harian', 'keuangan_perjadinlangsungs.uang_harian_fullday', 'keuangan_perjadinlangsungs.uang_harian_fullboard', 'keuangan_perjadinlangsungs.uang_representasi', 'keuangan_perjadinlangsungs.persen_pajak', 'keuangan_perjadinlangsungs.jumlah_harga', 'keuangan_perjadinlangsungs.status', 'keuangan_perjadinlangsungs.pph22', 'keuangan_perjadinlangsungs.pph23', 'keuangan_perjadinlangsungs.tgl_bayar', 'keuangan_perjadinlangsungs.ppn')
             ->where('data_perjadinlangsungs.info_perjadinlangsung', $id)
-            ->where(function ($query) {
-                $query->where('data_perjadinlangsungs.status_pegawai', '!=', 'Supir')
-                    ->orWhere(function ($query) {
-                        $query->where('data_perjadinlangsungs.status_pegawai', '=', 'Supir')
-                            ->whereNotExists(function ($query) {
-                                $query->select(DB::raw(1))
-                                    ->from('data_perjadinlangsungs as dp2')
-                                    ->whereColumn('dp2.pegawai_id', 'data_perjadinlangsungs.pegawai_id')
-                                    ->where('dp2.status_pegawai', '!=', 'Supir');
-                            });
-                    });
-            })
+            ->whereNull('keuangan_perjadinlangsungs.kebutuhan_id')
             ->get();
 
         $pesertaNonPegawais = DB::table('data_perjadinlangsungs')
@@ -737,7 +726,6 @@ class AdminPerjadinController extends Controller
                     ]);
             }
 
-
             $totalnonpesertapegawai = $request->numNonPegawai;
             for ($i = 0; $i < $totalnonpesertapegawai; $i++) {
                 $idpesertapegawai = 'idNonPesertaPegawai_' . $i;
@@ -848,7 +836,6 @@ class AdminPerjadinController extends Controller
                         'updated_at' => now(),
                     ]);
             }
-
 
             DB::table('dokumens')
                 ->where('id', $request->idDokumen)
@@ -1149,7 +1136,7 @@ class AdminPerjadinController extends Controller
         } elseif ($action === 'approval-2') {
             $totalpesertapegawai = $request->numPegawai;
             for ($i = 0; $i < $totalpesertapegawai; $i++) {
-                $idpesertapegawai = 'idKeuangan_' . $i;
+                $idpesertapegawai = 'idPegawai_' . $i;
                 $uangharian = 'uang_harian' . $i;
                 $uangfullday = 'uang_harian_fullday' . $i;
                 $uangfullboard = 'uang_harian_fullboard' . $i;
@@ -1249,6 +1236,7 @@ class AdminPerjadinController extends Controller
                     'is_acceptKeu' => 'selesai',
                     'is_acceptBend' => 'selesai',
                     'status_pengajuan' => 'selesai',
+                    'status_pengajuan_detail' => 'selesai',
                     'admin_Bend' => auth('administrator')->user()->id,
                     'updated_at' => now(),
                 ]);
