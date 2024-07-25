@@ -6,6 +6,7 @@ use App\Models\Dokumen;
 use App\Models\Info_perjadinlangsung;
 use App\Models\Kendaraan;
 use App\Models\Peminjaman_kendaraan_dinas;
+use App\Models\Data_perjadinlangsung;
 use App\Models\Kebutuhan;
 use App\Models\Non_pegawai;
 use Illuminate\Support\Facades\Log;
@@ -152,6 +153,15 @@ class AdminPerjadinController extends Controller
             'tgl_selesai' => $request->tgl_selesai,
             // 'non_pegawai_id' => $request->peserta_non_pegawai,
             'status_persetujuan' => 'Proses Persetujuan',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $data_perjaidinlangsung_max = data_perjadinlangsung::max('id');
+
+        DB::table('keuangan_perjadinlangsungs')->insertOrIgnore([
+            'info_perjadinlangsung' => $perjadin,
+            'data_perjadinlangsungs' => $data_perjaidinlangsung_max,
             'created_at' => now(),
             'updated_at' => now(),
         ]);

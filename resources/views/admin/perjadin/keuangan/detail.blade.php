@@ -242,11 +242,12 @@ use Carbon\Carbon;
                         </td>
                         <td>
                           <input type="hidden" name="idKebutuhan_{{$numkebutuhan}}" value="{{$kebutuhan->idKebutuhan}}">
-                          <select class="form-select" aria-label=".form-select-sm example" name="kesesuaianKebutuhan_{{$numkebutuhan}}">
-                            <option value="{{$kebutuhan->status}}" selected>-</option>
-                            <option value="sesuai">Sesuai</option>
-                            <option value="tidak sesuai">Tidak Sesuai</option>
-                          </select>
+                          <select class="form-select" aria-label="Default select example" name="kesesuaianKebutuhan_{{$numkebutuhan}}">
+                            <option value="" {{ $kebutuhan->status == '' ? 'selected' : '' }}>-</option>
+                            <option value="sesuai" {{ $kebutuhan->status == 'sesuai' ? 'selected' : '' }}>Sesuai</option>
+                            <option value="tidak sesuai" {{ $kebutuhan->status == 'tidak sesuai' ? 'selected' : '' }}>Tidak Sesuai</option>
+                        </select>
+
                         </td>
                       </tr>
                       @php
@@ -396,4 +397,24 @@ use Carbon\Carbon;
 </div>
 
 <!-- Akhir Dashboard - Kegiatan - Keuangan -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+    // Event listener for the first dropdown
+    $('select[name="kesesuaianKebutuhan_0"]').on('change', function() {
+      // Get the selected value
+      var selectedValue = $(this).val();
+      // Get the selected text
+      var selectedText = $(this).find("option:selected").text();
+
+      // Iterate over all other dropdowns and set the selected value
+      $('select[name^="kesesuaianKebutuhan_"]').not(this).each(function() {
+        $(this).val(selectedValue).trigger('change');
+        $(this).find("option:selected").text(selectedText);
+      });
+    });
+  });
+  </script>
 @endsection
+

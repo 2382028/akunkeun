@@ -331,7 +331,7 @@
                                             </tr>
                                             <tr>
                                                 <td class='text-center'>3</td>
-                                                <td class=''>SPPD</td>
+                                                <td class=''>SPPD [PDF]</td>
                                                 <td class=''>
                                                     @if ($dokumen != null && $dokumen->SPPD != null)
                                                     <?php
@@ -354,7 +354,7 @@
                                             </tr>
                                             <tr>
                                                 <td class='text-center'>4</td>
-                                                <td class=''>Laporan Pengeluaran</td>
+                                                <td class=''>Laporan Pengeluaran [PDF]</td>
                                                 <td class=''>
                                                     @if ($dokumen != null && $dokumen->lap_pengeluaran != null)
                                                     <?php
@@ -377,7 +377,7 @@
                                             </tr>
                                             <tr>
                                                 <td class='text-center'>5</td>
-                                                <td class=''>Laporan Perjalanan</td>
+                                                <td class=''>Laporan Perjalanan [PDF]</td>
                                                 <td class=''>
                                                     @if ($dokumen != null && $dokumen->lap_perjadin != null)
                                                     <?php
