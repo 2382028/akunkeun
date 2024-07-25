@@ -344,10 +344,11 @@
                                                     @endif
                                                 </td>
                                                 <td class='text-center'>
-                                                    @if ($dokumen != null && $dokumen->SPPD != null)
-                                                    <input type="hidden" name="oldSppd" value="{{ $dokumen->SPPD }}">
-                                                    @else
+                                                    @if (($perjadin->status_pengajuan != "pengajuan") && ($perjadin->status_pengajuan != "proses") && ($perjadin->status_pengajuan != "selesai"))
                                                     <input type="file" class="form-control" name="SPPD">
+                                                    @endif
+                                                    @if ($dokumen != null)
+                                                    <input type="hidden" name="oldSppd" value="{{$dokumen->SPPD}}">
                                                     @endif
                                                 </td>
                                             </tr>
@@ -366,10 +367,11 @@
                                                     @endif
                                                 </td>
                                                 <td class='text-center'>
-                                                    @if ($dokumen != null && $dokumen->lap_pengeluaran != null)
-                                                    <input type="hidden" name="oldlap_pengeluaran" value="{{ $dokumen->lap_pengeluaran }}">
-                                                    @else
+                                                    @if (($perjadin->status_pengajuan != "pengajuan") && ($perjadin->status_pengajuan != "proses") && ($perjadin->status_pengajuan != "selesai"))
                                                     <input type="file" class="form-control" name="lap_pengeluaran" required>
+                                                    @endif
+                                                    @if ($dokumen != null)
+                                                    <input type="hidden" name="oldlap_pengeluaran" value="{{$dokumen->lap_pengeluaran}}">
                                                     @endif
                                                 </td>
                                             </tr>
@@ -388,10 +390,11 @@
                                                     @endif
                                                 </td>
                                                 <td class='text-center'>
-                                                @if ($dokumen != null && $dokumen->lap_perjadin != null)
-                                                    <input type="hidden" name="oldLap_perjadin" value="{{ $dokumen->lap_perjadin}}">
-                                                    @else
-                                                    <input type="file" class="form-control" name="lap_perjadin">
+                                                    @if (($perjadin->status_pengajuan != "pengajuan") && ($perjadin->status_pengajuan != "proses") && ($perjadin->status_pengajuan != "selesai"))
+                                                    <input type="file" class="form-control" name="lap_perjadin" required>
+                                                    @endif
+                                                    @if ($dokumen != null)
+                                                    <input type="hidden" name="oldLap_perjadin" value="{{$dokumen->lap_perjadin}}">
                                                     @endif
                                                 </td>
                                             </tr>

@@ -31,7 +31,7 @@ use Carbon\Carbon;
                 <div class="col-10">: {{$perjadin->kabupaten_kota}}</div>
               </div>
               <div class="row small">
-                <div class="col-2">Verivikasi Dari BMN dan Bendahara</div>
+                <div class="col-2">Verifikasi Dari BMN dan Bendahara</div>
                 <div class="col-10">: <span class="bg-info text-white px-3 py-1">{{$perjadin->is_acceptBMN}} | <span class="bg-info text-white px-3 py-1">{{$perjadin->is_acceptBend}}</span></div>
               </div>
               <div class="row small">
@@ -45,8 +45,6 @@ use Carbon\Carbon;
               @csrf
               <input type="hidden" name="statusPerjadin" value="{{$perjadin->is_acceptKeu}}">
               <input type="hidden" name="idPerjadin" value="{{$perjadin->id}}">
-
-              
               <div class="col-md-12 mb-3">
                 <h5 class="fw-bold">Informasi Dokumen</h5>
                 <div class="table-responsive">
@@ -67,22 +65,21 @@ use Carbon\Carbon;
                         <td class='text-center'>1</td>
                         <td>Surat Tugas</td>
                         <td class='text-center'>
-                          <span>                                                        
+                          <span>
                             @if ($dokumen[0]->surat_tugas)
                             <?php
-                                $path = $dokumen[0]->surat_tugas;
-                                $filename = basename($path);
+                            $path = $dokumen[0]->surat_tugas;
+                            $filename = basename($path);
                             ?>
                             <a href="{{url('/perjadin-getDokumen/' . $filename)}}" target="_blank" class="btn btn-sm btn-secondary">
-                                <i class="fa-solid fa-eye"></i> Lihat Dokumen
+                              <i class="fa-solid fa-eye"></i> Lihat Dokumen
                             </a>
                             @endif
-
                           </span>
                         </td>
                         @if ($perjadin->is_acceptKeu == 'verifikasi-2')
                         <td>
-                        <input type="datetime-local" name="tgl_surtug" id="tgl_surtug" class="form-control" required>
+                          <input type="datetime-local" name="tgl_surtug" id="tgl_surtug" class="form-control" required>
                         </td>
                         @endif
                       </tr>
@@ -90,28 +87,15 @@ use Carbon\Carbon;
                         <td class='text-center'>2</td>
                         <td>Surat Undangan</td>
                         <td class='text-center'>
-                          
-                          <!-- @if ($dokumen[0]->surat_undangan != null)
-                          <?php
-                              $path = $dokumen[0]->surat_undangan;
-                              $filename = basename($path);
-                          ?>
-                           <a href="{{asset('/storage/' . $dokumen[0]->surat_undangan)}}" target="_blank" class="btn btn-sm btn-secondary"><i class="fa-solid fa-eye"></i> Lihat Dokumen</a> 
-                          <a href="{{url('/storage/perjadin/getdokumen' . $filename[0])}}" target="_blank" class="btn btn-sm btn-secondary"><i class="fa-solid fa-eye"></i> Lihat Dokumen</a>
-                          @endif                       -->
-
-
                           @if ($dokumen[0]->surat_undangan != null)
                           <?php
-                              $path = $dokumen[0]->surat_undangan;
-                              $filename = basename($path);
+                          $path = $dokumen[0]->surat_undangan;
+                          $filename = basename($path);
                           ?>
                           <a href="{{url('/perjadin-getDokumen/' . $filename)}}" target="_blank" class="btn btn-sm btn-secondary">
-                              <i class="fa-solid fa-eye"></i> Lihat Dokumen
+                            <i class="fa-solid fa-eye"></i> Lihat Dokumen
                           </a>
                           @endif
-
-
                           <span>
                           </span>
                         </td>
@@ -123,14 +107,14 @@ use Carbon\Carbon;
                           <span>
                             @if ($dokumen[0]->SPPD!= null)
                             <?php
-                              $path = $dokumen[0]->SPPD;
-                              $filename = basename($path);
-                          ?>
+                            $path = $dokumen[0]->SPPD;
+                            $filename = basename($path);
+                            ?>
 
                             <!-- <a href="{{asset('/storage/' . $dokumen[0]->SPPD)}}" target="_blank" class="btn btn-sm btn-secondary"><i class="fa-solid fa-eye"></i> Lihat Dokumen</a> -->
                             <a href="{{url('/perjadin-getDokumen/' . $filename)}}" target="_blank" class="btn btn-sm btn-secondary">
                               <i class="fa-solid fa-eye"></i> Lihat Dokumen
-                          </a>
+                            </a>
 
                             @endif
                           </span>
@@ -143,9 +127,9 @@ use Carbon\Carbon;
                           <span>
                             @if ($dokumen[0]->lap_pengeluaran != null)
                             <?php
-                              $path = $dokumen[0]->lap_pengeluaran;
-                              $filename = basename($path);
-                          ?>
+                            $path = $dokumen[0]->lap_pengeluaran;
+                            $filename = basename($path);
+                            ?>
                             <!-- <a href="{{asset('/storage/' . $dokumen[0]->lap_pengeluaran)}}" target="_blank" class="btn btn-sm btn-secondary"><i class="fa-solid fa-eye"></i> Lihat Laporan</a> -->
                             <a href="{{url('/perjadin-getDokumen/' . $filename)}}" target="_blank" class="btn btn-sm btn-secondary"><i class="fa-solid fa-eye"></i> Lihat Laporan </a>
                             @endif
@@ -156,7 +140,7 @@ use Carbon\Carbon;
                         <td class='text-center'>5</td>
                         <td>Laporan Perjadin</td>
                         <td class='text-center'>
-                        <span>
+                          <span>
                             @if ($dokumen[0]->lap_perjadin != null)
                             <?php
                             $path = $dokumen[0]->lap_perjadin;
@@ -182,7 +166,6 @@ use Carbon\Carbon;
                         <th class="th-md">Nama Lengkap</th>
                         <th class="th-sm">Pangkat/Golongan</th>
                         <th class="th-md">Sebagai</th>
-
                       </tr>
                     </thead>
                     <tbody>
@@ -195,7 +178,6 @@ use Carbon\Carbon;
                         <td>{{$pesertaPegawai->nama_lengkap}} <input type="hidden" name="idPesertaPegawai_{{$numpegawai}}" value="{{$pesertaPegawai->idPeserta}}"></td>
                         <td class="text-center">{{$pesertaPegawai->pangkat}}-{{$pesertaPegawai->golongan}}</td>
                         <td class="text-center">{{$pesertaPegawai->status_pegawai}}</td>
-
                       </tr>
                       @php
                       $numpegawai++;
@@ -284,16 +266,12 @@ use Carbon\Carbon;
               </div>
               @endif
 
-
-
               <div class="col-md-12 mb-3">
                 <div class="d-grid gap-2 d-md-flex justify-content-center">
-
                   @if (($perjadin->is_acceptKeu == 'verifikasi-1'))
                   <button class="btn btn-danger" type="submit" name="action" value="tolak">Tolak Perjalanan dinas</button>
                   <button class="btn btn-info text-white" type="button" data-bs-toggle="modal" data-bs-target="#revisi_user_modal">Revisi User</button>
                   <button class="btn btn-info text-white" type="button" data-bs-toggle="modal" data-bs-target="#revisi_hkt_modal">Revisi HKT</button>
-
                   <a href="{{url('/perjadin-keuangan/' . 'verifikasi-1')}}" class="btn btn-dark">Kembali</a>
                   @endif
                   @if (($perjadin->is_acceptKeu == 'verifikasi-2'))
@@ -312,7 +290,6 @@ use Carbon\Carbon;
               </div>
             </form>
           </div>
-
         </div>
       </div>
     </div>
@@ -349,44 +326,44 @@ use Carbon\Carbon;
 </div>
 
 <div class="modal fade" id="tambah_fasilitas" tabindex="-1" aria-labelledby="tambah_fasilitasLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="tambah_fasilitasLabel">Tambah Fasilitas</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form action="{{url('/c_fasilitasDetail_bendahara')}}" method="post">
-            @csrf
-            <input id="" type="hidden" value="{{ $perjadin->id }}" name="info_perjadinlangsung">
-            <div class="row">
-              <div class="col-md-12 mb-3">
-                <label for="uraian" class="form-label">Nama Fasilitas <span class="text-secondary small"></span><span class="text-danger">*</span></label>
-                <select class="form-select" id="uraian" name="uraian" required>
-                  <option value="" disabled selected>Pilih Jenis Fasilitas</option>
-                  <option value="Akomodasi Hotel">Akomodasi Hotel</option>
-                  <option value="BBM">BBM</option>
-                  <option value="Tiket Kereta">Tiket Kereta</option>
-                  <option value="Tiket Pesawat">Tiket Pesawat</option>
-                  <option value="Tiket Travel">Tiket Travel</option>
-                  <option value="Transportasi Online">Transportasi Online</option>
-                  <option value="Tol">Tol</option>
-                </select>
-              </div>
-            </div>
-
-            <div id="conditional_fields">
-            </div>
-
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger text-white" data-bs-dismiss="modal">Batal</button>
-              <button type="submit" class="btn btn-primary">Simpan</button>
-            </div>
-        </div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="tambah_fasilitasLabel">Tambah Fasilitas</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      </form>
+      <div class="modal-body">
+        <form action="{{url('/c_fasilitasDetail_bendahara')}}" method="post">
+          @csrf
+          <input id="" type="hidden" value="{{ $perjadin->id }}" name="info_perjadinlangsung">
+          <div class="row">
+            <div class="col-md-12 mb-3">
+              <label for="uraian" class="form-label">Nama Fasilitas <span class="text-secondary small"></span><span class="text-danger">*</span></label>
+              <select class="form-select" id="uraian" name="uraian" required>
+                <option value="" disabled selected>Pilih Jenis Fasilitas</option>
+                <option value="Akomodasi Hotel">Akomodasi Hotel</option>
+                <option value="BBM">BBM</option>
+                <option value="Tiket Kereta">Tiket Kereta</option>
+                <option value="Tiket Pesawat">Tiket Pesawat</option>
+                <option value="Tiket Travel">Tiket Travel</option>
+                <option value="Transportasi Online">Transportasi Online</option>
+                <option value="Tol">Tol</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="conditional_fields">
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger text-white" data-bs-dismiss="modal">Batal</button>
+            <button type="submit" class="btn btn-primary">Simpan</button>
+          </div>
+      </div>
     </div>
+    </form>
   </div>
+</div>
 
 <!-- Modal Revisi HKT -->
 <div class="modal fade" id="revisi_hkt_modal" tabindex="-1" aria-labelledby="tolak_mobilitasLabel" aria-hidden="true">

@@ -153,6 +153,7 @@
                 </div>
               </div>
 
+              @if($perjadin->is_acceptKeu != 'selesai')
               <div class="col-md-12 mb-3" id="divInformasiPeserta">
                 <h5 class="fw-bold">Informasi Peserta</h5>
                 <div class="table-responsive">
@@ -182,10 +183,11 @@
                   </table>
                 </div>
               </div>
+              @endif
 
               <div class="col-md-12 mb-3">
                 <!-- sementara gini dulu yang ini -->
-                @if($perjadin->is_acceptKeu == 'selesai')
+                @if(($perjadin->is_acceptKeu == 'selesai') && ($perjadin->is_acceptBend == 'approval-2') || ($perjadin->is_acceptBend == 'selesai'))
                 <div class="d-flex justify-content-between">
                   <h5 class="fw-bold">Informasi Peserta</h5>
                 </div>
@@ -594,5 +596,54 @@
       });
     });
   });
+
+  $(document).ready(function() {
+    // Event listener for the first dropdown
+    $('select[name="akunPegawai_0"]').on('change', function() {
+      // Get the selected value
+      var selectedValue = $(this).val();
+      // Get the selected text
+      var selectedText = $(this).find("option:selected").text();
+
+      // Iterate over all other dropdowns and set the selected value
+      $('select[name^="akunPegawai_"]').not(this).each(function() {
+        $(this).val(selectedValue).trigger('change');
+        $(this).find("option:selected").text(selectedText);
+      });
+    });
+  });
+
+  $(document).ready(function() {
+    // Event listener for the first dropdown
+    $('select[name="sbmPegawai_0"]').on('change', function() {
+      // Get the selected value
+      var selectedValue = $(this).val();
+      // Get the selected text
+      var selectedText = $(this).find("option:selected").text();
+
+      // Iterate over all other dropdowns and set the selected value
+      $('select[name^="sbmPegawai_"]').not(this).each(function() {
+        $(this).val(selectedValue).trigger('change');
+        $(this).find("option:selected").text(selectedText);
+      });
+    });
+  });
+
+  $(document).ready(function() {
+    // Event listener for the first dropdown
+    $('select[name="sbmKebutuhan_0"]').on('change', function() {
+      // Get the selected value
+      var selectedValue = $(this).val();
+      // Get the selected text
+      var selectedText = $(this).find("option:selected").text();
+
+      // Iterate over all other dropdowns and set the selected value
+      $('select[name^="sbmKebutuhan_"]').not(this).each(function() {
+        $(this).val(selectedValue).trigger('change');
+        $(this).find("option:selected").text(selectedText);
+      });
+    });
+  });
+
 </script>
 @endsection
