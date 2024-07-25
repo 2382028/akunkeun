@@ -91,7 +91,7 @@
                             <div class="row">
                                 <div class="col-md-4 mb-3">
                                     <label for="" class="form-label">Mobilitas<span class="text-danger">*</span></label>
-                                    <select class="form-select required2" aria-label=".form-select-sm example" name="fasilitas_perjadin">
+                                    <select class="form-select required2" aria-label=".form-select-sm example" name="fasilitas_perjadin" id="mobilitasSelect">
                                         <option value="">Pilih Mobilitas</option>
                                         <option value="Kendaraan Dinas">Kendaraan Dinas</option>
                                         <option value="Transportasi Publik">Transportasi Publik</option>
@@ -101,12 +101,8 @@
                                 </div>
                                 <div class="col-md-8 mb-3">
                                     <label for="" class="form-label">Keterangan Mobilitas<span class="text-danger"><span class="text-secondary small"> (Khusus untuk Kendaraan Dinas)</span>*</span></label>
-                                    <select class="form-select" aria-label=".form-select-sm example" name="keterangan_mobilitas" id="keteranganSelect">
+                                    <select class="form-select" aria-label=".form-select-sm example" name="keterangan_mobilitas" id="keteranganSelect" disabled>
                                         <option value="">Pilih Keterangan</option>
-                                        <option value="Antar">Antar</option>
-                                        <option value="Jemput">Jemput</option>
-                                        <option value="Antar-Jemput">Antar-Jemput</option>
-                                        <option value="Tidak Menggunakan Kendaraan Dinas">Tidak Menggunakan Kendaraan Dinas</option>
                                     </select>
                                 </div>
                             </div>
@@ -123,3 +119,47 @@
     </div>
 </section>
 @endsection
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobilitasSelect = document.getElementById('mobilitasSelect');
+        const keteranganSelect = document.getElementById('keteranganSelect');
+
+        const optionsMapping = {
+            'Kendaraan Dinas': ['Antar', 'Jemput', 'Antar-Jemput'],
+            'Kendaraan Dinas dan Transportasi Publik': ['Antar', 'Jemput', 'Antar-Jemput'],
+            'Transportasi Publik': ['Tidak Menggunakan Kendaraan Dinas'],
+            'Kendaraan Pribadi': ['Tidak Menggunakan Kendaraan Dinas']
+        };
+
+        mobilitasSelect.addEventListener('change', function() {
+            const selectedMobilitas = mobilitasSelect.value;
+            keteranganSelect.innerHTML = ''; // Clear existing options
+            if (selectedMobilitas) {
+                const newOptions = optionsMapping[selectedMobilitas] || [];
+                keteranganSelect.disabled = false; // Enable the dropdown
+                newOptions.forEach(option => {
+                    const optionElement = new Option(option, option);
+                    keteranganSelect.appendChild(optionElement);
+                });
+                // Add a placeholder option but disable it
+                const placeholderOption = new Option('Pilih Keterangan', '');
+                placeholderOption.disabled = true;
+                keteranganSelect.insertBefore(placeholderOption, keteranganSelect.firstChild);
+                keteranganSelect.value = ''; // Set the value to empty to select the placeholder
+
+                // Disable the "Pilih Mobilitas" option
+                mobilitasSelect.querySelector('option[value=""]').disabled = true;
+            } else {
+                keteranganSelect.disabled = true; // Disable the dropdown
+                keteranganSelect.appendChild(new Option('Pilih Keterangan', ''));
+            }
+        });
+
+        keteranganSelect.addEventListener('change', function() {
+            if (keteranganSelect.value !== '') {
+                keteranganSelect.querySelector('option[value=""]').disabled = true;
+            }
+        });
+    });
+    </script>

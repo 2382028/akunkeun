@@ -181,13 +181,18 @@ class AdminPerjadinController extends Controller
 
         // Mobilitass
         $mobilitass = DB::table('info_perjadinlangsungs')
-            ->join('peminjaman_kendaraan_dinas', 'info_perjadinlangsungs.id', '=', 'peminjaman_kendaraan_dinas.info_perjadinlangsung')
+            ->leftJoin('peminjaman_kendaraan_dinas', 'info_perjadinlangsungs.id', '=', 'peminjaman_kendaraan_dinas.info_perjadinlangsung')
             ->select('info_perjadinlangsungs.*')
             ->where('info_perjadinlangsungs.pemberi_undangan', '!=', '-')
-            ->where('peminjaman_kendaraan_dinas.ket_mobilitas', '!=', 'Antar-Jemput')
+            ->whereNotExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('peminjaman_kendaraan_dinas')
+                    ->whereColumn('peminjaman_kendaraan_dinas.info_perjadinlangsung', 'info_perjadinlangsungs.id');
+            })
             ->orderByDesc('info_perjadinlangsungs.id')
             ->limit(10)
             ->get();
+
 
         return view(
             'admin.perjadin.mobilitas.bmn_mobilitas_only',

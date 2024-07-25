@@ -35,7 +35,7 @@ use Carbon\Carbon;
                 </tr>
                 <tr>
                   <td class="fw-bold">Tempat</td>
-                  <td>                
+                  <td>
                   {{$dokumen[0]->tempat_pelaksanaan}}
                   </td>
                 </tr>
@@ -45,7 +45,7 @@ use Carbon\Carbon;
                   </td>
                 </tr>
               </table>
-    
+
               <div class="card border-0">
                 <div class="card-body ms-auto m-0">
                   <!-- Bandung, ............................... 20... <br />Pelaksana Perjalanan Dinas -->
@@ -58,7 +58,7 @@ use Carbon\Carbon;
                 {{$dokumen[0]->nama_pelaksana}}
                 </div>
               </div>
-    
+
             </div>
           </div>
         </div>
@@ -68,22 +68,45 @@ use Carbon\Carbon;
         </div>
 
       </div>
-      
+
       </form>
     </div>
-    
-    <script>
+
+    <style>
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            display: none;
+        }
+    </style>
+
+
+<script>
     function printPage() {
         var printContents = document.getElementById('printableArea').innerHTML;
         var originalContents = document.body.innerHTML;
 
-        document.body.innerHTML = printContents;
+        var overlay = document.createElement('div');
+        overlay.id = 'overlay';
+        document.body.appendChild(overlay);
+
+        overlay.style.display = 'block';
+
+        document.body.innerHTML = '<div id="printableArea">' + printContents + '</div>';
 
         window.print();
+
+        overlay.style.display = 'none';
 
         document.body.innerHTML = originalContents;
         location.reload();
     }
-    </script>
+</script>
+
     <!-- Akhir Delete Modal Data Ruangan -->
 @endsection

@@ -182,35 +182,37 @@
         const selectedOption = perjadinSebelumnya.options[perjadinSebelumnya.selectedIndex];
 
         if (perjadinSebelumnya.value === "") {
-            judulKegiatan.disabled = false;
-            tglKeberangkatan.disabled = false;
-            jamKeberangkatan.disabled = false;
-            tglSelesai.disabled = false;
-            jamSelesai.disabled = false;
-            tglMulai.disabled = false;
-            provinsi.disabled = false;
-            kabupatenKota.disabled = false;
-            alamat.disabled = false;
-            desaKecamatan.disabled = false;
-            radioButtons.forEach(rb => rb.disabled = false);
+            // judulKegiatan.disabled = false;
+            // tglKeberangkatan.disabled = false;
+            // jamKeberangkatan.disabled = false;
+            // tglSelesai.disabled = false;
+            // jamSelesai.disabled = false;
+            // tglMulai.disabled = false;
+            // provinsi.disabled = false;
+            // kabupatenKota.disabled = false;
+            // alamat.disabled = false;
+            // desaKecamatan.disabled = false;
+            // radioButtons.forEach(rb => rb.disabled = false);
+            perjadinSebelumnya.disabled =false;
 
             perjadinSebelumnya.classList.add('disabled-option');
             perjadinSebelumnyaText.classList.add('d-none');
             kendaraanDinasText.classList.remove('d-none');
         } else {
-            judulKegiatan.disabled = true;
+            perjadinSebelumnya.disabled =true;
+            // judulKegiatan.disabled = true;
             // tglKeberangkatan.disabled = true;
             // jamKeberangkatan.disabled = true;
             // tglSelesai.disabled = true;
             // jamSelesai.disabled = true;
-            tglMulai.disabled = true;
-            provinsi.disabled = true;
-            kabupatenKota.disabled = true;
-            alamat.disabled = true;
-            desaKecamatan.disabled = true;
+            // tglMulai.disabled = true;
+            // provinsi.disabled = true;
+            // kabupatenKota.disabled = true;
+            // alamat.disabled = true;
+            // desaKecamatan.disabled = true;
 
              // Disable radio buttons
-             radioButtons.forEach(rb => rb.disabled = true);
+            //  radioButtons.forEach(rb => rb.disabled = true);
 
              perjadinSebelumnya.classList.add('disabled-option');
             perjadinSebelumnyaText.classList.remove('d-none');
