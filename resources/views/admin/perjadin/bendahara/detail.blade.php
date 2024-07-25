@@ -212,7 +212,7 @@
                       $numpegawai = 0;
                       $numnonpegawai = 0;
                       @endphp
-                      @foreach ($pesertaPegawais as $pesertaPegawai)
+                      @foreach ($fasilitas as $pesertaPegawai)
                       <tr>
                         <td style="min-width: 150px">{{$pesertaPegawai->nama_lengkap}} <input type="hidden" name="idPegawai_{{$numpegawai}}" value="{{$pesertaPegawai->idPeserta}}"></td>
                         <td style="min-width: 150px">{{$pesertaPegawai->pangkat}}-{{$pesertaPegawai->golongan}}</td>
@@ -234,7 +234,7 @@
                             <option value="{{$sbm->id}}" selected>[{{$sbm->kode_sbm}} | {{$sbm->satuan}}] {{$sbm->uraian}}</option>
                             @endif
                             <option value="{{$sbm->id}}" data-label="{{$sbm->biaya}}">[{{$sbm->kode_sbm}} | {{$sbm->satuan}}] {{$sbm->uraian}}</option>
-                            @endforeach   
+                            @endforeach
                           </select>
                         </td>
                         <td style="min-width: 200px">
@@ -380,10 +380,10 @@
                       </select>
                     </td>
                     <td style="min-width: 200px">
-                      <input type="number" class="form-control num1 prevent-submit" min="0" name="nominalKebutuhan_{{$numkebutuhan}}" value="{{$kebutuhan->uang_harian}}" readonly>
+                      <input type="number" class="form-control " min="0" name="nominalKebutuhan_{{$numkebutuhan}}" value="{{$kebutuhan->uang_harian}}" readonly>
                     </td>
                     <td style="min-width: 200px">
-                      <input type="number" class="result form-control" min="0" name="totalKebutuhan_{{$numkebutuhan}}" value="{{$kebutuhan->jumlah_harga}}">
+                      <input type="number" class="num1 result prevent-submit form-control" min="0" name="totalKebutuhan_{{$numkebutuhan}}" value="{{$kebutuhan->jumlah_harga}}">
                     </td>
                   </tr>
                   @php
@@ -395,7 +395,7 @@
                 </tbody>
                 <tfoot>
                   <tr>
-                    <td colspan="7" class="fw-bold text-end">Sub Total</td>
+                    <td colspan="9" class="fw-bold text-end">Sub Total</td>
                     <td><input type="number" class="total form-control" readonly></td>
                   </tr>
                 </tfoot>

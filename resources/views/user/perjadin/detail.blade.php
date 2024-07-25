@@ -284,31 +284,26 @@
                                                     <th class="th-md">Unggah Dokumen</th>
                                                 </tr>
                                             </thead>
-                                            
+
                                             <tr>
                                                 <td class='text-center'>1</td>
-                                                <td class=''>Surat Undangan </td>
+                                                <td class=''>Surat Undangan</td>
                                                 <td class=''>
-                                                    @if ($dokumen != null)
-                                                    @if ($dokumen->surat_undangan != null)
+                                                    @if ($dokumen != null && $dokumen->surat_undangan != null)
                                                     <?php
-                                                $path = $dokumen->surat_undangan;
-                                                $filename = basename($path);
-                                                ?>
-                                                <!-- <a href="{{url('/storage/'. $dokumen->surat_undangan)}}" target="_blank">[Lihat Lampiran]</a> -->
-                                                <a href="{{url('/perjadin/getDokumen/'.$filename)}}" target="_blank">[Lihat Lampiran]</a>
-                                                
-                                                </td>
-                                                @else
-                                                Laporan Belum Diunggah
-                                                @endif
-                                                @endif
-                                                <td class='text-center'>
-                                                    @if (($perjadin->status_pengajuan != "pengajuan") && ($perjadin->status_pengajuan != "proses"))
-                                                    <input type="file" class="form-control" name="surat_undangan">
+                                                    $path = $dokumen->surat_undangan;
+                                                    $filename = basename($path);
+                                                    ?>
+                                                    <a href="{{ url('/perjadin/getDokumen/'.$filename) }}" target="_blank">[Lihat Lampiran]</a>
+                                                    @else
+                                                    Laporan Belum Diunggah
                                                     @endif
-                                                    @if ($dokumen != null)
-                                                    <input type="hidden" name="oldSuratUndangan" value="{{$dokumen->surat_undangan}}">
+                                                </td>
+                                                <td class='text-center'>
+                                                    @if ($dokumen != null && $dokumen->surat_undangan != null)
+                                                    <input type="hidden" name="oldSuratUndangan" value="{{ $dokumen->surat_undangan }}">
+                                                    @else
+                                                    <input type="file" class="form-control" name="surat_undangan">
                                                     @endif
                                                 </td>
                                             </tr>
@@ -316,51 +311,43 @@
                                                 <td class='text-center'>2</td>
                                                 <td class=''>Surat Tugas</td>
                                                 <td class=''>
-                                                    @if ($dokumen != null)
-                                                    @if ($dokumen->surat_tugas != null)
+                                                    @if ($dokumen != null && $dokumen->surat_tugas != null)
                                                     <?php
-                                                $path = $dokumen->surat_tugas;
-                                                $filename = basename($path);
-                                                ?>
-                                                    <!-- <a href="{{asset('/storage/'. $dokumen->surat_tugas)}}" target="_blank">[Lihat Lampiran]</a> -->
-                                                    <a href="{{url('/perjadin/getDokumen/'.$filename)}}" target="_blank">[Lihat Lampiran]</a>
-                                                    </td>
-                                                @else
-                                                Laporan Belum Diunggah
-                                                @endif
-                                                @endif
-                                                <td class='text-center'>
-                                                    @if (($perjadin->status_pengajuan != "pengajuan") && ($perjadin->status_pengajuan != "proses"))
-                                                    <input type="file" class="form-control" name="surat_tugas">
+                                                    $path = $dokumen->surat_tugas;
+                                                    $filename = basename($path);
+                                                    ?>
+                                                    <a href="{{ url('/perjadin/getDokumen/'.$filename) }}" target="_blank">[Lihat Lampiran]</a>
+                                                    @else
+                                                    Laporan Belum Diunggah
                                                     @endif
-                                                    @if ($dokumen != null)
-                                                    <input type="hidden" name="oldSuratTugas" value="{{$dokumen->surat_undangan}}">
+                                                </td>
+                                                <td class='text-center'>
+                                                    @if ($dokumen != null && $dokumen->surat_tugas != null)
+                                                    <input type="hidden" name="oldSuratTugas" value="{{ $dokumen->surat_tugas }}">
+                                                    @else
+                                                    <input type="file" class="form-control" name="surat_tugas">
                                                     @endif
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td class='text-center'>3</td>
-                                                <td class=''>SPPD </td>
+                                                <td class=''>SPPD</td>
                                                 <td class=''>
-                                                @if ($dokumen != null)
-                                                @if ($dokumen->SPPD != null)
+                                                    @if ($dokumen != null && $dokumen->SPPD != null)
                                                     <?php
-                                                        $path = $dokumen->SPPD;
-                                                        $filename = basename($path);
-                                                    ?>                                                                                                     
+                                                    $path = $dokumen->SPPD;
+                                                    $filename = basename($path);
+                                                    ?>
                                                     <a href="{{ url('/perjadin-getDokumen/'.$filename) }}" target="_blank">[Lihat Lampiran]</a>
-                                                @else
+                                                    @else
                                                     Laporan Belum Diunggah
-                                                @endif
-                                                @endif
-
+                                                    @endif
                                                 </td>
                                                 <td class='text-center'>
-                                                    @if (($perjadin->status_pengajuan != "pengajuan") && ($perjadin->status_pengajuan != "proses") && ($perjadin->status_pengajuan != "selesai"))
+                                                    @if ($dokumen != null && $dokumen->SPPD != null)
+                                                    <input type="hidden" name="oldSppd" value="{{ $dokumen->SPPD }}">
+                                                    @else
                                                     <input type="file" class="form-control" name="SPPD">
-                                                    @endif
-                                                    @if ($dokumen != null)
-                                                    <input type="hidden" name="oldSppd" value="{{$dokumen->SPPD}}">
                                                     @endif
                                                 </td>
                                             </tr>
@@ -368,25 +355,21 @@
                                                 <td class='text-center'>4</td>
                                                 <td class=''>Laporan Pengeluaran</td>
                                                 <td class=''>
-                                                    @if ($dokumen != null)
-                                                    @if ($dokumen->lap_pengeluaran != null)
+                                                    @if ($dokumen != null && $dokumen->lap_pengeluaran != null)
                                                     <?php
-                                                        $path = $dokumen->lap_pengeluaran;
-                                                        $filename = basename($path);
-                                                    ?>                                                                                      
-                                                    <!-- <a href="{{asset('/storage/'. $dokumen->lap_pengeluaran)}}" target="_blank">[Lihat Lampiran]</a> -->               
+                                                    $path = $dokumen->lap_pengeluaran;
+                                                    $filename = basename($path);
+                                                    ?>
                                                     <a href="{{ url('/perjadin-getDokumen/'.$filename) }}" target="_blank">[Lihat Lampiran]</a>
                                                     @else
                                                     Laporan Belum Diunggah
                                                     @endif
-                                                    @endif
                                                 </td>
                                                 <td class='text-center'>
-                                                    @if (($perjadin->status_pengajuan != "pengajuan") && ($perjadin->status_pengajuan != "proses") && ($perjadin->status_pengajuan != "selesai"))
-                                                    <input type="file" class="form-control" name="lap_pengeluaran">
-                                                    @endif
-                                                    @if ($dokumen != null)
-                                                    <input type="hidden" name="oldlap_pengeluaran" value="{{$dokumen->lap_pengeluaran}}">
+                                                    @if ($dokumen != null && $dokumen->lap_pengeluaran != null)
+                                                    <input type="hidden" name="oldlap_pengeluaran" value="{{ $dokumen->lap_pengeluaran }}">
+                                                    @else
+                                                    <input type="file" class="form-control" name="lap_pengeluaran" required>
                                                     @endif
                                                 </td>
                                             </tr>
@@ -394,25 +377,21 @@
                                                 <td class='text-center'>5</td>
                                                 <td class=''>Laporan Perjalanan</td>
                                                 <td class=''>
-                                                    @if ($dokumen != null)
-                                                    @if ($dokumen->lap_perjadin != null)
+                                                    @if ($dokumen != null && $dokumen->lap_perjadin != null)
                                                     <?php
-                                                        $path = $dokumen->lap_perjadin;
-                                                        $filename = basename($path);
-                                                    ?>                                                                                      
-                                                    <!-- <a href="{{asset('/storage/'. $dokumen->lap_perjadin)}}" target="_blank">[Lihat Lampiran]</a> -->               
+                                                    $path = $dokumen->lap_perjadin;
+                                                    $filename = basename($path);
+                                                    ?>
                                                     <a href="{{ url('/perjadin-getDokumen/'.$filename) }}" target="_blank">[Lihat Lampiran]</a>
                                                     @else
                                                     Laporan Belum Diunggah
                                                     @endif
-                                                    @endif
                                                 </td>
                                                 <td class='text-center'>
-                                                    @if (($perjadin->status_pengajuan != "pengajuan") && ($perjadin->status_pengajuan != "proses") && ($perjadin->status_pengajuan != "selesai"))
+                                                @if ($dokumen != null && $dokumen->lap_perjadin != null)
+                                                    <input type="hidden" name="oldLap_perjadin" value="{{ $dokumen->lap_perjadin}}">
+                                                    @else
                                                     <input type="file" class="form-control" name="lap_perjadin">
-                                                    @endif
-                                                    @if ($dokumen != null)
-                                                    <input type="hidden" name="oldLap_perjadin" value="{{$dokumen->lap_perjadin}}">
                                                     @endif
                                                 </td>
                                             </tr>
@@ -432,27 +411,25 @@
                                     @if (($perjadin->status_pengajuan == 'Draf-pengajuan') | ($perjadin->status_pengajuan == 'revisi') | ($perjadin->status_pengajuan == 'pelaporan'))
                                     <a href="{{url('/perjadin/riwayat/' . $perjadin->status_pengajuan)}}" class="btn btn-prev btn-warning col-md-2 text-white">Kembali</a>
                                     <div class="col-md-30">
-                                        <button class="btn btn-neon btn-warning text-white" type="submit"name="action" value="update">Perbaharui dan Simpan</button>
+                                        <button class="btn btn-neon btn-warning text-white" type="submit" name="action" value="update">Perbaharui dan Simpan</button>
                                     </div>
                                     @elseif (($perjadin->status_pengajuan == 'proses'))
                                     <a href="{{url('/perjadin/riwayat/' . $perjadin->status_pengajuan)}}" class="btn btn-prev btn-warning col-md-2 text-white">Kembali</a>
-                                        <div class="col-md-2">
-                                        @if (($perjadin->is_acceptBend == 'approval-2'))
-                                        <button class="btn btn-neon btn-warning text-white" type="submit" name="action" value="selesai">Selesai</button>
-                                        @else
-                                        <button class="btn btn-neon text-white" type="button" data-bs-toggle="modal" data-bs-target="#alertModal">Selesai</button>
-                                        @endif
-                                        </div>
-                                    </form>
-                                    @elseif (($perjadin->status_pengajuan == 'pengajuan'))
-                                    <a href="{{url('/perjadin/riwayat/' . $perjadin->status_pengajuan)}}" class="btn btn-prev btn-warning col-md-5 text-white">Kembali</a>
+                                    @if (($perjadin->is_acceptBend == 'approval-2'))
+                                    <button class="btn btn-neon btn-warning text-white col-md-2" type="submit" name="action" value="selesai">Selesai</button>
+                                    @else
+                                    <button class="btn btn-neon text-white col-md-2" type="button" data-bs-toggle="modal" data-bs-target="#alertModal">Selesai</button>
                                     @endif
-                                </div>
+                            </form>
+                            @elseif (($perjadin->status_pengajuan == 'pengajuan'))
+                            <a href="{{url('/perjadin/riwayat/' . $perjadin->status_pengajuan)}}" class="btn btn-prev btn-warning col-md-5 text-white">Kembali</a>
+                            @endif
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
     </div>
 </section>
@@ -462,7 +439,7 @@
         <div class="modal-content">
             <div class="modal-body text-center">
                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-exclamation-triangle-fill mb-3" viewBox="0 0 16 16">
-                    <path d="M8 16a2 2 0 0 1-1.732-1H1.78a2 2 0 0 1-1.732-3H14.5a2 2 0 0 1 1.732 3h-4.48A2 2 0 0 1 8 16zm.93-12.54L14 13H2L7.07 3.46a1 1 0 0 1 1.86 0zM5.002 6a.502.502 0 0 0-.53.47v3.06a.502.502 0 0 0 .53.47h6a.502.502 0 0 0 .53-.47V6.47a.502.502 0 0 0-.53-.47h-6zM8 10a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                    <path d="M8 16a2 2 0 0 1-1.732-1H1.78a2 2 0 0 1-1.732-3H14.5a2 2 0 0 1 1.732 3h-4.48A2 2 0 0 1 8 16zm.93-12.54L14 13H2L7.07 3.46a1 1 0 0 1 1.86 0zM5.002 6a.502.502 0 0 0-.53.47v3.06a.502.502 0 0 0 .53.47h6a.502.502 0 0 0 .53-.47V6.47a.502.502 0 0 0-.53-.47h-6zM8 10a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
                 </svg>
                 <p>Aksi tidak bisa dilakukan karena belum mendapatkan verifikasi-1 oleh Bendahara.</p>
             </div>
@@ -622,7 +599,7 @@
 
 <!-- Modal Untuk Pembuatan Laporan -->
 
-@if (($perjadin->status_pengajuan == 'pelaporan') | ($perjadin->status_pengajuan == 'revisi'))
+@if (($perjadin->status_pengajuan == 'pelaporan') || ($perjadin->status_pengajuan == 'revisi'))
 <div class="modal fade" id="template" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">

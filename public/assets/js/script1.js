@@ -58,8 +58,8 @@ function resetLinks() {
                   <label for="jumlah_tiket" class="detail-fields">Tipe Pendanaan<span class="text-danger">*</span></label>
                   <div class="input-group">
                     <select class="form-select" aria-label="Default select example" name="tipe_pendanaan">
-                      <option value="dibayar di awal" selected>Dibayar di Awal</option>
-                      <option value="reimburse">Reimburse</option>
+                      <option value="Bayar diawal" selected>Dibayar di Awal</option>
+                      <option value="Reimburse">Reimburse</option>
                     </select>
                   </div>
                 </div>
@@ -87,8 +87,8 @@ function resetLinks() {
                             <label for="jumlah_tiket" class="detail-fields">Tipe Pendanaan<span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <select class="form-select" aria-label="Default select example" name="tipe_pendanaan">
-                                    <option value="dibayar di awal" selected>Dibayar di Awal</option>
-                                    <option value="reimburse">Reimburse</option>
+                                    <option value="Bayar diawal" selected>Dibayar di Awal</option>
+                                    <option value="Reimburse">Reimburse</option>
                                 </select>
                             </div>
                         </div>
@@ -114,8 +114,8 @@ function resetLinks() {
                 <label for="jumlah_tiket" class="detail-fields">Tipe Pendanaan<span class="text-danger">*</span></label>
                 <div class="input-group">
                     <select class="form-select" aria-label="Default select example" name="tipe_pendanaan">
-                        <option value="dibayar di awal" selected>Dibayar di Awal</option>
-                        <option value="reimburse">Reimburse</option>
+                        <option value="Bayar di awal" selected>Dibayar di Awal</option>
+                        <option value="Reimburse">Reimburse</option>
                     </select>
                 </div>
         </div>
@@ -140,8 +140,8 @@ function resetLinks() {
                 <label for="jumlah_tiket" class="detail-fields">Tipe Pendanaan<span class="text-danger">*</span></label>
                 <div class="input-group">
                     <select class="form-select" aria-label="Default select example" name="tipe_pendanaan">
-                        <option value="dibayar di awal" selected>Dibayar di Awal</option>
-                        <option value="reimburse">Reimburse</option>
+                        <option value="Bayar di awal" selected>Dibayar di Awal</option>
+                        <option value="Reimburse">Reimburse</option>
                     </select>
                 </div>
         </div>
@@ -166,8 +166,8 @@ function resetLinks() {
                 <label for="jumlah_tiket" class="detail-fields">Tipe Pendanaan<span class="text-danger">*</span></label>
                 <div class="input-group">
                     <select class="form-select" aria-label="Default select example" name="tipe_pendanaan">
-                        <option value="dibayar di awal" selected>Dibayar di Awal</option>
-                        <option value="reimburse">Reimburse</option>
+                        <option value="Bayar di awal" selected>Dibayar di Awal</option>
+                        <option value="Reimburse">Reimburse</option>
                     </select>
                 </div>
         </div>
@@ -193,8 +193,8 @@ function resetLinks() {
                 <label for="jumlah_tiket" class="detail-fields">Tipe Pendanaan<span class="text-danger">*</span></label>
                 <div class="input-group">
                     <select class="form-select" aria-label="Default select example" name="tipe_pendanaan">
-                        <option value="dibayar di awal" selected>Dibayar di Awal</option>
-                        <option value="reimburse">Reimburse</option>
+                        <option value="Bayar di awal" selected>Dibayar di Awal</option>
+                        <option value="Reimburse">Reimburse</option>
                     </select>
                 </div>
             </div>
@@ -221,8 +221,8 @@ function resetLinks() {
                 <label for="jumlah_tiket" class="detail-fields">Tipe Pendanaan<span class="text-danger">*</span></label>
                 <div class="input-group">
                     <select class="form-select" aria-label="Default select example" name="tipe_pendanaan">
-                        <option value="dibayar di awal" selected>Dibayar di Awal</option>
-                        <option value="reimburse">Reimburse</option>
+                        <option value="Bayar di awal" selected>Dibayar di Awal</option>
+                        <option value="Reimburse">Reimburse</option>
                     </select>
                 </div>
             </div>
@@ -236,7 +236,7 @@ function resetLinks() {
         });
     });
 
-    /Control Tanggal Keberangkatan & Tanggal Mulai Acara di Perjadin Langsung/ 
+    // Control Tanggal Keberangkatan & Tanggal Mulai Acara di Perjadin Langsung/ 
     // Menangkap elemen-elemen yang diperlukan
     var konfirmasiRadio = document.querySelectorAll('input[name="konfirmasi"]');
     var tglKeberangkatanInput = document.getElementById('tgl_keberangkatan');
