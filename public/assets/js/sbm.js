@@ -4,11 +4,14 @@ function calculateRowResult($row) {
   var num3 = parseFloat($row.find('.num3').val()) || 0;
   var num4 = parseFloat($row.find('.num4').val()) || 0;
   var num5 = parseFloat($row.find('.num5').val()) || 0;
+  var num6 = parseFloat($row.find('.num6').val()) || 0;
   var desimalNum2 = num2 / 100;
   var desimalNum3 = num3 / 100;
   var desimalNum4 = num4 / 100;
   var desimalNum5 = num5 / 100;
-  var result = num1 + num2 + num3 +num4;
+  var result = num1 + num2 + num3 +num4 + num5 + num6;
+
+  console.log(num1, num2, num3, num4, num5, result);
 
   $row.find('.result').val(result);
   calculateTotal($row.closest('.calculationTable'));
@@ -46,7 +49,7 @@ $('#summaryTableBody').append('<tr><td><strong>Grand Total:</td><td><strong>' + 
 
 
 // Event delegation to handle dynamically added elements
-$(document).on('change', '.calculationTable .num1, .calculationTable .num2, .calculationTable .num3, .calculationTable .num4, .calculationTable .num5', function() {
+$(document).on('change', '.calculationTable .num1, .calculationTable .num2, .calculationTable .num3, .calculationTable .num4, .calculationTable .num5, .calculationTable .num6', function() {
   var $row = $(this).closest('tr');
   calculateRowResult($row);
 });

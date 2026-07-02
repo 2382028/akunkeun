@@ -15,8 +15,8 @@ class Ref_rkakl_sub_komponen extends Model
     */
    protected $fillable = [
     'ref_rkakl_komponen_id',
-    'kode_subkomponen',
-    'nama_subkomponen',
+    'kode_sub_kegiatan',
+    'nama_sub_kegiatan',
 ];
 
     public function getKomponen()

@@ -37,7 +37,7 @@
                                         <label for="InputPassword" class="form-label">Password</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <input type="text" class="form-control" id="InputPassword" placeholder="Masukkan Password Baru" name="password">
+                                        <input type="text" class="form-control" id="InputPassword" placeholder="Masukkan Password Baru" name="password" required>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
@@ -45,16 +45,15 @@
                                         <label for="InputRole" class="form-label">Role</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <select name="role" class="form-select text-muted" id="InputRole">
-                                            <option selected>-</option>
-                                            <option value="Master">Master</option>
-                                            <option value="Keuangan">Keuangan</option>
-                                            <option value="Bendahara">Bendahara</option>
-                                            <option value="BMN">BMN</option>
-                                            <option value="HKT">HKT</option>
-                                        </select>
-                                        <!-- <input type="text" class="form-control" id="InputRole" value="{{ $admin->role }}" name="role"> -->
-                                    </div>
+        <select name="role" class="form-select text-muted" id="InputRole">
+            <option value="-" {{ $admin->role == '-' ? 'selected' : '' }}>-</option>
+            <option value="Master" {{ $admin->role == 'Master' ? 'selected' : '' }}>Master</option>
+            <option value="Keuangan" {{ $admin->role == 'Keuangan' ? 'selected' : '' }}>Keuangan</option>
+            <option value="Bendahara" {{ $admin->role == 'Bendahara' ? 'selected' : '' }}>Bendahara</option>
+            <option value="BMN" {{ $admin->role == 'BMN' ? 'selected' : '' }}>BMN</option>
+            <option value="HKT" {{ $admin->role == 'HKT' ? 'selected' : '' }}>HKT</option>
+        </select>
+    </div>
                                 </div>
                             </div>
                             {{-- start button --}}

@@ -23,9 +23,14 @@
                   </div>
                   <div class="col-md-8">
                     <select name="kode_satker" class="form-select" id="InputKodeSatker" aria-label="Floating label select example">
-                      @foreach ($rkaklsatkers as $rkaklsatker)
-                      <option value="{{ $rkaklsatker->id }}">{{ $rkaklsatker->satker }}</option>
-                      @endforeach
+                        @foreach ($rkaklsatkers as $rkaklsatker)
+                            <option value="{{ $rkaklsatker->id }}"
+                                @if(isset($rkaklprograms[0]) && $rkaklsatker->id == $rkaklprograms[0]->ref_rkakl_satker_id)
+                                    selected
+                                @endif>
+                                {{ $rkaklsatker->satker }}
+                            </option>
+                        @endforeach
                     </select>
                   </div>
                 </div>

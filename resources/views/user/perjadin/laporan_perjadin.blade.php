@@ -8,7 +8,7 @@ use Carbon\Carbon;
 <div class="container my-5 pt-5">
     <form action="{{url('/note_perjadin')}}" method="post">
         @csrf
-        <input type="hidden" name="perjadin" value="{{$perjadin->id}}">
+        <input type="hidden" name="perjadin" value="{{ $perjadin->id}}">
         <input type="hidden" name="pelaksana" value="{{ $pic ? $pic->nama_lengkap : auth('pegawai')->user()->nama_lengkap }}">
         <div class="col-md-8 mx-auto ">
             <div class="card rounded-0">
@@ -28,7 +28,7 @@ use Carbon\Carbon;
                             </tr>
                             <tr>
                                 <td class="fw-bold">Pelaksana Kegiatan</td>
-                                <td>{{ $pic ? $pic->nama_lengkap : auth('pegawai')->user()->nama_lengkap }}</td>
+                                <td>{{ auth('pegawai')->user()->nama_lengkap }}</td>
                                 <!-- <td><input id="" type="text" class="form-control custom-input" name="pelaksana" placeholder="Silahkan isi nama PIC" value="{{$dokumen[0]->nama_pelaksana}}"></td> -->
                             </tr>
                             <tr>
@@ -57,27 +57,18 @@ use Carbon\Carbon;
                             <br />
                             <br />
                             <div class="card-body ms-auto m-0">
-                                {{$dokumen[0]->nama_pelaksana}}
+                                {{$penandatangan->nama_lengkap}}
                             </div>
                         </div>
 
                     </div>
                 </div>
             </div>
-            <div class="d-flex justify-content-between align-items-center mt-3 mb-2">
-                <!-- Left-aligned button -->
-                <span>
-                    @if ($dokumen[0]->hasil)
-                    <a href="{{url('/note-perjadin-user/' . $perjadin->id)}}" target="_blank" class="btn btn-sm btn-warning"><i class="fa-solid fa-eye"></i> Lihat Laporan</a>
-                    @endif
-                </span>
-
-                <!-- Right-aligned buttons -->
-                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <a href="{{url('/detail-perjadin/' . $perjadin->id)}}" class="btn btn-secondary btn-sm me-md-2 text-decoration-none text-white" type="button">Kembali</a>
-                    <button type="submit" class="btn btn-primary btn-sm text-decoration-none text-white">Simpan</button>
-                </div>
-            </div>
+            <div class="d-flex justify-content-end mt-3 mb-2">
+                <!-- Both buttons aligned to the right -->
+                <a href="{{url('/perjadin/riwayat/'. $perjadin->status_pengajuan)}}" class="btn btn-secondary btn-sm me-md-2 text-decoration-none text-white" type="button">Kembali</a>
+                <button type="submit" class="btn btn-primary btn-sm text-decoration-none text-white">Simpan</button>
+            </div>            
         </div>
     </form>
 </div>

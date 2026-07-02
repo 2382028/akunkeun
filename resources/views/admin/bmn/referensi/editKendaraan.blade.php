@@ -79,20 +79,20 @@
                                 <input type="text" class="form-control" id="" name="tipe" value="{{$kendaraan->tipe}}">
                             </div>
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label for="" class="form-label">Status Kendaraan</label>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="input-group mb-3 submit-select">
-                                    <select class="form-select text-muted" id="inputGroupSelect01" name="status">
-                                        <option value="{{$kendaraan->status}}" selected>{{$kendaraan->status}}</option>
-                                        <option value="baik">Baik</option>
-                                        <option value="rusak">Rusak</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
+                        <!--<div class="row mb-3">-->
+                        <!--    <div class="col-md-4">-->
+                        <!--        <label for="" class="form-label">Status Kendaraan</label>-->
+                        <!--    </div>-->
+                        <!--    <div class="col-md-8">-->
+                        <!--        <div class="input-group mb-3 submit-select">-->
+                        <!--            <select class="form-select text-muted" id="inputGroupSelect01" name="status">-->
+                        <!--                <option value="{{$kendaraan->status}}" selected>{{$kendaraan->status}}</option>-->
+                        <!--                <option value="baik">Baik</option>-->
+                        <!--                <option value="rusak">Rusak</option>-->
+                        <!--            </select>-->
+                        <!--        </div>-->
+                        <!--    </div>-->
+                        <!--</div>-->
                     </div>
 
                     <div class="col-md-12 mb-3">

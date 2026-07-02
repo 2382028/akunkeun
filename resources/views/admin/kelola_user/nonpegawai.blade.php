@@ -18,7 +18,7 @@
                   <div class="col-md-4 mb-3">
                     <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#tambah_nonpegawai">
                         <i href="{{ route('admin-nonpegawai.create') }}" class="fa fa-plus"></i> Tambah
-                    </button>        
+                    </button>
                   </div>
                 </div>
                 <div class="table-responsive">
@@ -114,19 +114,22 @@
                     <label for="InputGolongan" class="form-label">Golongan</label>
                 </div>
                 <div class="col-md-8">
-                  <select name="" id="" class="form-select js-example-basic-single-7" style="width: 100%;">
-                        <option value="0" selected>Pilih Golongan</option>
-                        <option value="1">-</option>
-                        <option value="2">II/c</option>
-                        <option value="3">II/d</option>
-                        <option value="4">III/a</option>
-                        <option value="5">III/b</option>
-                        <option value="6">III/c</option>
-                        <option value="7">III/d</option>
-                        <option value="8">IV/a</option>
-                        <option value="9">IV/b</option>
-                        <option value="10">IV/c</option>
-                        <option value="10">IV/d</option>
+                  <select name="" id="" class="form-select" style="width: 100%;">
+                    <option value="-" selected>Pilih Golongan</option>
+                    <option value="-">-</option>
+                    <option value="II/a">II/a</option>
+                    <option value="II/b">II/b</option>
+                    <option value="II/c">II/c</option>
+                    <option value="II/d">II/d</option>
+                    <option value="III/a">III/a</option>
+                    <option value="III/b">III/b</option>
+                    <option value="III/c">III/c</option>
+                    <option value="III/d">III/d</option>
+                    <option value="IV/a">IV/a</option>
+                    <option value="IV/a">IV/b</option>
+                    <option value="IV/c">IV/c</option>
+                    <option value="IV/d">IV/d</option>
+                    <option value="IV/e">IV/e</option>
                     </select>
                   </div>
             </div>
@@ -137,19 +140,23 @@
                     <label for="InputPangkat" class="form-label">Pangkat</label>
                 </div>
                 <div class="col-md-8">
-                  <select name="" id="" class="form-select js-example-basic-single-7" style="width: 100%;">
-                      <option value="0" selected>Pilih Pangkat</option>
-                      <option value="1">-</option>
-                      <option value="2">Pembina</option>
-                      <option value="3">Pembina Tingkat I</option>
-                      <option value="4">Pembina Utama Muda</option>
-                      <option value="5">Penata</option>
-                      <option value="6">Penata Muda</option>
-                      <option value="7">Penata Muda Tingkat I</option>
-                      <option value="8">Penata Tingkat I</option>
-                      <option value="9">Pengatur</option>
-                      <option value="10">Pengatur Tingkat I</option>
-                  </select>
+                    <select name="pangkat" id="" class="form-select" style="width: 100%;">
+                        <option value="-" selected>Pilih Pangkat</option>
+                        <option value="-">-</option>
+                        <option value="Pengatur Muda">II/a - Pengatur Muda</option>
+                        <option value="Pengatur Muda Tingkat 1">II/b - Pengatur Muda Tingkat 1</option>
+                        <option value="Pengatur">II/c - Pengatur</option>
+                        <option value="Pengatur Tingkat 1">II/d - Pengatur Tingkat 1</option>
+                        <option value="Penata Muda">III/a - Penata Muda</option>
+                        <option value="Penata Muda Tingkat I">III/b - Penata Muda Tingkat I</option>
+                        <option value="Penata">III/c - Penata</option>
+                        <option value="Penata Tingkat 1">III/d - Penata Tingkat 1</option>
+                        <option value="Pembina">IV/a - Pembina</option>
+                        <option value="Pembina Tingkat 1">IV/b - Pembina Tingkat 1</option>
+                        <option value="Pembina Utama Muda">IV/c - Pembina Utama Muda</option>
+                        <option value="Pembina Utama Madya">IV/d - Pembina Utama Madya</option>
+                        <option value="Pembina Utama">IV/e - Pembina Utama</option>
+                    </select>
                 </div>
             </div>
 
@@ -159,12 +166,17 @@
                     <label for="InputStatus" class="form-label">Status</label>
                 </div>
                 <div class="col-md-8">
-                  <select name="status" class="form-select text-muted" id="InputStatus">
-                    <option value="Aktif">Aktif</option>
-                    <option value="Nonaktif">Nonaktif</option>
-                  </select>
+                    <select name="status" class="form-select text-muted" id="InputStatus">
+                        <option selected>Pilih Status</option>
+                        <option value="PNS">PNS</option>
+                        <option value="NON PNS">Non PNS</option>
+                        <option value="NON PNS">PPPK</option>
+                        <option value="PPNPN">PPNPN</option>
+                    </select>
                 </div>
               </div>
+
+
 
               {{-- alamat --}}
               <div class="row mb-3">
@@ -195,6 +207,67 @@
                       <input name="no_telp" type="text" class="form-control" id="InputNoTelp" required>
                   </div>
               </div>
+
+              {{-- NPWP --}}
+              <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="InputNPWP" class="form-label">NPWP</label>
+                </div>
+                <div class="col-md-8">
+                    <input name="npwp" type="text" class="form-control" id="InputNPWP" required>
+                </div>
+            </div>
+
+            {{-- Bank --}}
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="InputBank" class="form-label">Bank</label>
+                </div>
+                <div class="col-md-8">
+                    <select name="bank" class="form-select text-muted" id="InputBank">
+                        <option readonly selected>Pilih Bank</option>
+                        @foreach ($data_bank as $bank)
+                            <option value="{{ $bank->kode_bank }}">{{$bank->kode_bank}} ({{ $bank->nama_bank }})</option>
+                        @endforeach
+                    </select>
+                </div>
+              </div>
+
+            {{-- no rekening --}}
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="InputNoRekening" class="form-label">No. Rekening</label>
+                </div>
+                <div class="col-md-8">
+                    <input name="no_rekening" type="text" class="form-control" id="InputNoRekening" required>
+                </div>
+            </div>
+
+            {{-- nama rekening --}}
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="InputNamaRekening" class="form-label">Nama Rekening</label>
+                </div>
+                <div class="col-md-8">
+                    <input name="nama_rekening" type="text" class="form-control" id="InputNamaRekening" required>
+                </div>
+            </div>
+
+              {{-- is aktif --}}
+              <div class="row">
+                <div class="col-md-4">
+                    <label for="InputStatusAktif" class="form-label">Is Aktif</label>
+                </div>
+                <div class="col-md-8">
+                    <div class="input-group mb-3 submit-select">
+                        <select name="is_aktif" class="form-select text-muted" id="InputStatusAktif">
+                            <option disabled selected>Pilih</option>
+                            <option value="1">Aktif</option>
+                            <option value="0">Nonaktif</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
 
             </div>
             <div class="modal-footer">

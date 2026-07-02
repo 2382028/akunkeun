@@ -27,7 +27,11 @@ class Pegawai extends Model
         'email',
         'password',
         'jabatan_id',
+        'fungsi_id',
+        'npwp',
+        'bank',
         'no_rekening',
+        'nama_rekening',
         'is_aktif',
         'is_dinas',
     ];

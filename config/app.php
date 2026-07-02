@@ -57,6 +57,8 @@ return [
     'url' => env('APP_URL', 'https://akunkeun.lldikti4.id'),
 
     'asset_url' => env('ASSET_URL','/../'),
+    'isMaintenance' => env('IS_MAINTENANCE', false),  // Default value false
+
 
     /*
     |--------------------------------------------------------------------------
@@ -69,7 +71,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Jakarta',
 
     /*
     |--------------------------------------------------------------------------
@@ -82,7 +84,8 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'id',
+    
 
     /*
     |--------------------------------------------------------------------------

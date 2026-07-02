@@ -48,6 +48,14 @@ return [
             'driver' => 'session',
             'provider' => 'administrators',
         ],
+        'penyedia' => [
+            'driver' => 'session',
+            'provider' => 'penyedias',
+        ],
+        'akun_penyewa' => [
+            'driver' => 'session',
+            'provider' => 'akun_penyewas',
+        ],
     ],
 
     /*
@@ -79,6 +87,14 @@ return [
         'administrators' => [
             'driver' => 'eloquent',
             'model' => App\Models\Administrator::class,
+        ],
+        'akun_penyewas' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\AkunPenyewa::class,
+        ],
+        'penyedias' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Data_penyedia::class,
         ],
         // 'users' => [
         //     'driver' => 'database',

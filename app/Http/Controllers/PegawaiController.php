@@ -11,132 +11,180 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
+use App\Models\RefGolonganPangkat;
+use App\Models\Karyawan;
 
 class PegawaiController extends Controller
 {
+        // Tampilkan daftar golongan
+    public function indexGolongan()
+    {
+        $golongans = RefGolonganPangkat::get();
+        return view('admin.referensi.ref_golongan', compact('golongans'));
+    }
+
+    // Simpan data baru atau update data lama
+public function saveGolongan(Request $request, $id = null): RedirectResponse
+{
+    $request->validate([
+        'golongan' => 'required|string|max:255',
+        'pangkat' => 'required|string|max:255',
+    ]);
+
+    RefGolonganPangkat::updateOrCreate(
+        ['id_ref_golongan_pangkat' => $id], // gunakan primary key baru
+        [
+            'golongan' => $request->golongan,
+            'pangkat' => $request->pangkat,
+        ]
+    );
+
+    $message = $id ? 'Data Golongan Berhasil Diupdate!' : 'Data Golongan Berhasil Disimpan!';
+    return redirect()->route('ref-golongan')->with('success', $message);
+}
+
+
+
+    // Hapus data golongan berdasarkan id
+    public function destroyGolongan($id): RedirectResponse
+    {
+        $golongan = RefGolonganPangkat::findOrFail($id);
+        $golongan->delete();
+
+        return redirect()->route('ref-golongan')->with('success', 'Data Golongan Berhasil Dihapus!');
+    }
     // function index untuk get all data
     public function index()
     {
-        
-        $jabatans = Jabatan::all();
-        $fungsis = Fungsi::all();
+        $ref_golongan_pangkats = RefGolonganPangkat::all();
+
         $pegawais = DB::table('pegawais')
-            ->SELECT('pegawais.*', 'fungsis.nama_fungsi as pokja')
             ->JOIN('jabatans', 'pegawais.jabatan_id', '=', 'jabatans.id')
-            ->JOIN('fungsis', 'jabatans.fungsi_id', '=', 'fungsis.id')
+            ->JOIN('fungsis', 'pegawais.fungsi_id', '=', 'fungsis.id')
+            ->SELECT('pegawais.*', 'fungsis.nama_fungsi as pokja')
+            ->get();
+        $data_bank = DB::table('ref_bank')
             ->get();
 
         return view(
             'admin.kelola_user.pegawai',
             [
                 'title' => 'Data Pegawai LLDIKTI',
+                'data_bank' => $data_bank,
                 'pegawais' => $pegawais,
                 'jabatans' => jabatan::all(),
                 'fungsis' => fungsi::all(),
-                
-            
+                'ref_golongan_pangkats' => $ref_golongan_pangkats,
             ]
         );
     }
-
-    // function create untuk tambah data
-    public function create(): View
-    {
-         // get pegawai by id
-         $jabatans = Jabatan::all();
-         $fungsis = Fungsi::all();
-         $pegawai = DB::table('pegawais')
-             ->SELECT('pegawais.*', 'jabatans.nama_jabatan as jabatan', 'fungsis.nama_fungsi as pokja')
-             ->JOIN('jabatans', 'pegawais.jabatan_id', '=', 'jabatans.id')
-             ->JOIN('fungsis', 'jabatans.fungsi_id', '=', 'fungsis.id')
-             ->WHERE('pegawais.id', '=', $id)
-             ->get();
-             
-        return view('admin.kelola_user.pegawai');
-    }
-    
     // function store untuk proses data
-    public function store(Request $request): RedirectResponse
+    public function save(Request $request, $id = null): RedirectResponse
     {
-        
-        Pegawai::create([
-            'NIP_NIK' => $request->NIP_NIK,
-            'nama_lengkap' => $request->nama_lengkap,
-            'jenis_kelamin' => $request->jenis_kelamin,
-            'status' => $request->status,
-            'golongan' => $request->golongan,
-            'pangkat' => $request->pangkat,
-            'no_telp' => $request->no_telp,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'jabatan_id' => $request->jabatan_id,
-            'no_rekening' => $request->no_rekening,
-            'is_aktif' => $request->is_aktif,
-            'is_dinas' => $request->is_dinas,
-            'created_at' => now(),
-            'updated_at' => now()
+        $request->validate([
+            'NIP_NIK' => 'required|string|max:255',
+            'nama_lengkap' => 'required|string|max:255',
+            // validasi lainnya
         ]);
 
-        return redirect('admin-pegawai')->with(['success' => 'Data Berhasil Disimpan!']);
-    }
+        $golongan = RefGolonganPangkat::find($request->id_golongan);
 
-    // function edit untuk find edit data by id
-    public function edit(string $id): View
-    {
-        {$pegawai = Pegawai::findOrFail($id);
-        $jabatans = Jabatan::all();
-        $fungsis = Fungsi::all();
-        return view('admin.kelola_user.detail_pegawai', compact('pegawai', 'jabatans', 'fungsis'));
-        
-        // get pegawai by id
-        $jabatans = Jabatan::all();
-        $fungsis = Fungsi::all();
-        $pegawai = DB::table('pegawais')
-            ->SELECT('pegawais.*', 'jabatans.nama_jabatan as jabatan', 'fungsis.nama_fungsi as pokja')
-            ->JOIN('jabatans', 'pegawais.jabatan_id', '=', 'jabatans.id')
-            ->JOIN('fungsis', 'jabatans.fungsi_id', '=', 'fungsis.id')
-            ->WHERE('pegawais.id', '=', $id)
-            ->get();
+        // Ambil password lama jika edit
+        $passwordPegawai = null;
+        if ($id) {
+            $oldPegawai = Pegawai::find($id);
+            $passwordPegawai = $oldPegawai ? $oldPegawai->password : null;
         }
-        return view('admin.kelola_user.detail_pegawai', ['title' => 'Data Pegawai LLDIKTI', 'pegawai' => $pegawai, 'jabatans' => $jabatans, 'fungsis' => $fungsis])->with(['success' => 'Data Berhasil Disimpan!']);
+
+        // Tentukan password yang akan disimpan
+        $passwordToSave = $request->filled('password') ? Hash::make($request->password) : $passwordPegawai;
+
+        $pegawai = Pegawai::updateOrCreate(
+            ['id' => $id],
+            [
+                'NIP_NIK' => $request->NIP_NIK,
+                'nama_lengkap' => $request->nama_lengkap,
+                'jenis_kelamin' => $request->jenis_kelamin,
+                'status' => $request->status,
+                'golongan' => $golongan ? $golongan->golongan : null,
+                'pangkat' => $golongan ? $golongan->pangkat : null,
+                'no_telp' => $request->no_telp,
+                'email' => $request->email,
+                'jabatan_id' => $request->jabatan_id,
+                'fungsi_id' => $request->fungsi_id,
+                'npwp' => $request->npwp,
+                'bank' => $request->bank,
+                'no_rekening' => $request->no_rekening,
+                'nama_rekening' => $request->nama_rekening,
+                'is_aktif' => $request->is_aktif,
+                'is_dinas' => $request->is_dinas ?? 1,
+                'password' => $passwordToSave,
+            ]
+        );
+
+        // Sama untuk Karyawan
+        $passwordKaryawan = null;
+        if ($id) {
+            $oldKaryawan = Karyawan::where('NIP_NIK', $request->NIP_NIK)->first();
+            $passwordKaryawan = $oldKaryawan ? $oldKaryawan->password : null;
+        }
+
+        $passwordToSaveKaryawan = $request->filled('password') ? Hash::make($request->password) : $passwordKaryawan;
+
+        $karyawan = Karyawan::updateOrCreate(
+            ['NIP_NIK' => $request->NIP_NIK],
+            [
+                'nama_lengkap' => $request->nama_lengkap,
+                'jenis_kelamin' => $request->jenis_kelamin,
+                'status' => $request->status,
+                'id_ref_golongan_pangkat' => $request->id_golongan,
+                'no_telp' => $request->no_telp,
+                'email' => $request->email,
+                'jabatan_id' => $request->jabatan_id,
+                'fungsi_id' => $request->fungsi_id,
+                'npwp' => $request->npwp,
+                'is_aktif' => $request->is_aktif,
+                'is_dinas' => $request->is_dinas ?? 1,
+                'password' => $passwordToSaveKaryawan,
+            ]
+        );
+
+        // Simpan rekening jika ada minimal 1 data valid
+        $bank = ($request->bank && $request->bank !== '-') ? $request->bank : null;
+        $noRekening = ($request->no_rekening && $request->no_rekening !== '-') ? $request->no_rekening : null;
+        $namaRekening = ($request->nama_rekening && $request->nama_rekening !== '-') ? $request->nama_rekening : null;
+
+        if ($bank || $noRekening) {
+            $karyawan->rekening()->updateOrCreate(
+                ['id_karyawan' => $karyawan->id_karyawan],
+                [
+                    'bank' => $bank,
+                    'no_rekening' => $noRekening,
+                ]
+            );
+        }
+
+        $message = $id ? 'Data Berhasil Diupdate!' : 'Data Berhasil Disimpan!';
+
+        return redirect('admin-pegawai')->with(['success' => $message]);
     }
 
-    // function update untuk update data by id
-    public function update(Request $request, $id): RedirectResponse
-    {
-        $pegawai = Pegawai::findOrFail($id);
-        $pegawai->update([
-            'NIP_NIK' => $request->NIP_NIK,
-            'password' => Hash::make($request->password),
-            'nama_lengkap' => $request->nama_lengkap,
-            'jenis_kelamin' => $request->jenis_kelamin,
-            'status' => $request->status,
-            'golongan' => $request->golongan,
-            'pangkat' => $request->pangkat,
-            'no_telp' => $request->no_telp,
-            'email' => $request->email,
-            'no_rekening' => $request->no_rekening,
-            'is_aktif' => $request->is_aktif,
-            'jabatan_id' => $request->jabatan_id,
-            'pokja' => $request->fungsi_id,
-            'created_at' => $pegawai->created_at,
-            'updated_at' => now()
-        ]);
 
-
-        return redirect()->route('admin-pegawai.index')->with(['success' => 'Data Berhasil Disimpan!']);
-    }
-
-    // function destroy untuk hapus data by id
     public function destroy($id): RedirectResponse
     {
-        // get by id
+        // Cari data pegawai berdasarkan id
         $pegawai = Pegawai::findOrFail($id);
 
-        //delete post
+        // Ambil NIP_NIK dari pegawai tersebut
+        $nipNik = $pegawai->NIP_NIK;
+
+        // Hapus data pegawai
         $pegawai->delete();
 
-        //redirect to index
+        // Hapus data karyawan yang NIP_NIK-nya sama
+        Karyawan::where('NIP_NIK', $nipNik)->delete();
+
+        // Redirect dengan pesan sukses
         return redirect('admin-pegawai')->with(['success' => 'Data Berhasil Dihapus!']);
     }
 };

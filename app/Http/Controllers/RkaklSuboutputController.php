@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Ref_rkakl_suboutput;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
+use App\Models\Versi;
 
 class RkaklSuboutputController extends Controller
 {
@@ -28,10 +29,10 @@ class RkaklSuboutputController extends Controller
             ->get();
         return view('admin.referensi.rkakl.rkakl_suboutput', [
             'title' => 'Rkakl Suboutput',
-            'rkaklsatkers' => Ref_rkakl_satker::all(),
-            'rkaklprograms' => Ref_rkakl_program::all(),
-            'rkaklkegiatans' => Ref_rkakl_kegiatan::all(),
-            'rkakloutputs' => Ref_rkakl_output::all(),
+            'rkaklsatkers' => Ref_rkakl_satker::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklprograms' => Ref_rkakl_program::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklkegiatans' => Ref_rkakl_kegiatan::where('versi_id', session('versi', '-1'))->get(),
+            'rkakloutputs' => Ref_rkakl_output::where('versi_id', session('versi', '-1'))->get(),
             'rkaklsuboutputs' => $rkaklsuboutput
         ]);
     }
@@ -49,8 +50,9 @@ class RkaklSuboutputController extends Controller
     {
         DB::table('ref_rkakl_suboutputs')->insertOrIgnore([
             'ref_rkakl_output_id' => $request->id_output,
-            'kode_sub_output' => $request->kode_suboutput,
-            'nama_sub_output' => $request->nama_suboutput,
+            'kode_sub_output' => $request->kode_sub_output,
+            'nama_sub_output' => $request->nama_sub_output,
+            'versi_id' => session('versi'),
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -64,10 +66,10 @@ class RkaklSuboutputController extends Controller
 
         return view('admin.referensi.rkakl.edit_rkakl_suboutput', [
             'title' => 'Rkakl Suboutput',
-            'rkaklsatkers' => Ref_rkakl_satker::all(),
-            'rkaklprograms' => Ref_rkakl_program::all(),
-            'rkaklkegiatans' => Ref_rkakl_kegiatan::all(),
-            'rkakloutputs' => Ref_rkakl_output::all(),
+            'rkaklsatkers' => Ref_rkakl_satker::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklprograms' => Ref_rkakl_program::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklkegiatans' => Ref_rkakl_kegiatan::where('versi_id', session('versi', '-1'))->get(),
+            'rkakloutputs' => Ref_rkakl_output::where('versi_id', session('versi', '-1'))->get(),
             'rkaklsuboutput' => Ref_rkakl_suboutput::find($id),
         ]);
     }

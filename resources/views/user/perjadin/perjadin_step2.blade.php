@@ -178,13 +178,9 @@
 
                                                 <div class="row mb-3">
                                                     <div class="col-md-4 mb-3">
-                                                        <label for="" class="form-label">Unggah Surat Undangan / Memo </span><span class="text-danger">*</span></label>
-                                                        <input type="file" name="surat_undangan" id="" class="form-control" accept="application/pdf">
-                                                        @error('surat_undangan')
-                                                        <div class="invalid-feedback">
-                                                            {{ $message }}
-                                                        </div>
-                                                        @enderror
+                                                        <label for="" class="form-label">Unggah Surat Undangan / Memo </span><span class="text-danger">*</span><span class="text-secondary small"><br>(Maksimal Ukuran File 2MB)</span></label>
+                                                        <input type="file" name="surat_undangan" id="" class="form-control" accept="application/pdf,image/jpeg,image/png">
+                                                            
                                                     </div>
                                                 </div>
 
@@ -194,7 +190,7 @@
                                 </div>
 
                                 <div class="btns-group d-flex justify-content-evenly pb-3 mt-5">
-                                    <a href="javascript:history.back()" class="btn btn-back btn-secondary col-md-5">Kembali</a>
+                                    <a href="/perjadin/{{$perjadin->id}}" class="btn btn-back btn-secondary col-md-5">Kembali</a>
                                     <button class="btn btn-next btn-primary col-md-5" type="submit">Kirim</button>
                                 </div>
                             </form>

@@ -30,6 +30,7 @@
                                 <th class="th-md">Jenis Perawatan</th>
                                 <th class="th-md">Kondisi</th>
                                 <th class="th-md">Status Peminjaman</th>
+                                <th class="th-md">Dapat diPinjami?</th>
                                 <th class="" style="min-width: 250px">Aksi</th>
                             </tr>
                             </thead>
@@ -44,6 +45,13 @@
                                 <td>{{$asset->jenis_perawatan}}</td>
                                 <td class="text-center">{{$asset->status_kondisi}}</td>
                                 <td class="text-center">{{$asset->status_peminjaman}}</td>
+                                <td class="text-center">
+                                    @if ($asset->kategori == '1')
+                                        Ya
+                                    @else
+                                        Tidak
+                                    @endif
+                                </td>
                                 <td class='text-center d-flex justify-content-center'>
                                     <span class="p-1">
                                         <a href="{{url('/data_asset/detail/' . $asset->id)}}" class="text-decoration-none btn btn-success"><i class="fa-solid fa-pen-to-square"></i></a>

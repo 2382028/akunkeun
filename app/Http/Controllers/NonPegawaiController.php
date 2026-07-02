@@ -14,7 +14,11 @@ class NonPegawaiController extends Controller
     // function index untuk get all data
     public function index()
     {
+        $data_bank = DB::table('ref_bank')
+        ->get();
+
         return view('admin.kelola_user.nonpegawai', [
+            'data_bank' => $data_bank,
             'nonpegawais' => Non_pegawai::all(),
             'title' => 'Data Non-Pegawai LLDIKTI',
         ]);
@@ -28,16 +32,21 @@ class NonPegawaiController extends Controller
     // function store untuk proses data
     public function store(Request $request): RedirectResponse
     {
-
         DB::table('non_pegawais')->insertOrIgnore([
             'NIP_NIK' => $request->NIP_NIK,
             'nama_lengkap' => $request->nama_lengkap,
-            'status' => $request->status,
+            'jenis_kelamin' => $request->jenis_kelamin,
             'golongan' => $request->golongan,
             'pangkat' => $request->pangkat,
+            'status' => $request->status,
             'alamat' => $request->alamat,
             'email' => $request->email,
             'no_telp' => $request->no_telp,
+            'npwp' => $request->npwp,
+            'bank' => $request->bank,
+            'no_rekening' => $request->no_rekening,
+            'nama_rekening' => $request->nama_rekening,
+            'is_aktif' => $request->is_aktif,
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -49,9 +58,12 @@ class NonPegawaiController extends Controller
     // function edit untuk find edit data by id
     public function edit(string $id): View
     {
+        $banks = DB::table('ref_bank')
+            ->get();
         // get admin by id
         return view('admin.kelola_user.detail_nonpegawai', [
             'nonpegawai' => Non_pegawai::findOrFail($id),
+            'banks' => $banks,
             'title' => 'Data Non-Pegawai LLDIKTI',
         ]);
     }
@@ -59,21 +71,27 @@ class NonPegawaiController extends Controller
         // function update untuk update data by id
         public function update(Request $request, $id): RedirectResponse
         {
+            
+            // dd($request);
             $nonpegawai = Non_pegawai::findOrFail($id);
             $nonpegawai->update([
                 'NIP_NIK' => $request->NIP_NIK,
                 'nama_lengkap' => $request->nama_lengkap,
+                'jenis_kelamin' => $request->jenis_kelamin,
                 'status' => $request->status,
                 'golongan' => $request->golongan,
                 'pangkat' => $request->pangkat,
                 'alamat' => $request->alamat,
                 'email' => $request->email,
                 'no_telp' => $request->no_telp,
-                'created_at' => $nonpegawai->created_at,
+                'npwp' => $request->NPWP,
+                'bank' => $request->bank,
+                'no_rekening' => $request->no_rekening,
+                'nama_rekening' => $request->nama_rekening,
                 'updated_at' => now()
             ]);
-    
-    
+
+
             return redirect()->route('admin-nonpegawai.index')->with(['success' => 'Data Berhasil Disimpan!']);
         }
 

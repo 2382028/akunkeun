@@ -1,5 +1,11 @@
 @extends('user.templates.template')
 
+<!-- Tambahkan ini di dalam <head> -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<!-- Tambahkan ini sebelum </body> -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 @section('content')
 <!-- Awal Form Perjadin Biasa  -->
 <section id="beranda" class=" pb-5 mt-5 pt-5">
@@ -36,12 +42,71 @@
                                             </div>
                                             <div class="row mb-3">
                                                 <div class="col-md-4 mb-3">Status Pengajuan</div>
-                                                <div class="col-md-4 mb-3"> {{ $perjadin->status_pengajuan_detail }} </div>
+                                                <div class="col-md-4 mb-3"> {{ str_replace('<br>', ' - ', $perjadin->status_pengajuan_detail) }} </div>
+                                            </div>
+                                            @if (($perjadin->status_pengajuan == 'revisi') || $perjadin->status_pengajuan == 'ditolak')
+                                                <div class="row mb-3">
+                                                    <div class="col-md-4 mb-3">Alasan Penolakan/Revisi</div>
+                                                    <div class="col-md-4 mb-3">
+
+                                                        {!! nl2br(e($perjadin->alasan_penolakan)) !!}
+                                                    </div>
+                                                </div>
+                                            @endif
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @if (($perjadin->status_pengajuan == "selesai"))
+                            
+                            <div class="row mb-3 text-secondary">
+                                <div class="col-md-12 mb-3">
+                                    <div class="card shadow rounded-0  border-0">
+                                    <div class="card-body">
+                                    <div class="table-responsive">
+                                        <div>
+                                            <h6 class="fw-bold text-secondary">Informasi Pembayaran</h6><br>
+                                            
+                                        </div>
+                                        <table id="example" class="table table-bordered data-table" style="width: 100%">
+                                            <thead>
+                                                <tr class="text-center small">
+                                                    <th class="th-sm">No</th>
+                                                    <th class="th-md">Nama Dokumen</th>
+                                                    <th class="th-md">Lampiran</th>
+                                                    <th class="th-md">Tanggal Pembayaran</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class='text-center'>1</td>
+                                                    <td class='text-center'>Rincian Perjalanan Dinas</td>
+                                                    <td class='text-center'>
+                                                        @if ($perjadin->status_pengajuan == "selesai" && $RPDExists)
+                                                            <?php $id_perjadin = $perjadin->id; ?>
+                                                            <a href="{{ url('/perjadin/rpd/'.$id_perjadin) }}" target="_blank">[Lihat Lampiran]</a>
+                                                        @else
+                                                            RPD Belum Dicetak oleh Bendahara
+                                                        @endif
+                                                    </td>
+                                                    <td class='text-center'>
+                                                        @if (!empty($pembayaran->tgl_bayar))
+                                                            {!! \Carbon\Carbon::parse($pembayaran->tgl_bayar)->translatedFormat('d F Y') !!}
+                                                        @else
+                                                            Tanggal Pembayaran Belum Tersedia
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            @endif
 
                             @if ($mobilitass->isNotEmpty())
                             {{-- informasi mobilitas --}}
@@ -82,6 +147,8 @@
                                 </div>
                             </div>
                             @endif
+                            
+                            
                             {{-- informasi Peserta --}}
                             <div class="row mb-3 text-secondary">
                                 <div class="col-md-12 mb-3">
@@ -93,11 +160,10 @@
                                                         <h6 class="fw-bold text-secondary">Informasi Peserta</h6><br>
                                                     </div>
                                                     <div>
-                                                        @if (($perjadin->status_pengajuan == 'Draf-pengajuan') | ($perjadin->status_pengajuan == 'pengajuan') | ($perjadin->status_pengajuan == 'revisi'))
-                                                        <button class="btn btn-neon text-white mb-3" data-bs-toggle="modal" data-bs-target="#tambah_peserta" type="button" @if ($perjadin->status_pengajuan == 'pengajuan' || $perjadin->status_pengajuan == 'proses') disabled @endif>
+                                                        <button disabled class="btn btn-neon text-white mb-3" data-bs-toggle="modal" data-bs-target="#tambah_peserta" type="button" @if ($perjadin->status_pengajuan == 'pengajuan' || $perjadin->status_pengajuan == 'proses') disabled @endif>
                                                             <i class="fa fa-plus"></i> Tambah Peserta
                                                         </button>
-                                                        @endif
+                                                        
                                                     </div>
                                                 </div>
                                                 <table id="example" class="table table-bordered data-table mb-3" style="width: 100%">
@@ -126,7 +192,7 @@
                                                                 @csrf
                                                                 <input type="hidden" name="info_perjadinlangsung" value="{{ $perjadin->id }}">
                                                                 <span>
-                                                                    <button type="submit" class="text-decoration-none btn btn-danger btn-sm text-white" onclick="return confirm('Hapus Data Peserta?')" @if ($perjadin->status_pengajuan == 'pengajuan' || $perjadin->status_pengajuan == 'proses') disabled @endif><i class="fa-solid fa-trash"></i></button>
+                                                                    <button type="submit" class="text-decoration-none btn btn-danger btn-sm text-white" onclick="return confirm('Hapus Data Peserta?')" disabled><i class="fa-solid fa-trash"></i></button>
                                                                 </span>
                                                             </form>
                                                         </td>
@@ -162,7 +228,7 @@
                                                                 @csrf
                                                                 <input type="hidden" name="info_perjadinlangsung" value="{{ $perjadin->id }}">
                                                                 <span>
-                                                                    <button type="submit" class="text-decoration-none btn btn-danger btn-sm text-white" onclick="return confirm('Hapus Data Peserta?')" @if ($perjadin->status_pengajuan == 'pengajuan' || $perjadin->status_pengajuan == 'proses') disabled @endif><i class="fa-solid fa-trash"></i></button>
+                                                                    <button type="submit" class="text-decoration-none btn btn-danger btn-sm text-white" onclick="return confirm('Hapus Data Peserta?')" disabled><i class="fa-solid fa-trash"></i></button>
                                                                 </span>
                                                             </form>
                                                         </td>
@@ -191,11 +257,10 @@
                                                         <h6 class="fw-bold text-secondary">Fasilitas Yang Diperlukan</h6><br>
                                                     </div>
                                                     <div>
-                                                        @if (($perjadin->status_pengajuan == 'Draf-pengajuan') | ($perjadin->status_pengajuan == 'pengajuan') | ($perjadin->status_pengajuan == 'revisi'))
-                                                        <button class="btn btn-neon text-white mb-3" data-bs-toggle="modal" data-bs-target="#tambah_fasilitas" type="button">
+                                                        <button disabled class="btn btn-neon text-white mb-3" data-bs-toggle="modal" data-bs-target="#tambah_fasilitas" type="button">
                                                             <i class="fa fa-plus"></i> Tambah Fasilitas
                                                         </button>
-                                                        @endif
+                                                        
                                                     </div>
                                                 </div>
                                                 <table id="example" class="table table-bordered data-table mb-3" style="width: 100%">
@@ -240,7 +305,7 @@
                                             </div>
                                             @else
                                             <div class="text-center">
-                                                <button class="btn btn-neon text-white mb-3" data-bs-toggle="modal" data-bs-target="#tambah_fasilitas" type="button" @if ($perjadin->status_pengajuan == 'pengajuan' || $perjadin->status_pengajuan == 'proses') disabled @endif>
+                                                <button disabled class="btn btn-neon text-white mb-3" data-bs-toggle="modal" data-bs-target="#tambah_fasilitas" type="button" @if ($perjadin->status_pengajuan == 'pengajuan' || $perjadin->status_pengajuan == 'proses') disabled @endif>
                                                     <i class="fa fa-plus"></i> Tambah Fasilitas
                                                 </button>
                                             </div>
@@ -251,7 +316,7 @@
                                 </div>
                             </div>
                             @endif
-
+                            <div id="dokumen-section">
                             {{-- Dokumen Pendukung --}}
                             <form action="{{url('/u_perjadin')}}" method="POST" enctype="multipart/form-data">
                                 @method('PUT')
@@ -262,7 +327,8 @@
                                 <div class="card-body">
                                     <div class="table-responsive">
                                         <div>
-                                            <h6 class="fw-bold text-secondary">Kelengkapan Dokumen</h6><br>
+                                            <h6 class="fw-bold text-secondary">Kelengkapan Dokumen</h6>
+                                            <medium class="text-muted">Silakan siapkan semua dokumen terlebih dahulu, dan upload dalam 1 waktu</medium>
                                             <div class="alert alert-success" role="alert">
                                                 Dokumen
                                                 @if ($dokumen != null)
@@ -281,14 +347,17 @@
                                                     <th class="th-sm">No</th>
                                                     <th class="th-md">Nama Dokumen</th>
                                                     <th class="th-md">Lampiran</th>
+                                                    <th class="th-md">Tanggal Upload</th>
                                                     <th class="th-md">Unggah Dokumen</th>
                                                 </tr>
                                             </thead>
 
+                                            
+                                    
                                             <tr>
                                                 <td class='text-center'>1</td>
                                                 <td class=''>Surat Undangan</td>
-                                                <td class=''>
+                                                <td class='text-center'>
                                                     @if ($dokumen != null && $dokumen->surat_undangan != null)
                                                     <?php
                                                     $path = $dokumen->surat_undangan;
@@ -300,18 +369,37 @@
                                                     @endif
                                                 </td>
                                                 <td class='text-center'>
-                                                    @if ($dokumen != null && $dokumen->surat_undangan != null)
-                                                    <input type="hidden" name="oldSuratUndangan" value="{{ $dokumen->surat_undangan }}">
+                                                @if ($dokumen != null)
+                                                    @if ($dokumen->tgl_upload_undangan)
+                                                            {!! \Carbon\Carbon::parse($dokumen->tgl_upload_undangan)->translatedFormat('d F Y') !!} 
+                                                            ({{ \Carbon\Carbon::parse($dokumen->tgl_upload_undangan)->format('H:i') }})
                                                     @else
-                                                    <input type="file" class="form-control" name="surat_undangan">
+                                                            {!! \Carbon\Carbon::parse($dokumen->created_at)->translatedFormat('d F Y') !!} 
+                                                            ({{ \Carbon\Carbon::parse($dokumen->created_at)->format('H:i') }})
                                                     @endif
+                                                   
+                                                @endif
                                                 </td>
+                                                @if ($perjadin->status_pengajuan == 'pelaporan')
+                                                    <td class='text-center'>
+                                                        @if ($dokumen != null && $dokumen->surat_undangan != null)
+                                                        <input type="hidden" name="oldSuratUndangan" value="{{ $dokumen->surat_undangan }}">
+                                                        @else
+                                                        <input type="file" class="form-control" name="surat_undangan">
+                                                        @endif
+                                                    </td>
+                                                @else
+                                                    <td class='text-center'>
+                                                  -
+                                                    </td>
+                                                @endif
+                                                
                                             </tr>
                                             <tr>
                                                 <td class='text-center'>2</td>
                                                 <td class=''>Surat Tugas</td>
-                                                <td class=''>
-                                                    @if ($dokumen != null && $dokumen->surat_tugas != null)
+                                                <td class='text-center'>
+                                                    @if ($dokumen != null && $dokumen->surat_tugas != null && $dokumen->surat_tugas != 'dokumen-perjadins/surtug.pdf') 
                                                     <?php
                                                     $path = $dokumen->surat_tugas;
                                                     $filename = basename($path);
@@ -322,81 +410,151 @@
                                                     @endif
                                                 </td>
                                                 <td class='text-center'>
-                                                    @if ($dokumen != null && $dokumen->surat_tugas != null)
-                                                    <input type="hidden" name="oldSuratTugas" value="{{ $dokumen->surat_tugas }}">
-                                                    @else
-                                                    <input type="file" class="form-control" name="surat_tugas">
-                                                    @endif
+                                                @if ($dokumen != null)
+                                                    @if ($dokumen->tgl_upload_surtug != null)
+                                                        {!! \Carbon\Carbon::parse($dokumen->tgl_upload_surtug)->translatedFormat('d F Y') !!} 
+                                                        ({{ \Carbon\Carbon::parse($dokumen->tgl_upload_surtug)->format('H:i') }})
+                                                    @elseif ($surtug != null)
+                                                        -
+                                                    @endif  
+                                                @endif
                                                 </td>
+                                                @if ($perjadin->status_pengajuan == 'pelaporan')
+                                                    <td class='text-center'>
+                                                        @if ($dokumen != null && $dokumen->surat_tugas != null)
+                                                        <input type="hidden" name="oldSuratTugas" value="{{ $dokumen->surat_tugas }}">
+                                                        
+                                                        @endif
+                                                    </td>
+                                                @else
+                                                    <td class='text-center'>
+                                                    -
+                                                    </td>
+                                                @endif
                                             </tr>
                                             <tr>
                                                 <td class='text-center'>3</td>
-                                                <td class=''>SPPD [PDF]</td>
-                                                <td class=''>
+                                                <td class=''>SPPD [PDF] <small class="text-muted">(max 2MB)</small></td>
+                                                <td class='text-center'>
                                                     @if ($dokumen != null && $dokumen->SPPD != null)
                                                     <?php
                                                     $path = $dokumen->SPPD;
                                                     $filename = basename($path);
                                                     ?>
-                                                    <a href="{{ url('/perjadin-getDokumen/'.$filename) }}" target="_blank">[Lihat Lampiran]</a>
+                                                    <a href="{{ url('/perjadin/getDokumen/'.$filename) }}" target="_blank">[Lihat Lampiran]</a>
                                                     @else
                                                     Laporan Belum Diunggah
                                                     @endif
                                                 </td>
                                                 <td class='text-center'>
-                                                    @if (($perjadin->status_pengajuan != "pengajuan") && ($perjadin->status_pengajuan != "proses") && ($perjadin->status_pengajuan != "selesai"))
-                                                    <input type="file" class="form-control" name="SPPD">
-                                                    @endif
-                                                    @if ($dokumen != null)
-                                                    <input type="hidden" name="oldSppd" value="{{$dokumen->SPPD}}">
+                                                    @if ($dokumen->tgl_upload_SPPD)
+                                                            {!! \Carbon\Carbon::parse($dokumen->tgl_upload_SPPD)->translatedFormat('d F Y') !!} 
+                                                            ({{ \Carbon\Carbon::parse($dokumen->tgl_upload_SPPD)->format('H:i') }})
+                                                    @else
+                                                        
                                                     @endif
                                                 </td>
+                                                @if (($perjadin->status_pengajuan == 'pelaporan')| ($perjadin->status_pengajuan == 'revisi'))
+                                                    <td class='text-center'>
+                                                        @if (($perjadin->status_pengajuan != "pengajuan") && ($perjadin->status_pengajuan != "proses") && ($perjadin->status_pengajuan != "selesai") || ($perjadin->status_pengajuan == "selesai"))
+                                                        <input type="file" class="form-control" name="SPPD">
+                                                        @endif 
+                                                        @if ($dokumen != null)
+                                                        <input type="hidden" name="oldSppd" value="{{$dokumen->SPPD}}">
+                                                        @endif
+                                                    </td>
+                                                @else
+                                                    <td class='text-center'>
+                                                    Tidak dalam masa Pelaporan
+                                                    </td>
+
+                                                @endif
+                                                
                                             </tr>
                                             <tr>
                                                 <td class='text-center'>4</td>
-                                                <td class=''>Laporan Pengeluaran [PDF]</td>
-                                                <td class=''>
+                                                <td >
+                                                    Laporan Pengeluaran <small class="text-muted">(max 2MB)</small>
+                                                </td>
+
+                                                <td class='text-center'>
                                                     @if ($dokumen != null && $dokumen->lap_pengeluaran != null)
                                                     <?php
                                                     $path = $dokumen->lap_pengeluaran;
                                                     $filename = basename($path);
                                                     ?>
-                                                    <a href="{{ url('/perjadin-getDokumen/'.$filename) }}" target="_blank">[Lihat Lampiran]</a>
+                                                    <a href="{{ url('/perjadin/getDokumen/'.$filename) }}" target="_blank">[Lihat Lampiran]</a>
                                                     @else
                                                     Laporan Belum Diunggah
                                                     @endif
                                                 </td>
                                                 <td class='text-center'>
-                                                    @if (($perjadin->status_pengajuan != "pengajuan") && ($perjadin->status_pengajuan != "proses") && ($perjadin->status_pengajuan != "selesai"))
-                                                    <input type="file" class="form-control" name="lap_pengeluaran" required>
+                                                @if ($dokumen != null)
+                                                    @if ($dokumen->tgl_upload_lap_keu)
+                                                        {!! \Carbon\Carbon::parse($dokumen->tgl_upload_lap_keu)->translatedFormat('d F Y') !!} 
+                                                        ({{ \Carbon\Carbon::parse($dokumen->tgl_upload_lap_keu)->format('H:i') }})
+                                                    @else
+                                                        
                                                     @endif
-                                                    @if ($dokumen != null)
-                                                    <input type="hidden" name="oldlap_pengeluaran" value="{{$dokumen->lap_pengeluaran}}">
-                                                    @endif
+                                                @endif
                                                 </td>
+                                                @if (($perjadin->status_pengajuan == 'pelaporan')| ($perjadin->status_pengajuan == 'revisi'))
+                                                    <td class='text-center'>
+                                                        @if (($perjadin->status_pengajuan != "pengajuan") && ($perjadin->status_pengajuan != "proses") && ($perjadin->status_pengajuan != "selesai") || ($perjadin->status_pengajuan == "selesai"))
+                                                        <input type="file" class="form-control" name="lap_pengeluaran">
+                                                        @endif
+                                                        @if ($dokumen != null)
+                                                        <input type="hidden" name="oldlap_pengeluaran" value="{{$dokumen->lap_pengeluaran}}">
+                                                        @endif
+                                                    </td>
+                                                @else
+                                                    <td class='text-center'>
+                                                    Tidak dalam masa Pelaporan
+                                                    </td>
+                                                @endif
                                             </tr>
                                             <tr>
                                                 <td class='text-center'>5</td>
-                                                <td class=''>Laporan Perjalanan [PDF]</td>
-                                                <td class=''>
+                                                <td class=''>Laporan Perjalanan<span class="text-danger"> *</span> <small class="text-muted">(max 2MB)</small></td>
+                                                <td class='text-center'>
                                                     @if ($dokumen != null && $dokumen->lap_perjadin != null)
-                                                    <?php
-                                                    $path = $dokumen->lap_perjadin;
-                                                    $filename = basename($path);
-                                                    ?>
-                                                    <a href="{{ url('/perjadin-getDokumen/'.$filename) }}" target="_blank">[Lihat Lampiran]</a>
+                                                        <?php
+                                                        $path = $dokumen->lap_perjadin;
+                                                        $filename = basename($path);
+                                                        ?>
+                                                        <a href="{{ url('/perjadin/getDokumen/'.$filename) }}" target="_blank">[Lihat Lampiran]</a>
                                                     @else
-                                                    Laporan Belum Diunggah
+                                                        Laporan Belum Diunggah
                                                     @endif
                                                 </td>
                                                 <td class='text-center'>
-                                                    @if (($perjadin->status_pengajuan != "pengajuan") && ($perjadin->status_pengajuan != "proses") && ($perjadin->status_pengajuan != "selesai"))
-                                                    <input type="file" class="form-control" name="lap_perjadin" required>
+                                                    @if ($dokumen->tgl_upload_lap_perjadin)
+                                                            {!! \Carbon\Carbon::parse($dokumen->tgl_upload_lap_perjadin)->translatedFormat('d F Y') !!} 
+                                                            ({{ \Carbon\Carbon::parse($dokumen->tgl_upload_lap_perjadin)->format('H:i') }})
+                                                    @else
+                                                        
                                                     @endif
-                                                    @if ($dokumen != null)
-                                                    <input type="hidden" name="oldLap_perjadin" value="{{$dokumen->lap_perjadin}}">
-                                                    @endif
-                                                </td>
+                                                </td> 
+                                                @if (($perjadin->status_pengajuan == 'pelaporan')| ($perjadin->status_pengajuan == 'revisi'))
+                                                    <td class='text-center'>
+                                                    
+                                                        @if (($perjadin->status_pengajuan != "pengajuan") && 
+                                                            ($perjadin->status_pengajuan != "proses") && 
+                                                            ($perjadin->status_pengajuan != "selesai") || 
+                                                            ($perjadin->status_pengajuan == "selesai"))
+                                                            <input type="file" class="form-control" name="lap_perjadin" 
+                                                                @if (!$dokumen || !$dokumen->lap_perjadin) required @endif>
+                                                        @endif
+                                                
+                                                        @if ($dokumen != null)
+                                                            <input type="hidden" name="oldLap_perjadin" value="{{ $dokumen->lap_perjadin }}">
+                                                        @endif
+                                                    </td>
+                                                    @else
+                                                        <td class='text-center'>
+                                                        Tidak dalam masa Pelaporan
+                                                        </td>
+                                                @endif                                               
                                             </tr>
                                             @if (($perjadin->status_pengajuan == 'pelaporan') && ($perjadin->status_pengajuan == 'revisi'))
                                             <tr>
@@ -410,23 +568,29 @@
                                         </table>
                                     </div>
                                 </div>
+                            </div>
+                                <div id="bottom-of-page">
+                                <!-- Konten bagian bawah halaman -->
+                            </div>
                                 <div class="btns-group d-flex justify-content-evenly pb-3 mt-5">
-                                    @if (($perjadin->status_pengajuan == 'Draf-pengajuan') | ($perjadin->status_pengajuan == 'revisi') | ($perjadin->status_pengajuan == 'pelaporan'))
+                                    @if (($perjadin->status_pengajuan == 'Draf-pengajuan') | ($perjadin->status_pengajuan == 'revisi') | ($perjadin->status_pengajuan == 'pelaporan') | ($perjadin->status_pengajuan == 'selesai')) 
                                     <a href="{{url('/perjadin/riwayat/' . $perjadin->status_pengajuan)}}" class="btn btn-prev btn-warning col-md-2 text-white">Kembali</a>
-                                    <div class="col-md-30">
-                                        <button class="btn btn-neon btn-warning text-white" type="submit" name="action" value="update">Perbaharui dan Simpan</button>
-                                    </div>
+                                        @if (($perjadin->status_pengajuan == 'pelaporan') | ($perjadin->status_pengajuan == 'revisi'))
+                                            <!-- Input tersembunyi untuk 'action' -->
+                                            <input type="hidden" id="actionField" name="action" value="">
+                                            <div class="col-md-30">
+                                                <button id="simpanKirim" class="btn btn-neon btn-warning text-white" type="submit" name="action" value="update">
+                                                    Simpan dan Kirim <i class="fas fa-paper-plane"></i>
+                                                </button>
+                                            </div>
+                                        @endif
                                     @elseif (($perjadin->status_pengajuan == 'proses'))
                                     <a href="{{url('/perjadin/riwayat/' . $perjadin->status_pengajuan)}}" class="btn btn-prev btn-warning col-md-2 text-white">Kembali</a>
-                                    @if (($perjadin->is_acceptBend == 'approval-2'))
-                                    <button class="btn btn-neon btn-warning text-white col-md-2" type="submit" name="action" value="selesai">Selesai</button>
-                                    @else
-                                    <button class="btn btn-neon text-white col-md-2" type="button" data-bs-toggle="modal" data-bs-target="#alertModal">Selesai</button>
-                                    @endif
                             </form>
                             @elseif (($perjadin->status_pengajuan == 'pengajuan'))
                             <a href="{{url('/perjadin/riwayat/' . $perjadin->status_pengajuan)}}" class="btn btn-prev btn-warning col-md-5 text-white">Kembali</a>
                             @endif
+
                         </div>
                     </div>
                 </div>
@@ -437,21 +601,6 @@
     </div>
 </section>
 
-<div class="modal fade" id="alertModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-body text-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-exclamation-triangle-fill mb-3" viewBox="0 0 16 16">
-                    <path d="M8 16a2 2 0 0 1-1.732-1H1.78a2 2 0 0 1-1.732-3H14.5a2 2 0 0 1 1.732 3h-4.48A2 2 0 0 1 8 16zm.93-12.54L14 13H2L7.07 3.46a1 1 0 0 1 1.86 0zM5.002 6a.502.502 0 0 0-.53.47v3.06a.502.502 0 0 0 .53.47h6a.502.502 0 0 0 .53-.47V6.47a.502.502 0 0 0-.53-.47h-6zM8 10a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
-                </svg>
-                <p>Aksi tidak bisa dilakukan karena belum mendapatkan verifikasi-1 oleh Bendahara.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- Modal Tambah Peserta -->
 <div class="modal fade" id="tambah_peserta" tabindex="-1" aria-labelledby="tambah_pesertaLabel" aria-hidden="true">
@@ -600,34 +749,59 @@
     </form>
 </div>
 
-<!-- Modal Untuk Pembuatan Laporan -->
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        if (window.location.hash === "#dokumen-section") {
+            const dokumenSection = document.getElementById("dokumen-section");
+            if (dokumenSection) {
+                dokumenSection.scrollIntoView({ behavior: "smooth" });
+            }
+        }
+    });
+</script>
 
-@if (($perjadin->status_pengajuan == 'pelaporan') || ($perjadin->status_pengajuan == 'revisi'))
-<div class="modal fade" id="template" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div style="font-size: 5rem;" class="text-center text-warning">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-                </div>
-                <div>
-                    <h4 class="fw-bold text-center">Laporan Perjalanan Dinas</h4>
-                    <p class="text-center">Silakan buat laporan perjalanan dinas!</p>
-                </div>
-            </div>
-            <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-sm btn-warning text-decoration-none text-white mr-2" data-bs-dismiss="modal">Sudah Membuat</button>
-                <a href="{{url('/note-perjadin/' . $perjadin->id)}}" class="btn btn-sm btn-danger text-decoration-none text-white mr-2"><i class="fa-solid fa-file-pen"></i> Buat Laporan</a>
-            </div>
-        </div>
-    </div>
-</div>
-@endif
 
 <script>
-    function showModal() {
-        var alertModal = new bootstrap.Modal(document.getElementById('alertModal'));
-        alertModal.show();
-    }
+    document.querySelectorAll('.form-control[type="file"]').forEach(input => {
+    input.addEventListener('change', function () {
+        const file = this.files[0];
+        if (file && file.size > 2 * 1024 * 1024) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Ukuran File Terlalu Besar',
+                text: 'Maksimum ukuran file adalah 2 MB.',
+            });
+            this.value = ''; // Mengosongkan input
+        }
+    });
+});
+
 </script>
+
+<script>
+    document.getElementById('formPerjadin').addEventListener('submit', function(event) {
+        event.preventDefault(); // Mencegah pengiriman form langsung
+
+        Swal.fire({
+            title: 'Pastikan Dokumen Sesuai Sebelum Verifikasi',
+            text: 'Apakah Anda yakin ingin mengirimkan ajuan ini untuk proses verifikasi keuangan?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya',
+            cancelButtonText: 'Batal',
+            reverseButtons: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Menambahkan nilai action ke input tersembunyi
+                var actionField = document.getElementById('actionField');
+                actionField.value = 'update';  // Mengatur value action
+
+                // Kirim form setelah menambahkan nilai
+                event.target.submit();
+            }
+        });
+    });
+</script>
+
+
 @endsection

@@ -1,4 +1,7 @@
 @extends('user.templates.template')
+@php
+    $activeVersi = \App\Models\Versi::where('status', 'aktif')->first() ?? (object) ['id' => '-1','versi' => 'Default Versi'];
+@endphp
 
 @section('content')
     <div class="container mt-5 mb-5 pt-5">
@@ -29,10 +32,16 @@
                                     <td class=''>{{$asset->nama_barang}}</td>
                                     <td class=''>{{$asset->nama_merek}}</td>
                                     <td class='text-center'>{{$asset->status_peminjaman}}</td>
-                                    <td class='text-center'>
-                                        <span class="page details">
-                                            <a href="{{url('/peminjaman/' . $asset->id)}}" class="page-wrap btn btn-primary btn-sm">Pinjam</a>
-                                        </span>
+                                    <td class="text-center">
+                                        @if ($asset->kategori == 1 && $asset->status_peminjaman === 'Tidak Dipakai')
+                                            @if ($activeVersi && ($activeVersi->id != session('versi')))
+                                                <a href="{{ url('/peminjaman/' . $asset->id) }}" class="btn btn-primary btn-sm" onclick="showAlert(event)">Pinjam</a>
+                                            @else
+                                                <a href="{{ url('/peminjaman/' . $asset->id) }}" class="btn btn-primary btn-sm">Pinjam</a>
+                                            @endif
+                                        @else
+                                            <button class="btn btn-secondary btn-sm" disabled>Tidak Dapat Dipinjam</button>
+                                        @endif
                                     </td>
                                 </tr>
                                 @endforeach

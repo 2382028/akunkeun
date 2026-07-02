@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Illuminate\Auth\AuthenticationException;
 
 class Handler extends ExceptionHandler
 {
@@ -44,5 +45,26 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+        protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        $guard = $exception->guards()[0];
+
+        switch ($guard) {
+            case 'administrator':
+                $login = route('administrator.login'); // bikin route khusus admin
+                break;
+            case 'penyedia':
+                $login = route('penyedia.login'); // bikin route khusus penyedia
+                break;
+            case 'akun_penyewa':
+                $login = route('penyewa.login'); // bikin route khusus penyewa
+                break;
+            default:
+                $login = route('login'); // fallback ke default /akses
+                break;
+        }
+
+        return redirect()->guest($login);
     }
 }

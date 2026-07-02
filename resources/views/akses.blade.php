@@ -34,11 +34,26 @@
                         <label for="" class="form-label text-muted">Password</label>
                         <input type="password" class="form-control" id="" name="password" required>
                     </div>
+                    <div class="mb-3">
+                        <label for="InputTahun" class="form-label">Tahun</label>
+                        <select class="form-select text-muted" id="inputGroupSelect01" name="versi" required>
+                            @if (\App\Models\Versi::where('status', 'aktif')->exists())
+                                @foreach ($versis as $versi)
+                                    <option value="{{ $versi->id }}" {{ $versi->status == 'aktif' ? 'selected' : '' }}>
+                                        {{ $versi->versi }}
+                                    </option>
+                                @endforeach
+                            @else
+                                <option value="" disabled {{ $versis->where('status', 'aktif')->isEmpty() ? 'selected' : '' }}>Pilih tahun</option>
+                            @endif
+
+                        </select>
+                    </div>
                     <div class="d-grid gap-2 submit-button">
                         <button class="btn btn-primary fw-bold" type="submit">Masuk</button>
                     </div>
                     <br>
-                    <p class="text-center text-muted small">Bantuan!</p>
+                    <!--<p class="text-center text-muted small">Bantuan!</p>-->
                 </form>
             </div>
         </div>

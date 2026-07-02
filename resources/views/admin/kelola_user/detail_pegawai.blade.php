@@ -49,7 +49,10 @@
                {{-- password --}}
                <div class="row mb-3">
                 <div class="col-md-3">
-                 <label for="InputPassword" class="form-label">Password</label>
+                  <label for="InputPassword" class="form-label">
+                      Password Baru 
+                      <small class="text-muted">(Hanya Jika Ganti Password)</small>
+                  </label>
                 </div>
                 <div class="col-md-9">
                  <input type="password" class="form-control" id="InputPassword" name="password">
@@ -62,11 +65,11 @@
                    <label for="InputJenisKelamin" class="form-label">Jenis Kelamin</label>
                   </div>
                   <div class="col-md-9">
-                    <select name="jenis_kelamin" class="form-select text-muted" id="InputStatus">
-                      <option selected>{{ $pegawai->jenis_kelamin }}</option>
-                      <option value="Laki-laki">Laki-Laki</option>
-                      <option value="Perempuan">Perempuan</option>
-                    </select>
+                  <select name="jenis_kelamin" class="form-select text-muted" id="InputStatus">
+                      <option value="Laki-laki" {{ $pegawai->jenis_kelamin == 'Laki-laki' ? 'selected' : '' }}>Laki-Laki</option>
+                      <option value="Perempuan" {{ $pegawai->jenis_kelamin == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                  </select>
+
                   </div>
                 </div>
 
@@ -76,12 +79,15 @@
                   <label for="InputStatus" class="form-label">Status</label>
                  </div>
                  <div class="col-md-9">
-                  <select name="status" class="form-select text-muted" id="InputStatus">
-                    <option selected>{{ $pegawai->status }}</option>
-                    <option value="PNS">PNS</option>
-                    <option value="non PNS">Non PNS</option>
-                    <option value="non PNS">PPPK</option>
+                 <select name="status" class="form-select text-muted" id="InputStatus">
+                    <option value="-" {{ $pegawai->status == '-' ? 'selected' : '' }}>-</option>
+                    <option value="PNS" {{ $pegawai->status == 'PNS' ? 'selected' : '' }}>PNS</option>
+                    <option value="non PNS" {{ $pegawai->status == 'non PNS' ? 'selected' : '' }}>Non PNS</option>
+                    <option value="PPPK" {{ $pegawai->status == 'PPPK' ? 'selected' : '' }}>PPPK</option>
+                    <option value="PPNPN" {{ $pegawai->status == 'PPNPN' ? 'selected' : '' }}>PPNPN</option>
                 </select>
+
+
                  </div>
                 </div>
 
@@ -91,7 +97,34 @@
                   <label for="InputGolongan" class="form-label">Golongan</label>
                  </div>
                  <div class="col-md-9">
-                  <input type="text" class="form-control" id="InputGolongan" value="{{ $pegawai->golongan }}" name="golongan">
+                 <select name="golongan" id="InputGolongan" class="form-select text-muted" >
+                    @foreach ($pangkats as $pangkat)
+                        @if ($pangkat->golongan == "-")
+                          <option value="-" {{ $pegawai->golongan == '-' ? 'selected' : '' }}>-</option>
+                        @endif
+                      @endforeach
+                      @foreach ($pangkats as $pangkat)
+                        @if ($pangkat->golongan != "-")
+                          <option value="{{ $pangkat->golongan }}" {{ $pegawai->golongan == $pangkat->golongan ? 'selected' : '' }}>
+                            {{ $pangkat->golongan }}
+                          </option>
+                        @endif
+                      @endforeach
+                      <!-- <option value="-" {{ $pegawai->golongan == '-' ? 'selected' : '' }}>-</option>
+                      <option value="II/a" {{ $pegawai->golongan == 'II/a' ? 'selected' : '' }}>II/a</option>
+                      <option value="II/b" {{ $pegawai->golongan == 'II/b' ? 'selected' : '' }}>II/b</option>
+                      <option value="II/c" {{ $pegawai->golongan == 'II/c' ? 'selected' : '' }}>II/c</option>
+                      <option value="II/d" {{ $pegawai->golongan == 'II/d' ? 'selected' : '' }}>II/d</option>
+                      <option value="III/a" {{ $pegawai->golongan == 'III/a' ? 'selected' : '' }}>III/a</option>
+                      <option value="III/b" {{ $pegawai->golongan == 'III/b' ? 'selected' : '' }}>III/b</option>
+                      <option value="III/c" {{ $pegawai->golongan == 'III/c' ? 'selected' : '' }}>III/c</option>
+                      <option value="III/d" {{ $pegawai->golongan == 'III/d' ? 'selected' : '' }}>III/d</option>
+                      <option value="IV/a" {{ $pegawai->golongan == 'IV/a' ? 'selected' : '' }}>IV/a</option>
+                      <option value="IV/b" {{ $pegawai->golongan == 'IV/b' ? 'selected' : '' }}>IV/b</option>
+                      <option value="IV/c" {{ $pegawai->golongan == 'IV/c' ? 'selected' : '' }}>IV/c</option>
+                      <option value="IV/d" {{ $pegawai->golongan == 'IV/d' ? 'selected' : '' }}>IV/d</option>
+                      <option value="IV/e" {{ $pegawai->golongan == 'IV/e' ? 'selected' : '' }}>IV/e</option> -->
+                </select>
                  </div>
                </div>
                
@@ -101,7 +134,20 @@
                  <label for="InputPangkat" class="form-label">Pangkat</label>
                 </div>
                 <div class="col-md-9">
-                 <input type="text" class="form-control" id="InputPangkat" value="{{ $pegawai->pangkat }}" name="pangkat">
+                <select name="pangkat" id="InputPangkat" class="form-select text-muted" style="width: 100%;">
+                  @foreach ($pangkats as $pangkat)
+                    @if ($pangkat->nama_pangkat == "-")
+                      <option value="-" {{ $pegawai->pangkat == '-' ? 'selected' : '' }}>-</option>
+                    @endif
+                  @endforeach
+                  @foreach ($pangkats as $pangkat)
+                    @if ($pangkat->nama_pangkat != "-")
+                      <option value="{{ $pangkat->nama_pangkat }}" {{ $pegawai->pangkat == $pangkat->nama_pangkat ? 'selected' : '' }}>
+                        {{ $pangkat->golongan }} - {{ $pangkat->nama_pangkat }}
+                      </option>
+                    @endif
+                  @endforeach
+                </select>
                 </div>
                </div>
 
@@ -131,11 +177,14 @@
                  <label for="InputJabatan" class="form-label">Jabatan</label>
                 </div>
                 <div class="col-md-9">
-                 <select id="InputJabatan" name="jabatan_id" class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                  @foreach ($jabatans as $jabatan)
-                    <option value="{{ $jabatan->id }}">{{ $jabatan->nama_jabatan }}</option>
-                  @endforeach
+                <select id="InputJabatan" name="jabatan_id" class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                    @foreach ($jabatans as $jabatan)
+                        <option value="{{ $jabatan->id }}" {{ $pegawai->jabatan_id == $jabatan->id ? 'selected' : '' }}>
+                            {{ $jabatan->nama_jabatan }}
+                        </option>
+                    @endforeach
                 </select>
+
                 </div>
                </div>
 
@@ -146,10 +195,41 @@
                 </div>
                 <div class="col-md-9">
                 <select name="fungsi_id" class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                  @foreach ($fungsis as $fungsi)
-                    <option value="{{ $fungsi->id }}">{{ $fungsi->nama_fungsi }}</option>
-                  @endforeach
+                    @foreach ($fungsis as $fungsi)
+                        <option value="{{ $fungsi->id }}" {{ $pegawai->fungsi_id == $fungsi->id ? 'selected' : '' }}>
+                            {{ $fungsi->nama_fungsi }}
+                        </option>
+                    @endforeach
                 </select>
+                </div>
+              </div>
+
+              {{-- NPWP --}}
+               <div class="row mb-3">
+                <div class="col-md-3">
+                 <label for="InputNPWP" class="form-label">NPWP</label>
+                </div>
+                <div class="col-md-9">
+                 <input type="text" class="form-control" id="InputNPWP" value="{{ $pegawai->npwp }}" name="NPWP">
+                </div>
+               </div>
+
+               {{-- pokja --}}
+              <div class="row mb-3">
+                <div class="col-md-3">
+                <label for="InputPokja" class="form-label">Bank</label>
+                </div>
+                <div class="col-md-9">
+                <select name="bank" class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                    <!-- Tambahkan opsi default "Pilih Bank" -->
+                    <option value="" disabled {{ !$banks->contains('kode_bank', $pegawai->bank) ? 'selected' : '' }}>Pilih Bank</option>
+                    @foreach ($banks as $bank)
+                        <option value="{{ $bank->kode_bank }}" {{ $pegawai->bank == $bank->kode_bank ? 'selected' : '' }}>
+                            {{ $bank->kode_bank }} ({{ $bank->nama_bank }})
+                        </option>
+                    @endforeach
+                </select>
+
                 </div>
               </div>
 
@@ -163,6 +243,16 @@
                 </div>
                </div>
 
+               {{-- Nama Rekening --}}
+               <div class="row mb-3">
+                <div class="col-md-3">
+                 <label for="InputNamaRekening" class="form-label">Nama Rekening</label>
+                </div>
+                <div class="col-md-9">
+                 <input type="text" class="form-control" id="InputNamaRekening" value="{{ $pegawai->nama_rekening }}" name="nama_rekening">
+                </div>
+               </div>
+
                {{-- status aktif --}}
                <div class="row mb-3">
                 <div class="col-md-3">
@@ -170,10 +260,10 @@
                 </div>
                 <div class="col-md-9">
                   <select name="is_aktif" class="form-select text-muted" id="InputStatusAktif">
-                    <option selected>{{ $pegawai->is_aktif }}</option>
-                    <option value="aktif">Aktif</option>
-                    <option value="nonaktif">Nonaktif</option>
-                </select>
+                      <option value="1" {{ $pegawai->is_aktif == 1 ? 'selected' : '' }}>Aktif</option>
+                      <option value="0" {{ $pegawai->is_aktif == 0 ? 'selected' : '' }}>Nonaktif</option>
+                  </select>
+
                 </div>
                </div>
 

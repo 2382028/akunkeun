@@ -30,7 +30,7 @@
                                 <th>Legalitas</th>
                                 <th>Legalitas 5 Tahun</th>
                                 <th>Tipe</th>
-                                <th>Status</th>
+                                <!--<th>Status</th>-->
                                 <th>Aksi</th>
                             </tr>
                             </thead>
@@ -45,7 +45,7 @@
                                 <td class="text-center">{{$kendaraan->legalitas}}</td>
                                 <td class="text-center">{{$kendaraan->legalitas_5th}}</td>
                                 <td class="text-center">{{$kendaraan->tipe}}</td>
-                                <td class="text-center">{{$kendaraan->status}}</td>
+                                <!--<td class="text-center">{{$kendaraan->status}}</td>-->
                                 <td class='text-center d-flex justify-content-center'>
                                     <span class="p-1">
                                         <a href="{{url('/data_kendaraan/detail/' . $kendaraan->id)}}" class="text-decoration-none btn btn-success"><i class="fa-solid fa-pen-to-square"></i></a>
@@ -56,9 +56,9 @@
                                             <button type="submit" class="text-decoration-none btn btn-danger" onclick="return confirm('Hapus Data?')"><i class="fa-solid fa-trash"></i></button>
                                         </form>
                                     </span>
-                                    <span class="p-1">
-                                        <a href="{{url('/service_kendaraan/' . $kendaraan->id)}}" class="text-decoration-none btn btn-warning text-white"><i class="fa-solid fa-screwdriver-wrench"></i> Ajukan Perbaikan</a>
-                                    </span>
+                                    <!--<span class="p-1">-->
+                                    <!--    <a href="{{url('/service_kendaraan/' . $kendaraan->id)}}" class="text-decoration-none btn btn-warning text-white"><i class="fa-solid fa-screwdriver-wrench"></i> Ajukan Perbaikan</a>-->
+                                    <!--</span>-->
                                 </td>
                             </tr>
                             @endforeach
@@ -147,20 +147,20 @@
                         <input type="text" class="form-control" id="" name="tipe" required>
                     </div>
                 </div>
-                <div class="row mb-3">
-                    <div class="col-md-4">
-                        <label for="" class="form-label">Status Kendaraan</label>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="input-group mb-3 submit-select">
-                            <select class="form-select text-muted" id="inputGroupSelect01" name="status">
-                                <option selected>Pilih Status</option>
-                                <option value="baik">Baik</option>
-                                <option value="rusak">Rusak</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
+                <!--<div class="row mb-3">-->
+                <!--    <div class="col-md-4">-->
+                <!--        <label for="" class="form-label">Status Kendaraan</label>-->
+                <!--    </div>-->
+                <!--    <div class="col-md-8">-->
+                <!--        <div class="input-group mb-3 submit-select">-->
+                <!--            <select class="form-select text-muted" id="inputGroupSelect01" name="status">-->
+                <!--                <option selected>Pilih Status</option>-->
+                <!--                <option value="baik">Baik</option>-->
+                <!--                <option value="rusak">Rusak</option>-->
+                <!--            </select>-->
+                <!--        </div>-->
+                <!--    </div>-->
+                <!--</div>-->
             </div>
             <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>

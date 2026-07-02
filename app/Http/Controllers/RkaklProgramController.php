@@ -24,7 +24,7 @@ class RkaklProgramController extends Controller
         return view('admin.referensi.rkakl.rkakl_program', [
             'title' => 'Rkakl Program',
             'rkaklprograms' => $rkaklprograms,
-            'rkaklsatkers' => Ref_rkakl_satker::all()
+            'rkaklsatkers' => Ref_rkakl_satker::where('versi_id', session('versi', '-1'))->get()
         ]);
     }
 
@@ -57,6 +57,7 @@ class RkaklProgramController extends Controller
             'ref_rkakl_satker_id' => $request->kode_satker,
             'kode_program' => $request->kode_program,
             'program' => $request->program,
+            'versi_id' => session('versi'),
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -68,7 +69,7 @@ class RkaklProgramController extends Controller
     public function edit(string $id): View
     {
         // get pegawai by id
-        $rkaklsatkers = Ref_rkakl_satker::all();
+        $rkaklsatkers = Ref_rkakl_satker::where('versi_id', session('versi', '-1'))->get();
         $rkaklprograms = DB::table('ref_rkakl_programs')
             ->SELECT('ref_rkakl_programs.*', 'ref_rkakl_satkers.kode_satker as kode_induk')
             ->JOIN('ref_rkakl_satkers',  'ref_rkakl_satkers.id', '=', 'ref_rkakl_programs.ref_rkakl_satker_id')

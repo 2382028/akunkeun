@@ -58,13 +58,12 @@
                     <label for="InputTahun" class="form-label">Tahun</label>
                     <div class="input-group mb-3 submit-select">
                         <select class="form-select text-muted" id="inputGroupSelect01" name="versi" required>
-                          <option selected>Pilih tahun</option>
-                          @foreach ($versis as $versi)
-                          @if ($versi->status == 'aktif')
-                          <option value="{{$versi->id}}" selected>{{$versi->versi}}</option>
-                          @endif
-                          <option value="{{$versi->id}}">{{$versi->versi}}</option>
-                          @endforeach
+                            <option value="" disabled {{ $versis->where('status', 'aktif')->isEmpty() ? 'selected' : '' }}>Pilih tahun</option>
+                            @foreach ($versis as $versi)
+                                <option value="{{ $versi->id }}" {{ $versi->status == 'aktif' ? 'selected' : '' }}>
+                                    {{ $versi->versi }}
+                                </option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="d-grid gap-2 submit-button">

@@ -26,9 +26,9 @@ class RkaklOutputController extends Controller
             ->get();
         return view('admin.referensi.rkakl.rkakl_output', [
             'title' => 'Rkakl Output',
-            'rkaklsatkers' => Ref_rkakl_satker::all(),
-            'rkaklprograms' => Ref_rkakl_program::all(),
-            'rkaklkegiatans' => Ref_rkakl_kegiatan::all(),
+            'rkaklsatkers' => Ref_rkakl_satker::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklprograms' => Ref_rkakl_program::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklkegiatans' => Ref_rkakl_kegiatan::where('versi_id', session('versi', '-1'))->get(),
             'rkakloutputs' => $rkakloutput
         ]);
     }
@@ -48,6 +48,7 @@ class RkaklOutputController extends Controller
             'ref_rkakl_kegiatan_id' => $request->id_kegiatan,
             'kode_output' => $request->kode_output,
             'nama_output' => $request->nama_output,
+            'versi_id' => session('versi'),
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -61,9 +62,9 @@ class RkaklOutputController extends Controller
 
         return view('admin.referensi.rkakl.edit_rkakl_output', [
             'title' => 'Rkakl Output',
-            'rkaklsatkers' => Ref_rkakl_satker::all(),
-            'rkaklprograms' => Ref_rkakl_program::all(),
-            'rkaklkegiatans' => Ref_rkakl_kegiatan::all(),
+            'rkaklsatkers' => Ref_rkakl_satker::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklprograms' => Ref_rkakl_program::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklkegiatans' => Ref_rkakl_kegiatan::where('versi_id', session('versi', '-1'))->get(),
             'rkakloutput' => Ref_rkakl_output::find($id),
         ]);
     }

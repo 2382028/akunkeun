@@ -17,6 +17,7 @@ use App\Models\Ref_rkakl_kegiatan;
 use App\Models\Ref_rkakl_komponen;
 
 use App\Models\Ref_rkakl_suboutput;
+use App\Models\Versi;
 
 
 class AkunXRkaklController extends Controller
@@ -38,15 +39,15 @@ class AkunXRkaklController extends Controller
             ->get();
         return view('admin.referensi.rkakl.rkaklxakun', [
             'title' => 'Akun x Rkakl',
-            'rkaklsatkers' => Ref_rkakl_satker::all(),
-            'rkaklprograms' => Ref_rkakl_program::all(),
-            'rkaklkegiatans' => Ref_rkakl_kegiatan::all(),
-            'rkakloutputs' => Ref_rkakl_output::all(),
-            'rkaklsuboutputs' => Ref_rkakl_suboutput::all(),
-            'rkaklkomponens' => Ref_rkakl_komponen::all(),
+            'rkaklsatkers' => Ref_rkakl_satker::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklprograms' => Ref_rkakl_program::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklkegiatans' => Ref_rkakl_kegiatan::where('versi_id', session('versi', '-1'))->get(),
+            'rkakloutputs' => Ref_rkakl_output::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklsuboutputs' => Ref_rkakl_suboutput::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklkomponens' => Ref_rkakl_komponen::where('versi_id', session('versi', '-1'))->get(),
             'akunxrkakls' => $akunxrkakl,
-            'rkaklsubkomponens' => Ref_rkakl_sub_komponen::all(),
-            'akuns' => Akun::all(),
+            'rkaklsubkomponens' => Ref_rkakl_sub_komponen::where('versi_id', session('versi', '-1'))->get(),
+            'akuns' => Akun::where('versi_id', session('versi', '-1'))->get(),
         ]);
     }
 
@@ -61,11 +62,29 @@ class AkunXRkaklController extends Controller
     // function store untuk proses data
     public function store(Request $request): RedirectResponse
     {
+        // Validasi input
+        $request->validate([
+            'nominal' => [
+                'nullable',
+                'numeric', // Pastikan nilai adalah angka
+                function ($attribute, $value, $fail) {
+                    if (!is_null($value) && !is_numeric($value)) {
+                        return redirect('admin-akun_x_rkakl')->with(['error' => 'Masukkan Nominal dengan Angka!']);
+                    }
+                },
+            ],
+        ]);
+
+        $nominal = $request->nominal ?? 0;
+
+        // dd($nominal);
+        $versi = Versi::where('status', 'aktif')->get();
         // Insert data into 'akuns' table
         $akunId = DB::table('akuns')->insertGetId([
             'kode_akun' => $request->kode_akun,
             'uraian' => $request->uraian,
-            'nominal' => $request->nominal,
+            'nominal' => $nominal,
+            'versi_id' => session('versi'),
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -74,6 +93,7 @@ class AkunXRkaklController extends Controller
         DB::table('akun_x_rkakls')->insertOrIgnore([
             'akun_id' => $akunId, // Use the newly inserted 'akun' ID
             'ref_sub_komponen_id' => $request->sub_komponen_id,
+            'versi_id' => session('versi'),
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -87,15 +107,15 @@ class AkunXRkaklController extends Controller
 
         return view('admin.referensi.rkakl.edit_akun_x_rkakl', [
             'title' => 'Akun',
-            'rkaklsatkers' => Ref_rkakl_satker::all(),
-            'rkaklprograms' => Ref_rkakl_program::all(),
-            'rkaklkegiatans' => Ref_rkakl_kegiatan::all(),
-            'rkakloutputs' => Ref_rkakl_output::all(),
-            'rkaklsuboutputs' => Ref_rkakl_suboutput::all(),
-            'rkaklkomponens' => Ref_rkakl_komponen::all(),
+            'rkaklsatkers' => Ref_rkakl_satker::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklprograms' => Ref_rkakl_program::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklkegiatans' => Ref_rkakl_kegiatan::where('versi_id', session('versi', '-1'))->get(),
+            'rkakloutputs' => Ref_rkakl_output::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklsuboutputs' => Ref_rkakl_suboutput::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklkomponens' => Ref_rkakl_komponen::where('versi_id', session('versi', '-1'))->get(),
             'akunxrkakl' => Akun_x_rkakl::find($id),
-            'akuns' => Akun::all(),
-            'rkaklsubkomponens' => Ref_rkakl_sub_komponen::all(),
+            'akuns' => Akun::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklsubkomponens' => Ref_rkakl_sub_komponen::where('versi_id', session('versi', '-1'))->get(),
         ]);
     }
 

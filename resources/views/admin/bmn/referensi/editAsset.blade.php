@@ -79,6 +79,17 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="dapat_dipinjami" class="form-label">Dapat Dipinjami?</label>
+                            </div>
+                            <div class="col-md-8">
+                                <select class="form-select" name="dapat_dipinjami" id="dapat_dipinjami">
+                                    <option value="1" {{ $asset->kategori == '1' ? 'selected' : '' }}>Ya</option>
+                                    <option value="0" {{ $asset->kategori == '0' ? 'selected' : '' }}>Tidak</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="col-md-12 mb-3">

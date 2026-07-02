@@ -1,6 +1,9 @@
 @extends('admin.templates.sidebar')
 
 @section('contain')
+<head>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+</head>
 <!-- Awal Dashboard - Kegiatan - Keuangan -->
 <div class="container-fluid">
   <div class="row">
@@ -15,17 +18,41 @@
                 <h5 class="fw-bold">Informasi Kegiatan</h5>
               </div>
               <div class="row small">
-                <div class="col-2">Nama Kegiatan</div>
-                <div class="col-10">: {{$perjadin->nama_kegiatan}}</div>
-              </div>
-              <div class="row small">
-                <div class="col-2">Tanggal Penyelenggaran</div>
-                <div class="col-10">: {{$perjadin->tgl_mulai}} s.d {{$perjadin->tgl_selesai}}</div>
-              </div>
-              <div class="row small">
-                <div class="col-2">Lokasi</div>
-                <div class="col-10">: {{$perjadin->kabupaten_kota}}</div>
-              </div>
+              <div class="col-md-2">Nama Kegiatan</div>
+                <input type="hidden" value="{{ $perjadin->id }}">
+                <div class="col-md-10">: {{ $perjadin->nama_kegiatan }}</div>
+            </div>
+            <div class="row small">
+                <div class="col-md-2">Asal Surat Undangan</div>
+                <input type="hidden" value="{{ $perjadin->id }}">
+                <div class="col-md-10">: {{$perjadin->pemberi_undangan}}</div>
+            </div>
+            <div class="row small">
+                <div class="col-md-2">Tanggal Pelaksanaan</div>
+                <div class="col-md-10">: {{\Carbon\Carbon::parse($perjadin->tgl_mulai)->format('d-m-Y H:i')}}</div>
+            </div>
+            <div class="row small">
+                <div class="col-md-2">Tanggal Selesai</div>
+                <div class="col-md-10">: {{\Carbon\Carbon::parse($perjadin->tgl_selesai)->format('d-m-Y H:i')}}</div>
+            </div>
+            <div class="row small">
+                <div class="col-md-2">Lokasi</div>
+                <div class="col-md-10">: {{ $perjadin->alamat }}</div>
+            </div>
+            <div class="row small">
+                <div class="col-md-2">Nomor Surat Tugas</div>
+                <div class="col-md-10">: {{ $perjadin->kode_surat_tugas }}</div>
+            </div>
+            <div class="row small">
+                <div class="col-md-2">Tanggal Surat Tugas</div>
+                <input type="hidden" value="{{ $perjadin->id }}">
+                <div class="col-md-10">: {{\Carbon\Carbon::parse($perjadin->tgl_surat_dibuat)->format('d-m-Y H:i')}}</div>
+            </div>
+            <div class="row small">
+                <div class="col-md-2">Jumlah Hari</div>
+                <input type="hidden" value="{{ $perjadin->id }}">
+                <div class="col-md-10">: {{$perjadin->jumlah_hari}} Hari</div>
+            </div>
               <div class="row small">
                 <div class="col-2">Verifikasi Dari BMN dan Keuangan</div>
                 <div class="col-10">: <span class="bg-info text-white px-3 py-1">{{$perjadin->is_acceptBMN}} | <span class="bg-info text-white px-3 py-1">{{$perjadin->is_acceptKeu}}</span></div>
@@ -34,6 +61,7 @@
                 <div class="col-2">Status Pengajuan</div>
                 <div class="col-10">: {{$perjadin->status_pengajuan}} | <span class="bg-success text-white px-3 py-1">{{$perjadin->is_acceptBend}}</span></div>
               </div>
+
               <br>
             </div>
 
@@ -51,9 +79,6 @@
                         <th class="th-sm">No</th>
                         <th class="th-md">Nama Dokumen</th>
                         <th class="th-md">Aksi</th>
-                        @if ($perjadin->is_acceptKeu == 'verifikasi-2')
-                        <th class="th-sm">Tanggal Penerimaan Berkas</th>
-                        @endif
                       </tr>
                     </thead>
                     <tbody>
@@ -64,7 +89,7 @@
                         <td class='text-center'>
                           <span>
 
-                            @if ($dokumen[0]->surat_tugas)
+                          @if ($dokumen->isNotEmpty() && $dokumen[0]->surat_tugas && $dokumen[0]->surat_tugas !== "-")
                             <?php
                             $path = $dokumen[0]->surat_tugas;
                             $filename = basename($path);
@@ -76,17 +101,12 @@
 
                           </span>
                         </td>
-                        @if ($perjadin->is_acceptKeu == 'verifikasi-2')
-                        <td>
-                          <input type="datetime-local" name="tgl_surtug" id="tgl_surtug" class="form-control" required>
-                        </td>
-                        @endif
                       </tr>
                       <tr>
                         <td class='text-center'>2</td>
                         <td>Surat Undangan</td>
                         <td class='text-center'>
-                          @if ($dokumen[0]->surat_undangan != null)
+                        @if ($dokumen->isNotEmpty() && $dokumen[0]->surat_undangan && $dokumen[0]->surat_undangan !== "-")
                           <?php
                           $path = $dokumen[0]->surat_undangan;
                           $filename = basename($path);
@@ -104,7 +124,7 @@
                         <td>SPPD</td>
                         <td class='text-center'>
                           <span>
-                            @if ($dokumen[0]->SPPD!= null)
+                            @if ($dokumen[0]->SPPD!= null && $dokumen[0]->SPPD!= "-")
                             <?php
                             $path = $dokumen[0]->SPPD;
                             $filename = basename($path);
@@ -152,6 +172,10 @@
                   </table>
                 </div>
               </div>
+              @php
+                      $numpegawai = 0;
+                      $numnonpegawai = 0;
+                      @endphp
 
               @if($perjadin->is_acceptKeu != 'selesai')
               <div class="col-md-12 mb-3" id="divInformasiPeserta">
@@ -160,24 +184,36 @@
                   <table id="example" class="table table-bordered" style="width: 100%">
                     <thead>
                       <tr class="text-center small">
-                        <th class="th-md">Nama Lengkap</th>
-                        <th class="th-md">Pangkat/Golongan</th>
-                        <th class="th-md">Sebagai</th>
+                        <th >Nama Lengkap</th>
+                        <th>Pangkat/Golongan</th>
+                        <th >Sebagai</th>
+                        <!-- <th>Akun</th>
+                        <th>Nominal</th>
+                        <th>Total Pembayaran Bersih</th> -->
                       </tr>
                     </thead>
-                    @foreach ($pesertaPegawais as $pesertaPegawai)
+                    @foreach ($fasilitas as $pesertaPegawai)
                     <tr>
                       <td>{{$pesertaPegawai->nama_lengkap}}</td>
                       <td>{{$pesertaPegawai->pangkat}}-{{$pesertaPegawai->golongan}}</td>
                       <td class="text-center">{{$pesertaPegawai->status_pegawai}}</td>
+                      <!-- <td>
+                          <select class="js-example-basic-single-3 form-select" aria-label="Default select example" style="min-width: 300px" name="akunPegawai_{{$numpegawai}}">
+                            @foreach ($akuns as $akun)
+                                <option value="{{$akun->idAkun}}"
+                                    @if ($pesertaPegawai->akun_x_rkakl == $akun->idAkun) selected @endif>
+                                    [{{$akun->kode_satker}}.{{$akun->kode_program}}.{{$akun->kode_kegiatan}}.{{$akun->kode_output}}.{{$akun->kode_sub_output}}.{{$akun->kode_komponen}}.{{$akun->kode_sub_kegiatan}}.{{$akun->kode_akun}}] {{$akun->nama_sub_kegiatan}} - {{$akun->uraian}}
+                                </option>
+                            @endforeach
+                          </select>
+                        </td> -->
                     </tr>
                     @endforeach
                     @foreach ($pesertaNonPegawais as $pesertaNonPegawai)
                     <tr>
-                      <td class="text-center">{{$pesertaNonPegawai->id}}</td>
                       <td>{{$pesertaNonPegawai->nama_lengkap}}</td>
                       <td>{{$pesertaNonPegawai->pangkat}}-{{$pesertaNonPegawai->golongan}}</td>
-                      <td>{{$pesertaNonPegawai->status_pegawai}}</td>
+                      <td class="text-center">{{$pesertaNonPegawai->status_pegawai}}</td>
                     </tr>
                     @endforeach
                   </table>
@@ -199,7 +235,7 @@
                         <th>Pangkat/Golongan</th>
                         <th>Sebagai</th>
                         <th>Akun</th>
-                        <th>SBM</th>
+                        <!-- <th>SBM</th> -->
                         <th>Uang Harian</th>
                         <th>Uang Harian Halfday/Fullday</th>
                         <th>Uang Harian Fullboard</th>
@@ -210,10 +246,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      @php
-                      $numpegawai = 0;
-                      $numnonpegawai = 0;
-                      @endphp
+
                       @foreach ($fasilitas as $pesertaPegawai)
                       <tr>
                         <td style="min-width: 150px">{{$pesertaPegawai->nama_lengkap}} <input type="hidden" name="idPegawai_{{$numpegawai}}" value="{{$pesertaPegawai->idPeserta}}"></td>
@@ -222,14 +255,19 @@
                         <td>
                           <select class="js-example-basic-single-3 form-select" aria-label="Default select example" style="min-width: 300px" name="akunPegawai_{{$numpegawai}}">
                             @foreach ($akuns as $akun)
-                            @if ($pesertaPegawai->akun_x_rkakl == $akun->idAkun)
-                            <option value="{{$akun->idAkun}}" selected>[{{$akun->kode_satker}}.{{$akun->kode_program}}.{{$akun->kode_kegiatan}}.{{$akun->kode_output}}.{{$akun->kode_sub_output}}.{{$akun->kode_komponen}}.{{$akun->kode_sub_kegiatan}}.{{$akun->kode_akun}}] {{$akun->nama_sub_kegiatan}} - {{$akun->uraian}}</option>
-                            @endif
-                            <option value="{{$akun->idAkun}}">[{{$akun->kode_satker}}.{{$akun->kode_program}}.{{$akun->kode_kegiatan}}.{{$akun->kode_output}}.{{$akun->kode_sub_output}}.{{$akun->kode_komponen}}.{{$akun->kode_sub_kegiatan}}.{{$akun->kode_akun}}] {{$akun->nama_sub_kegiatan}} - {{$akun->uraian}}</option>
+                                <option value="{{$akun->idAkun}}"
+                                    @if ($pesertaPegawai->akun_x_rkakl == $akun->idAkun) selected @endif>
+                                    [{{$akun->kode_satker}}.{{$akun->kode_program}}.{{$akun->kode_kegiatan}}.{{$akun->kode_output}}.{{$akun->kode_sub_output}}.{{$akun->kode_komponen}}.{{$akun->kode_sub_kegiatan}}.{{$akun->kode_akun}}] {{$akun->nama_sub_kegiatan}} - {{$akun->uraian}}
+                                </option>
                             @endforeach
                           </select>
                         </td>
-                        <td style="min-width: 300px">
+                        <style>
+                          .hidden-select {
+                            display: none;
+                          }
+                        </style>
+                        <td style="min-width: 300px" class="hidden-select">
                           <select class="form-control mySelect" name="sbmPegawai_{{$numpegawai}}">
                             @foreach ($sbms as $sbm)
                             @if ($pesertaPegawai->ref_sbm == $sbm->id)
@@ -250,20 +288,23 @@
                         </td>
                         <td style="min-width: 200px">
                           <input type="number" class="form-control num4 prevent-submit" min="0" name="uang_representasi{{$numpegawai}}" value="{{$pesertaPegawai->uang_representasi}}">
-                        </td>
-                        <td style="min-width: 200px">
-                          <input type="number" class="result form-control" name="total_{{$numpegawai}}" value="{{$pesertaPegawai->jumlah_harga}}" readonly>
-                        </td>
-                        <td style="min-width: 200px">
+                          </td>
 
+                          <td style="min-width: 200px">
+                            <input type="number" class="result form-control" name="total_{{$numpegawai}}" value="{{$pesertaPegawai->jumlah_harga}}" readonly>
+                          </td>
+                        <td style="min-width: 200px">
                           <input type="date" class="result form-control" name="tglbayar_{{$numpegawai}}" value="{{$pesertaPegawai->tgl_bayar}}" required>
                         </td>
                         <td>
                           <select class="form-select" aria-label="Default select example" style="min-width: 150px" name="statuspegawai_{{$numpegawai}}">
-                            <option value="{{$pesertaPegawai->status}}">{{$pesertaPegawai->status}}</option>
-                            <option value="Belum Dibayarkan">Belum Dibayarkan</option>
-                            <option value="Tidak Dibayarkan">Tidak Dibayarkan</option>
-                            <option value="Sudah Dibayarkan">Sudah Dibayarkan</option>
+                              <option value="" {{ $pesertaPegawai->status == '' ? 'selected' : '' }}>-</option>
+                              @if($pesertaPegawai->status != '' && !in_array($pesertaPegawai->status, ['Belum Dibayarkan', 'Tidak Dibayarkan', 'Sudah Dibayarkan']))
+                                  <option value="{{ $pesertaPegawai->status }}" selected>{{ $pesertaPegawai->status }}</option>
+                              @endif
+                              <option value="Belum Dibayarkan" {{ $pesertaPegawai->status == 'Belum Dibayarkan' ? 'selected' : '' }}>Belum Dibayarkan</option>
+                              <option value="Tidak Dibayarkan" {{ $pesertaPegawai->status == 'Tidak Dibayarkan' ? 'selected' : '' }}>Tidak Dibayarkan</option>
+                              <option value="Sudah Dibayarkan" {{ $pesertaPegawai->status == 'Sudah Dibayarkan' ? 'selected' : '' }}>Sudah Dibayarkan</option>
                           </select>
                         </td>
                       </tr>
@@ -279,14 +320,14 @@
                         <td>
                           <select class="js-example-basic-single-3 form-select" aria-label="Default select example" style="min-width: 300px" name="akunNonPegawai_{{$numnonpegawai}}">
                             @foreach ($akuns as $akun)
-                            @if ($pesertaNonPegawai->akun_x_rkakl == $akun->idAkun)
-                            <option value="{{$akun->idAkun}}" selected>[{{$akun->kode_satker}}.{{$akun->kode_program}}.{{$akun->kode_kegiatan}}.{{$akun->kode_output}}.{{$akun->kode_sub_output}}.{{$akun->kode_komponen}}.{{$akun->kode_sub_kegiatan}}.{{$akun->kode_akun}}] {{$akun->nama_sub_kegiatan}} - {{$akun->uraian}}</option>
-                            @endif
-                            <option value="{{$akun->idAkun}}">[{{$akun->kode_satker}}.{{$akun->kode_program}}.{{$akun->kode_kegiatan}}.{{$akun->kode_output}}.{{$akun->kode_sub_output}}.{{$akun->kode_komponen}}.{{$akun->kode_sub_kegiatan}}.{{$akun->kode_akun}}] {{$akun->nama_sub_kegiatan}} - {{$akun->uraian}}</option>
+                                <option value="{{$akun->idAkun}}"
+                                    @if ($pesertaNonPegawai->akun_x_rkakl == $akun->idAkun) selected @endif>
+                                    [{{$akun->kode_satker}}.{{$akun->kode_program}}.{{$akun->kode_kegiatan}}.{{$akun->kode_output}}.{{$akun->kode_sub_output}}.{{$akun->kode_komponen}}.{{$akun->kode_sub_kegiatan}}.{{$akun->kode_akun}}] {{$akun->nama_sub_kegiatan}} - {{$akun->uraian}}
+                                </option>
                             @endforeach
                           </select>
                         </td>
-                        <td>
+                        <td class="hidden-select">
                           <select class="form-select mySelect" aria-label="Default select example" style="min-width: 300px" name="sbmNonPegawai_{{$numnonpegawai}}">
                             @foreach ($sbms as $sbm)
                             @if ($pesertaNonPegawai->ref_sbm == $sbm->id)
@@ -297,22 +338,37 @@
                           </select>
                         </td>
                         <td style="min-width: 200px">
-                          <input type="number" class="form-control num1 prevent-submit" min="0" name="nominalNon_{{$numnonpegawai}}" value="{{$pesertaNonPegawai->uang_harian}}">
+                          <input type="number" class="form-control num1 prevent-submit" min="0" name="uang_non_harian{{$numnonpegawai}}" value="{{$pesertaNonPegawai->uang_harian}}">
                         </td>
+                        <td style="min-width: 200px">
+                          <input type="number" class="form-control num2 prevent-submit" min="0" name="uang_non_harian_fullday{{$numnonpegawai}}" value="{{$pesertaNonPegawai->uang_harian_fullday}}">
+                        </td>
+                        <td style="min-width: 200px">
+                          <input type="number" class="form-control num3 prevent-submit" min="0" name="uang_non_harian_fullboard{{$numnonpegawai}}" value="{{$pesertaNonPegawai->uang_harian_fullboard}}">
+                        </td>
+                        <td style="min-width: 200px">
+                          <input type="number" class="form-control nu m4 prevent-submit" min="0" name="uang_non_representasi{{$numnonpegawai}}" value="{{$pesertaNonPegawai->uang_representasi}}">
+                          </td>
+                        <!-- <td style="min-width: 200px">
+                          <input type="number" class="form-control num1 prevent-submit" min="0" name="nominalNon_{{$numnonpegawai}}" value="{{$pesertaNonPegawai->uang_harian}}">
+                        </td> -->
                         <td style="min-width: 200px">
                           <input type="number" class="result form-control" name="totalNon_{{$numnonpegawai}}" value="{{$pesertaNonPegawai->jumlah_harga}}">
                         </td>
                         <td style="min-width: 200px">
-                          @if (($perjadin->is_acceptKeu == 'verifikasi-1'))
-                          <input type="date" class="result form-control" name="tglbayarnon_{{$numnonpegawai}}" value="{{$pesertaNonPegawai->tgl_bayar}}" readonly>
+                          @if (($perjadin->is_acceptKeu == 'selesai'))
+                          <input type="date" class="result form-control" name="tglbayarnon_{{$numnonpegawai}}" value="{{$pesertaNonPegawai->tgl_bayar}}">
                           @endif
                         </td>
                         <td>
                           <select class="form-select" aria-label="Default select example" style="min-width: 150px" name="statusnonpegawai_{{$numnonpegawai}}">
-                            <option value="{{$pesertaNonPegawai->status}}">{{$pesertaNonPegawai->status}}</option>
-                            <option value="Belum Dibayarkan">Belum Dibayarkan</option>
-                            <option value="Tidak Dibayarkan">Tidak Dibayarkan</option>
-                            <option value="Sudah Dibayarkan">Sudah Dibayarkan</option>
+                            <option value="" {{ $pesertaNonPegawai->status == '' ? 'selected' : '' }}>-</option>
+                            @if($pesertaNonPegawai->status != '' && !in_array($pesertaNonPegawai->status, ['Belum Dibayarkan', 'Tidak Dibayarkan', 'Sudah Dibayarkan']))
+                                <option value="{{ $kebutuhan->statusPembayaran }}" selected>{{ $kebutuhan->status }}</option>
+                            @endif
+                            <option value="Belum Dibayarkan" {{ $pesertaNonPegawai->status == 'Belum Dibayarkan' ? 'selected' : '' }}>Belum Dibayarkan</option>
+                            <option value="Tidak Dibayarkan" {{ $pesertaNonPegawai->status == 'Tidak Dibayarkan' ? 'selected' : '' }}>Tidak Dibayarkan</option>
+                            <option value="Sudah Dibayarkan" {{ $pesertaNonPegawai->status == 'Sudah Dibayarkan' ? 'selected' : '' }}>Sudah Dibayarkan</option>
                           </select>
                         </td>
                       </tr>
@@ -347,11 +403,12 @@
                 <thead>
                   <tr class="text-center small">
                     <th>No</th>
-                    <th>Nama Peserta</th>
+                    <!-- <th>Nama Peserta</th> -->
                     <th>Nama Fasilitas</th>
                     <th>Jumlah</th>
                     <th>Detail</th>
                     <th>Tipe Pendanaan</th>
+                    <th>Pelaksana</th>
                     <th>Keterangan</th>
                     <th>Akun</th>
                     <th>Nominal</th>
@@ -365,19 +422,20 @@
                   @foreach ($kebutuhans as $kebutuhan)
                   <tr>
                     <td class='text-center' style="min-width: 50px">{{$loop->iteration}} <input type="hidden" name="idKebutuhan_{{$numkebutuhan}}" value="{{$kebutuhan->idKebutuhan}}"></td>
-                    <td class="text-center" style="min-width: 150px;">{{$kebutuhan->nama_lengkap}}</td>
+                    <!-- <td class="text-center" style="min-width: 150px;">{{$kebutuhan->nama_lengkap}}</td> -->
                     <td style="min-width: 150px">{{$kebutuhan->nama}}</td>
-                    <td class='text-center' style="min-width: 50px">{{$kebutuhan->jumlah_frekuensi}}</td>
+                    <td class='text-center' style="min-width: 50px">{{ number_format($kebutuhan->jumlah_frekuensi, 0, ',', '.') }}</td>
                     <td class='text-center' style="min-width: 100px">{{$kebutuhan->satuan}}</td>
                     <td class='text-center' style="min-width: 100px">{{$kebutuhan->tipe_pendanaan}}</td>
+                    <td class='text-center' style="min-width: 100px">{{$kebutuhan->pelaksana}}</td>
                     <td class='text-center' style="min-width: 100px">{{$kebutuhan->ket}}</td>
                     <td>
                       <select class="js-example-basic-single-3 form-select akun-dropdown" aria-label="Default select example" style="min-width: 300px" name="akunKebutuhan_{{$numkebutuhan}}">
                         @foreach ($akuns as $akun)
-                        @if ($kebutuhan->akun_x_rkakl == $akun->idAkun)
-                        <option value="{{$akun->idAkun}}" selected>[{{$akun->kode_satker}}.{{$akun->kode_program}}.{{$akun->kode_kegiatan}}.{{$akun->kode_output}}.{{$akun->kode_sub_output}}.{{$akun->kode_komponen}}.{{$akun->kode_sub_kegiatan}}.{{$akun->kode_akun}}] {{$akun->nama_sub_kegiatan}} - {{$akun->uraian}}</option>
-                        @endif
-                        <option value="{{$akun->idAkun}}">[{{$akun->kode_satker}}.{{$akun->kode_program}}.{{$akun->kode_kegiatan}}.{{$akun->kode_output}}.{{$akun->kode_sub_output}}.{{$akun->kode_komponen}}.{{$akun->kode_sub_kegiatan}}.{{$akun->kode_akun}}] {{$akun->nama_sub_kegiatan}} - {{$akun->uraian}}</option>
+                            <option value="{{$akun->idAkun}}"
+                                @if ($kebutuhan->akun_x_rkakl == $akun->idAkun) selected @endif>
+                                [{{$akun->kode_satker}}.{{$akun->kode_program}}.{{$akun->kode_kegiatan}}.{{$akun->kode_output}}.{{$akun->kode_sub_output}}.{{$akun->kode_komponen}}.{{$akun->kode_sub_kegiatan}}.{{$akun->kode_akun}}] {{$akun->nama_sub_kegiatan}} - {{$akun->uraian}}
+                            </option>
                         @endforeach
                       </select>
                     </td>
@@ -410,9 +468,12 @@
           <div class="col-md-12 mb-3">
             <div class="table-responsive">
               <div class="d-flex justify-content-between">
-                <div>
-                  <h5 class="fw-bold">Informasi Fasilitas <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambah_fasilitas">+ Tambah Fasilitas</button></h5>
-                </div>
+                  <div>
+                      <h5 class="fw-bold">Informasi Fasilitas
+                        @if($perjadin->is_acceptKeu == 'selesai')
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambah_fasilitas">+ Tambah Fasilitas</button></h5>
+                        @endif
+                    </div>
               </div>
               <table id="calculationTable2" name="Fasilitas" class="table table-bordered calculationTable" style="width: 100%">
                 <thead>
@@ -422,13 +483,18 @@
                     <th>Jumlah</th>
                     <th>Detail</th>
                     <th>Tipe Pendanaan</th>
+                    <th>Pelaksana</th>
                     <th>Keterangan</th>
-                    <th>Akun</th>
-                    <th>SBM</th>
-                    <th>Nominal</th>
-                    <th>Total Pembayaran Bersih</th>
-                    <th>Tanggal Bayar</th>
-                    <th>Status</th>
+
+                    @if($perjadin->is_acceptKeu == 'selesai')
+                        <th>Akun</th>
+                        <!-- <th>SBM</th> -->
+                        <!-- <th>Nominal</th> -->
+                        <th>Total Pembayaran Bersih</th>
+                        <th>Tanggal Bayar</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    @endif
                   </tr>
                 </thead>
                 <tbody>
@@ -442,44 +508,55 @@
                     <td class='text-center' style="min-width: 50px">{{$kebutuhan->jumlah_frekuensi}}</td>
                     <td class='text-center' style="min-width: 100px">{{$kebutuhan->satuan}}</td>
                     <td class='text-center' style="min-width: 100px">{{$kebutuhan->tipe_pendanaan}}</td>
+                    <td class='text-center' style="min-width: 100px">{{$kebutuhan->pelaksana}}</td>
                     <td class='text-center' style="min-width: 100px">{{$kebutuhan->ket}}</td>
-                    <td>
-                      <select class="js-example-basic-single-3 form-select" aria-label="Default select example" style="min-width: 300px" name="akunKebutuhan_{{$numkebutuhan}}">
-                        @foreach ($akuns as $akun)
-                        @if ($kebutuhan->akun_x_rkakl == $akun->idAkun)
-                        <option value="{{$akun->idAkun}}" selected>[{{$akun->kode_satker}}.{{$akun->kode_program}}.{{$akun->kode_kegiatan}}.{{$akun->kode_output}}.{{$akun->kode_sub_output}}.{{$akun->kode_komponen}}.{{$akun->kode_sub_kegiatan}}.{{$akun->kode_akun}}] {{$akun->nama_sub_kegiatan}} - {{$akun->uraian}}</option>
+
+                    @if($perjadin->is_acceptKeu == 'selesai')
+                        <td>
+                        <select class="js-example-basic-single-3 form-select" aria-label="Default select example" style="min-width: 300px" name="akunKebutuhan_{{$numkebutuhan}}">
+                            @foreach ($akuns as $akun)
+                                <option value="{{$akun->idAkun}}"
+                                    @if ($kebutuhan->akun_x_rkakl == $akun->idAkun) selected @endif>
+                                    [{{$akun->kode_satker}}.{{$akun->kode_program}}.{{$akun->kode_kegiatan}}.{{$akun->kode_output}}.{{$akun->kode_sub_output}}.{{$akun->kode_komponen}}.{{$akun->kode_sub_kegiatan}}.{{$akun->kode_akun}}] {{$akun->nama_sub_kegiatan}} - {{$akun->uraian}}
+                                </option>
+                            @endforeach
+                        </select>
+                        </td>
+                        <td class="hidden-select">
+                        <select class="form-select mySelect" aria-label="Default select example" style="min-width: 300px" name="sbmKebutuhan_{{$numkebutuhan}}">
+                            @foreach ($sbms as $sbm)
+                            @if ($kebutuhan->ref_sbm == $sbm->id)
+                            <option value="{{$sbm->id}}" selected>[{{$sbm->kode_sbm}} | {{$sbm->satuan}}] {{$sbm->uraian}}</option>
+                            @endif
+                            <option value="{{$sbm->id}}" data-label="{{$sbm->biaya}}">[{{$sbm->kode_sbm}} | {{$sbm->satuan}}] {{$sbm->uraian}}</option>
+                            @endforeach
+                        </select>
+                        </td>
+                        <!-- <td style="min-width: 200px">
+                        <input type="number" class="form-control num1 prevent-submit" min="0" name="nominalKebutuhan_{{$numkebutuhan}}" value="{{$kebutuhan->uang_harian}}">
+                        </td> -->
+                        <td style="min-width: 200px">
+                        <input type="number" class="result form-control" name="totalKebutuhan_{{$numkebutuhan}}" value="{{$kebutuhan->jumlah_harga}}">
+                        </td>
+                        <td style="min-width: 200px">
+                        <input type="date" class="result form-control" name="tglbayarKebutuhan_{{$numkebutuhan}}" value="{{$kebutuhan->tgl_bayar}}" required>
+                        </td>
+                        <td>
+                        <select class="form-select" aria-label=".form-select-sm example" style="min-width: 150px" name="kesesuaian_{{$numkebutuhan}}">
+                        <option value="" {{ $kebutuhan->statusPembayaran == '' ? 'selected' : '' }}>-</option>
+                        @if($kebutuhan->statusPembayaran != '' && !in_array($kebutuhan->statusPembayaran, ['Belum Dibayarkan', 'Tidak Dibayarkan', 'Sudah Dibayarkan']))
+                            <option value="{{ $kebutuhan->statusPembayaran }}" selected>{{ $kebutuhan->statusPembayaran }}</option>
                         @endif
-                        <option value="{{$akun->idAkun}}">[{{$akun->kode_satker}}.{{$akun->kode_program}}.{{$akun->kode_kegiatan}}.{{$akun->kode_output}}.{{$akun->kode_sub_output}}.{{$akun->kode_komponen}}.{{$akun->kode_sub_kegiatan}}.{{$akun->kode_akun}}] {{$akun->nama_sub_kegiatan}} - {{$akun->uraian}}</option>
-                        @endforeach
-                      </select>
-                    </td>
-                    <td>
-                      <select class="form-select mySelect" aria-label="Default select example" style="min-width: 300px" name="sbmKebutuhan_{{$numkebutuhan}}">
-                        @foreach ($sbms as $sbm)
-                        @if ($kebutuhan->ref_sbm == $sbm->id)
-                        <option value="{{$sbm->id}}" selected>[{{$sbm->kode_sbm}} | {{$sbm->satuan}}] {{$sbm->uraian}}</option>
-                        @endif
-                        <option value="{{$sbm->id}}" data-label="{{$sbm->biaya}}">[{{$sbm->kode_sbm}} | {{$sbm->satuan}}] {{$sbm->uraian}}</option>
-                        @endforeach
-                      </select>
-                    </td>
-                    <td style="min-width: 200px">
-                      <input type="number" class="form-control num1 prevent-submit" min="0" name="nominalKebutuhan_{{$numkebutuhan}}" value="{{$kebutuhan->uang_harian}}">
-                    </td>
-                    <td style="min-width: 200px">
-                      <input type="number" class="result form-control" name="totalKebutuhan_{{$numkebutuhan}}" value="{{$kebutuhan->jumlah_harga}}">
-                    </td>
-                    <td style="min-width: 200px">
-                      <input type="date" class="result form-control" name="tglbayarKebutuhan_{{$numkebutuhan}}" value="{{$kebutuhan->tgl_bayar}}" required>
-                    </td>
-                    <td>
-                      <select class="form-select" aria-label=".form-select-sm example" style="min-width: 150px" name="kesesuaian_{{$numkebutuhan}}">
-                        <option value="{{$kebutuhan->statusPembayaran}}" selected>{{$kebutuhan->statusPembayaran}}</option>
-                        <option value="Belum Dibayarkan">Belum Dibayarkan</option>
-                        <option value="Tidak Dibayarkan">Tidak Dibayarkan</option>
-                        <option value="Sudah Dibayarkan">Sudah Dibayarkan</option>
-                      </select>
-                    </td>
+                        <option value="Belum Dibayarkan" {{ $kebutuhan->statusPembayaran == 'Belum Dibayarkan' ? 'selected' : '' }}>Belum Dibayarkan</option>
+                        <option value="Tidak Dibayarkan" {{ $kebutuhan->statusPembayaran == 'Tidak Dibayarkan' ? 'selected' : '' }}>Tidak Dibayarkan</option>
+                        <option value="Sudah Dibayarkan" {{ $kebutuhan->statusPembayaran == 'Sudah Dibayarkan' ? 'selected' : '' }}>Sudah Dibayarkan</option>
+                        </td>
+                        <td>
+                            <button type="button" class="text-decoration-none btn btn-danger btn-sm text-white delete-fasilitas" data-id="{{$kebutuhan->idKebutuhan}}">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </td>
+                    @endif
                   </tr>
                   @php
                   $numkebutuhan++;
@@ -488,12 +565,14 @@
                   @endforeach
                   <input type="hidden" name="numKebutuhan" value="{{$numkebutuhan}}">
                 </tbody>
-                <tfoot>
-                  <tr>
-                    <td colspan="7" class="fw-bold text-end">Sub Total</td>
-                    <td><input type="number" class="total form-control" readonly></td>
-                  </tr>
-                </tfoot>
+                @if($perjadin->is_acceptKeu == 'selesai')
+                    <tfoot>
+                            <tr>
+                                <td colspan="8" class="fw-bold text-end">Sub Total</td>
+                                <td><input type="number" class="total form-control" readonly></td>
+                            </tr>
+                    </tfoot>
+                @endif
               </table>
             </div>
           </div>
@@ -509,21 +588,52 @@
             </div>
           </div>
 
-          <div class="col-md-12 mb-3">
-            <div class="d-grid gap-2 d-md-flex justify-content-center">
-              <a href="{{url('/perjadin-bendahara/' . 'approval-1')}}" class="btn btn-dark">Kembali</a>
-              @if (($perjadin->is_acceptBend == 'approval-1') | ($perjadin->is_acceptBend == 'approval-2'))
-              <button class="btn btn-danger submitButton" type="submit" name="action" value="tolak">Tolak Perjalanan dinas</button>
-              <button class="btn btn-primary submitButton" type="submit" name="action" value="simpan">Simpan Draf</button>
-              @endif
-              @if (($perjadin->is_acceptBend == 'approval-1') | ($perjadin->is_acceptBend == 'revisi') | ($perjadin->is_acceptBend == 'ditolak'))
-              <button class="btn btn-success submitButton" type="submit" name="action" value="approval">Approval Tahap 1</button>
-              @endif
-              @if ($perjadin->is_acceptBend == 'approval-2')
-              <button class="btn btn-success submitButton" type="submit" name="action" value="approval-2">Approval Tahap 2</button>
-              @endif
-            </div>
+          @if($perjadin->is_acceptKeu == 'selesai' || $perjadin->is_acceptBend == 'approval-1')
+            <div class="col-md-12 mb-3">
+                <div class="row">
+                    <!-- Tombol di kiri -->
+                    <div class="col-md-3 text-start">
+                        @if (($perjadin->is_acceptBend == 'approval-1') || ($perjadin->is_acceptBend == 'approval-2'))
+                        @if ( ($perjadin->is_acceptBend == 'approval-2'))
+                        <button class="btn btn-warning text-white submitButton" type="button" data-bs-toggle="modal" data-bs-target="#revisi_verifikator_modal">Revisi ke Verifikator</button>
+                        <button class="btn btn-danger submitButton" type="button" data-bs-toggle="modal" data-bs-target="#batalkan_user_modal">Batalkan Perjadin</button>
+                        @endif
+                        @if ( ($perjadin->is_acceptBend == 'approval-1'))
+                        <button class="btn btn-danger submitButton" type="button" data-bs-toggle="modal" data-bs-target="#tolak_user_modal">Tolak</button>
+                        <button class="btn btn-warning text-white submitButton" type="button" data-bs-toggle="modal" data-bs-target="#revisi_hkt_modal">Revisi ke HKT</button>
+                        @endif
+                        @endif
+                        <button class="btn btn-success submitButton" type="submit" name="action" value="selesai-tanpa-bayar">Selesaikan Tanpa Pembayaran</button>
+                    </div>
+
+                    <!-- Tombol di tengah -->
+                            <div class="col-md-6 text-center">
+                                <a href="{{url('/perjadin-bendahara/' . 'approval-1')}}" class="btn btn-dark">Batal</a>
+                                <button class="btn btn-primary submitButton" type="submit" name="action" value="simpan">Simpan Draf</button>
+                                @if (($perjadin->is_acceptBend == 'approval-1') || ($perjadin->is_acceptBend == 'revisi') || ($perjadin->is_acceptBend == 'ditolak'))
+                                <button class="btn btn-success submitButton" type="submit" name="action" value="approval">Approval Tahap 1</button>
+                                @endif
+                                @if ($perjadin->is_acceptBend == 'approval-2')
+                                <button class="btn btn-success submitButton" type="submit" name="action" value="approval-2">Approval Tahap 2</button>
+                                @endif
+                                @if ($perjadin->is_acceptBend == 'selesai')
+                                <button class="btn btn-success submitButton" type="submit" name="action" value="approval-2">Perbarui Data</button>
+                                @endif
+                            </div>
+
+
+                    <!-- Kosongkan kanan untuk memaksa tombol di tengah -->
+                    <div class="col-md-3"></div>
+                </div>
+                @else
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a href="{{url('/perjadin-bendahara/' . 'approval-1')}}" class="btn btn-dark">Kembali</a>
+                    </div>
+                @endif
+
           </div>
+
           </form>
         </div>
 
@@ -554,13 +664,16 @@
               <label for="uraian" class="form-label">Nama Fasilitas <span class="text-secondary small"></span><span class="text-danger">*</span></label>
               <select class="form-select" id="uraian" name="uraian" required>
                 <option value="" disabled selected>Pilih Jenis Fasilitas</option>
-                <option value="Akomodasi Hotel">Akomodasi Hotel</option>
+                <!-- <option value="Akomodasi Hotel">Akomodasi Hotel</option>
                 <option value="BBM">BBM</option>
                 <option value="Tiket Kereta">Tiket Kereta</option>
                 <option value="Tiket Pesawat">Tiket Pesawat</option>
                 <option value="Tiket Travel">Tiket Travel</option>
                 <option value="Transportasi Online">Transportasi Online</option>
-                <option value="Tol">Tol</option>
+                <option value="Tol">Tol</option> -->
+                @foreach ($ref_fasilitas as $ref_fasilitas)
+                        <option value="{{$ref_fasilitas->nama_fasilitas}}">{{$ref_fasilitas->nama_fasilitas}}</option>
+                @endforeach
               </select>
             </div>
           </div>
@@ -577,9 +690,265 @@
     </form>
   </div>
 </div>
+
+<!-- Modal Tolak USER -->
+<div class="modal fade" id="tolak_user_modal" tabindex="-1" aria-labelledby="tolak_mobilitasLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="tolak_user"></h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="{{url('/cu_perjadin_bendahara')}}" method="post">
+          @csrf
+          <input type="hidden" name="statusPerjadin" value="{{$perjadin->is_acceptBend}}">
+          <input type="hidden" name="idPerjadin" value="{{$perjadin->id}}">
+          <div class="row">
+            <div class="col-md-12 mb-3">
+              <label for="uraian" class="form-label">Masukkan Alasan Ditolak<span class="text-secondary small"></span><span class="text-danger">*</span></label>
+              <textarea id="tolak" name="alasanTolak" class="form-control" placeholder="Alasan Ditolak" required=""></textarea>
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger text-white" data-bs-dismiss="modal">Batal</button>
+        <button type="submit" class="btn btn-primary" name="action" value="tolak">Simpan</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+<!-- Modal Tolak USER -->
+<div class="modal fade" id="batalkan_user_modal" tabindex="-1" aria-labelledby="batalkan_mobilitasLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="batalkan_user"></h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="{{url('/cu_perjadin_bendahara')}}" method="post">
+          @csrf
+          <input type="hidden" name="statusPerjadin" value="{{$perjadin->is_acceptBend}}">
+          <input type="hidden" name="idPerjadin" value="{{$perjadin->id}}">
+          <div class="row">
+            <div class="col-md-12 mb-3">
+              <label for="uraian" class="form-label">Masukkan Alasan Dibatalkan<span class="text-secondary small"></span><span class="text-danger">*</span></label>
+              <textarea id="batalkan" name="alasanBatalkan" class="form-control" placeholder="Alasan Dibatalkan" required=""></textarea>
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger text-white" data-bs-dismiss="modal">Batal</button>
+        <button type="submit" class="btn btn-primary" name="action" value="batal-approval-2">Simpan</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Modal Revisi HKT -->
+<div class="modal fade" id="revisi_hkt_modal" tabindex="-1" aria-labelledby="tolak_mobilitasLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="revisi_hkt"></h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="{{url('/cu_perjadin_bendahara')}}" method="post">
+          @csrf
+          <input type="hidden" name="statusPerjadin" value="{{$perjadin->is_acceptBend}}">
+          <input type="hidden" name="idPerjadin" value="{{$perjadin->id}}">
+          <div class="row">
+            <div class="col-md-12 mb-3">
+              <label for="uraian" class="form-label">Masukkan Alasan Revisi<span class="text-secondary small"></span><span class="text-danger">*</span></label>
+              <textarea id="tolak" name="alasanHKT" class="form-control" placeholder="Alasan Revisi" required=""></textarea>
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger text-white" data-bs-dismiss="modal">Batal</button>
+        <button type="submit" class="btn btn-primary" name="action" value="revisi-HKT">Simpan</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Modal Revisi Verifikator -->
+<div class="modal fade" id="revisi_verifikator_modal" tabindex="-1" aria-labelledby="tolak_mobilitasLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="revisi_verifikator"></h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="{{url('/cu_perjadin_bendahara')}}" method="post">
+          @csrf
+          <input type="hidden" name="statusPerjadin" value="{{$perjadin->is_acceptBend}}">
+          <input type="hidden" name="idPerjadin" value="{{$perjadin->id}}">
+          <div class="row">
+            <div class="col-md-12 mb-3">
+              <label for="uraian" class="form-label">Masukkan Alasan Revisi<span class="text-secondary small"></span><span class="text-danger">*</span></label>
+              <textarea id="tolak" name="alasanVerifikator" class="form-control" placeholder="Alasan Revisi" required=""></textarea>
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger text-white" data-bs-dismiss="modal">Batal</button>
+        <button type="submit" class="btn btn-primary" name="action" value="revisi-Verifikator">Simpan</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+
 <!-- Akhir Dashboard - Kegiatan - Keuangan -->
 <script src="{{asset('public/assets/js/pdfselected.js')}}"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Tambahkan event listener pada tombol trash
+        document.querySelectorAll('.delete-fasilitas').forEach(function(button) {
+            button.addEventListener('click', function() {
+                // Dapatkan ID mobilitas dari atribut data-id
+                var fasilitasId = this.getAttribute('data-id');
+                var perjadinId = document.querySelector('input[name="idPerjadin"]').value;
+
+                if (confirm('Hapus Data Fasilitas?')) {
+                    // Kirim AJAX request ke server untuk menghapus mobilitas
+                    fetch(`/h_fasilitas_keu/${fasilitasId}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                info_perjadinlangsung: perjadinId
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // Jika sukses, hapus row dari tabel
+                                // this.closest('tr').remove();
+                                // Refresh halaman
+                                window.location.reload();
+                            } else {
+                                alert('Gagal menghapus data fasilitas.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('Terjadi kesalahan saat menghapus data fasilitas.');
+                        });
+                }
+            });
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        // Event listener for the first date input
+        $('input[name="tglbayar_0"]').on('change', function() {
+            // Get the selected date
+            var selectedDate = $(this).val();
+
+            // Iterate over all other date inputs and set the selected date
+            $('input[name^="tglbayar_"]').not(this).each(function() {
+                $(this).val(selectedDate);
+            });
+            $('input[name^="tglbayarnon_"]').not(this).each(function() {
+                $(this).val(selectedDate);
+            });
+            $('input[name^="tglbayarKebutuhan_"]').not(this).each(function() {
+                $(this).val(selectedDate);
+            });
+        });
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        // Event listener for the first date input
+        $('input[name="tglbayarKebutuhan_0"]').on('change', function() {
+            // Get the selected date
+            var selectedDate = $(this).val();
+
+            // Iterate over all other date inputs and set the selected date
+            $('input[name^="tglbayarKebutuhan_"]').not(this).each(function() {
+                $(this).val(selectedDate);
+            });
+        });
+    });
+</script>
+<script>
+    $(document).ready(function() {
+    // Event listener for the first dropdown
+    $('select[name="kesesuaian_0"]').on('change', function() {
+      // Get the selected value
+      var selectedValue = $(this).val();
+      // Get the selected text
+      var selectedText = $(this).find("option:selected").text();
+
+      // Iterate over all other dropdowns and set the selected value
+      $('select[name^="kesesuaian_"]').not(this).each(function() {
+        $(this).val(selectedValue).trigger('change');
+        $(this).find("option:selected").text(selectedText);
+      });
+    });
+  });
+  </script>
+<script>
+    $(document).ready(function() {
+    // Event listener for the first dropdown
+    $('select[name="statuspegawai_0"]').on('change', function() {
+      // Get the selected value
+      var selectedValue = $(this).val();
+      // Get the selected text
+      var selectedText = $(this).find("option:selected").text();
+
+      // Iterate over all other dropdowns and set the selected value
+      $('select[name^="statuspegawai_"]').not(this).each(function() {
+        $(this).val(selectedValue).trigger('change');
+        $(this).find("option:selected").text(selectedText);
+      });
+      $('select[name^="statusnonpegawai_"]').not(this).each(function() {
+        $(this).val(selectedValue).trigger('change');
+        $(this).find("option:selected").text(selectedText);
+      });
+      $('select[name^="kesesuaian_"]').not(this).each(function() {
+        $(this).val(selectedValue).trigger('change');
+        $(this).find("option:selected").text(selectedText);
+      });
+    });
+  });
+  </script>
+<script>
+    $(document).ready(function() {
+    // Event listener for the first dropdown
+    $('select[name="statusnonpegawai_0"]').on('change', function() {
+      // Get the selected value
+      var selectedValue = $(this).val();
+      // Get the selected text
+      var selectedText = $(this).find("option:selected").text();
+
+      // Iterate over all other dropdowns and set the selected value
+      $('select[name^="statusnonpegawai_"]').not(this).each(function() {
+        $(this).val(selectedValue).trigger('change');
+        $(this).find("option:selected").text(selectedText);
+      });
+    });
+  });
+  </script>
+
 <script>
    $(document).ready(function() {
     // Event listener for the first dropdown
@@ -607,6 +976,14 @@
 
       // Iterate over all other dropdowns and set the selected value
       $('select[name^="akunPegawai_"]').not(this).each(function() {
+        $(this).val(selectedValue).trigger('change');
+        $(this).find("option:selected").text(selectedText);
+      });
+      $('select[name^="akunNonPegawai_"]').not(this).each(function() {
+        $(this).val(selectedValue).trigger('change');
+        $(this).find("option:selected").text(selectedText);
+      });
+      $('select[name^="akunKebutuhan_0"]').not(this).each(function() {
         $(this).val(selectedValue).trigger('change');
         $(this).find("option:selected").text(selectedText);
       });

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use App\Models\Akun_x_rkakl;
+use App\Models\Versi;
 
 class AkunController extends Controller
 {
@@ -19,7 +20,7 @@ class AkunController extends Controller
         // $nominals = DB::table('akuns')->select('nominal')->get();
         return view('admin.referensi.rkakl.rkakl_akun', [
             'title' => 'Akun',
-            'akuns' => Akun::all(),
+            'akuns' => Akun::where('versi_id', session('versi', '-1'))->get(),
         ]);
     }
 
@@ -35,11 +36,13 @@ class AkunController extends Controller
     public function store(Request $request): RedirectResponse
     {
 
+        $versi = Versi::where('status', 'aktif')->get();
         // Insert data into 'akuns' table
         $akunId = DB::table('akuns')->insertGetId([
             'kode_akun' => $request->kode_akun,
             'uraian' => $request->uraian,
             'nominal' => $request->nominal,
+            'versi_id' => session('versi'),
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -47,6 +50,7 @@ class AkunController extends Controller
         // Insert data into 'akun_x_rkakls' table with 'ref_sub_komponen_id'
         DB::table('akun_x_rkakls')->insertOrIgnore([
             'akun_id' => $akunId, // Use the newly inserted 'akun' ID
+            'versi_id' => session('versi'),
             'ref_sub_komponen_id' => $request->sub_komponen_id,
             'created_at' => now(),
             'updated_at' => now()

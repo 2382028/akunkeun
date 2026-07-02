@@ -27,7 +27,7 @@ use Carbon\Carbon;
                 </tr>
                 <tr>
                   <td class="fw-bold">Pelaksana Kegiatan</td>
-                  <td>{{$dokumen[0]->nama_pelaksana}}</td>
+                  <td>{{ auth('pegawai')->user()->nama_lengkap }}</td>
                 </tr>
                 <tr>
                   <td class="fw-bold">Hari/Tanggal</td>
@@ -55,7 +55,7 @@ use Carbon\Carbon;
                 <br />
                 <br />
                 <div class="card-body ms-auto m-0">
-                {{$dokumen[0]->nama_pelaksana}}
+                {{$penandatangan->nama_lengkap}}
                 </div>
               </div>
 
@@ -63,7 +63,7 @@ use Carbon\Carbon;
           </div>
         </div>
         <div class="d-grid mt-3 gap-2 d-md-flex justify-content-md-end mb-2 noprint">
-            <a href="{{url('/note-perjadin/' . $perjadin->id)}}" class="btn btn-secondary btn-sm me-md-2 text-decoration-none text-white" type="button">Kembali</a>
+            <a href="{{url('/perjadin/riwayat/' . $perjadin->status_pengajuan)}}" class="btn btn-secondary btn-sm me-md-2 text-decoration-none text-white" type="button">Kembali</a>
             <a onclick="printPage()" class="btn btn-primary btn-sm me-md-2 text-decoration-none text-white" type="button"><i class="fa-solid fa-print"></i> Print</a>
         </div>
 

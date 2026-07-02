@@ -14,6 +14,7 @@ use App\Models\Ref_rkakl_suboutput;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use App\Models\Ref_rkakl_sub_komponen;
+use App\Models\Versi;
 
 class RkaklSubkomponenController extends Controller
 {
@@ -32,12 +33,12 @@ class RkaklSubkomponenController extends Controller
             ->get();
         return view('admin.referensi.rkakl.rkakl_subkomponen', [
             'title' => 'Rkakl Komponen',
-            'rkaklsatkers' => Ref_rkakl_satker::all(),
-            'rkaklprograms' => Ref_rkakl_program::all(),
-            'rkaklkegiatans' => Ref_rkakl_kegiatan::all(),
-            'rkakloutputs' => Ref_rkakl_output::all(),
-            'rkaklsuboutputs' => Ref_rkakl_suboutput::all(),
-            'rkaklkomponens' => Ref_rkakl_komponen::all(),
+            'rkaklsatkers' => Ref_rkakl_satker::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklprograms' => Ref_rkakl_program::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklkegiatans' => Ref_rkakl_kegiatan::where('versi_id', session('versi', '-1'))->get(),
+            'rkakloutputs' => Ref_rkakl_output::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklsuboutputs' => Ref_rkakl_suboutput::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklkomponens' => Ref_rkakl_komponen::where('versi_id', session('versi', '-1'))->get(),
             'rkaklsubkomponens' => $rkaklssubkomponen
         ]);
     }
@@ -53,10 +54,12 @@ class RkaklSubkomponenController extends Controller
     // function store untuk proses data
     public function store(Request $request): RedirectResponse
     {
+        $versi = Versi::where('status', 'aktif')->get();
         DB::table('ref_rkakl_sub_komponens')->insertOrIgnore([
             'ref_rkakl_komponen_id' => $request->id_komponen,
             'kode_sub_kegiatan' => $request->kode_sub_kegiatan,
             'nama_sub_kegiatan' => $request->nama_sub_kegiatan,
+            'versi_id' => session('versi'),
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -67,15 +70,15 @@ class RkaklSubkomponenController extends Controller
     // function edit untuk find edit data by id
     public function edit(string $id): View
     {
-
+        // dd($id);
         return view('admin.referensi.rkakl.edit_rkakl_subkomponen', [
             'title' => 'Rkakl komponen',
-            'rkaklsatkers' => Ref_rkakl_satker::all(),
-            'rkaklprograms' => Ref_rkakl_program::all(),
-            'rkaklkegiatans' => Ref_rkakl_kegiatan::all(),
-            'rkakloutputs' => Ref_rkakl_output::all(),
-            'rkaklsuboutputs' => Ref_rkakl_suboutput::all(),
-            'rkaklkomponens' => Ref_rkakl_komponen::all(),
+            'rkaklsatkers' => Ref_rkakl_satker::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklprograms' => Ref_rkakl_program::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklkegiatans' => Ref_rkakl_kegiatan::where('versi_id', session('versi', '-1'))->get(),
+            'rkakloutputs' => Ref_rkakl_output::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklsuboutputs' => Ref_rkakl_suboutput::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklkomponens' => Ref_rkakl_komponen::where('versi_id', session('versi', '-1'))->get(),
             'rkaklsubkomponen' => Ref_rkakl_sub_komponen::find($id),
         ]);
     }
@@ -83,15 +86,21 @@ class RkaklSubkomponenController extends Controller
     // function update untuk update data by id
     public function update(Request $request, $id): RedirectResponse
     {
+        // dd($id);
+
+        // dd($request->all());
+        
         $rkaklsubkomponen = Ref_rkakl_sub_komponen::findOrFail($id);
+        // dd($rkaklsubkomponen);
+        // dd($request->nama_sub_kegiatan);
         $rkaklsubkomponen->update([
             'ref_rkakl_komponen_id' => $request->id_komponen,
-            'kode_sub_komponen' => $request->kode_sub_komponen,
-            'nama_sub_komponen' => $request->nama_sub_komponen,
+            'kode_sub_kegiatan' => $request->kode_sub_kegiatan,
+            'nama_sub_kegiatan' => $request->nama_sub_kegiatan,
             'created_at' => old(),
             'updated_at' => now()
         ]);
-
+        
 
         return redirect()->route('admin-rkakl_subkomponen.index')->with(['success' => 'Data Berhasil Diupdate!']);
     }

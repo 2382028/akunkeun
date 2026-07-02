@@ -25,8 +25,8 @@ class RkaklKegiatanController extends Controller
 
         return view('admin.referensi.rkakl.rkakl_kegiatan', [
             'title' => 'Rkakl Kegiatan',
-            'rkaklsatkers' => Ref_rkakl_satker::all(),
-            'rkaklprograms' => Ref_rkakl_program::all(),
+            'rkaklsatkers' => Ref_rkakl_satker::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklprograms' => Ref_rkakl_program::where('versi_id', session('versi', '-1'))->get(),
             'rkaklkegiatans' => $rkaklkegiatans
         ]);
     }
@@ -64,6 +64,7 @@ class RkaklKegiatanController extends Controller
             'ref_rkakl_program_id' => $request->id_program,
             'kode_kegiatan' => $request->kode_kegiatan,
             'nama_kegiatan' => $request->nama_kegiatan,
+            'versi_id' => session('versi'),
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -83,8 +84,8 @@ class RkaklKegiatanController extends Controller
             ->get();
 
         return view('admin.referensi.rkakl.edit_rkakl_kegiatan', [
-            'rkaklsatkers' => Ref_rkakl_satker::all(),
-            'rkaklprograms' => Ref_rkakl_program::all(),
+            'rkaklsatkers' => Ref_rkakl_satker::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklprograms' => Ref_rkakl_program::where('versi_id', session('versi', '-1'))->get(),
             'rkaklkegiatans' => $rkaklkegiatans,
             'title' => 'Rkakl Kegiatan',
         ])->with(['success' => 'Data Berhasil Disimpan!']);

@@ -32,6 +32,7 @@
                                 <thead>
                                   <tr class="text-center small">
                                     <th class="th-sm">No</th>
+                                    <th class="th-lg-percent">ID Kegiatan</th>
                                     <th class="th-md">Nama Kegiatan</th>
                                     <th class="th-md">Untuk</th>
                                     <th class="th-md">Berangkat</th>
@@ -43,16 +44,25 @@
                                   @foreach ($mobilitass as $mobilitas)
                                   <tr>
                                     <td class="text-center">{{$loop->iteration}}</td>
+                                    <td class="text-center">{{$mobilitas->idKegiatan}}</td>
                                     <td>{{$mobilitas->nama_kegiatan}}</td>
-                                    <td>{{$mobilitas->tujuan_penggunaan}}</td>
-                                    <td class='text-center'>{{$mobilitas->tgl_mulai}}</td>
+                                    <td class="text-center">{{$mobilitas->tujuan_penggunaan}}</td>
+                                    <td class='text-center'>{{\Carbon\Carbon::parse($mobilitas->tgl_mulai)->format('d-m-Y H:i')}}</td>
                                     <td class="text-center">{{$mobilitas->status}}</td>
                                     <td>
+                                      @if($mobilitas->status == 'pengajuan')
                                       <span class="page d-flex justify-content-center align-items-center">
                                         <a href="{{url('/kegiatan-mobilitas/detail/' . $mobilitas->idMobilitas)}}" class="btn btn btn-primary d-flex">
                                           <i class="fa-solid fa-check pt-1"></i> <p class="ps-1  m-0">Verifikasi</p>
                                         </a>
                                       </span>
+                                      @else
+                                      <span class="page d-flex justify-content-center align-items-center">
+                                        <a href="{{url('/kegiatan-mobilitas/detail/' . $mobilitas->idMobilitas)}}" class="btn btn btn-primary d-flex">
+                                          <i class="fa-solid fa-eye pt-1"></i> 
+                                        </a>
+                                      </span>
+                                      @endif
                                     </td>
                                   </tr>
                                   @endforeach

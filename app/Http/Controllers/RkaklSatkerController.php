@@ -36,6 +36,7 @@ class RkaklSatkerController extends Controller
         DB::table('ref_rkakl_satkers')->insertOrIgnore([
             'kode_satker' => $request->kode_satker,
             'satker' => $request->satker,
+            'versi_id' => session('versi'),
             'created_at' => now(),
             'updated_at' => now()
         ]);

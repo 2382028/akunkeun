@@ -1,5 +1,9 @@
 @extends('user.templates.template')
 
+@php
+    $activeVersi = \App\Models\Versi::where('status', 'aktif')->first() ?? (object) ['id' => '-1','versi' => 'Default Versi'];
+@endphp
+
 @section('content')
     {{-- jumbotron --}}
     <section >
@@ -18,13 +22,18 @@
                           </div>
                           <br>
                           <h1 class="text-md-start fw-bold">
-                              AKUNKEUN 
-                            </h1>                    
+                              AKUNKEUN
+                            </h1>
                           <p class="lead text-md-start text-muted mb-3 mb-lg-8 small">Aplikasi Kegiatan dan Urusan Keuangan</p>
                       </div>
                       <div class="d-flex mb-3">
-                        <a href="{{url('/perjadin')}}" class="btn btn-primary btn-sm small fw-bold text-white">Ajukan Perjalanan Dinas!</a>
-                        <a href="{{url('/kegiatan')}}" class="btn btn-warning btn-sm small fw-bold text-white mx-1">Buat Program Kegiatan!</a>
+                        @if ($activeVersi && ($activeVersi->id != session('versi')))
+                            <a href="{{url('/perjadin')}}" class="btn btn-primary btn-sm small fw-bold text-white" onclick="showAlert(event)">Ajukan Perjalanan Dinas!</a>
+                            <a href="{{url('/kegiatan')}}" class="btn btn-warning btn-sm small fw-bold text-white mx-1" onclick="showAlert(event)">Buat Program Kegiatan!</a>
+                        @else
+                            <a href="{{url('/perjadin')}}" class="btn btn-primary btn-sm small fw-bold text-white">Ajukan Perjalanan Dinas!</a>
+                            <a href="{{url('/kegiatan')}}" class="btn btn-warning btn-sm small fw-bold text-white mx-1">Buat Program Kegiatan!</a>
+                        @endif
                       </div>
                       <div class="mb-3">
                           <img src="{{asset('/assets/images/LLDIKTI4 final1.png')}}" width="150px" alt="">
@@ -45,28 +54,54 @@
           <h3 class="fw-bold text-secondary">Fitur Aplikasi Akunkeun</h3>
           <div class="row mt-3">
             {{-- start --}}
-            <div class="col-sm-4 mb-3">
-              <a href="{{url('/perjadin')}}" class="nav-link">
-                <div class="card" style="max-width: 21rem; height: 23rem;" data-aos="zoom-in" data-aos-delay="100" data-aos-duration="1000">
-                  <img src="{{asset('/assets/images/3 - perjadin (home).svg')}}" class="card-img-top pb-4 mt-3" alt="...">
-                  <div class="card-body">
-                    <h5 class="card-title fw-bold">Perjalanan Dinas</h5>
-                    <p class="card-text small text-justify">Pengajuan perjalanan dinas saat ini dapat dilakukan secara online dan akan diproses secara langsung sehingga keefisiensian waktu bisa dimanfaatkan secara maksimal.</p>
-                  </div>
+            @if ($activeVersi && ($activeVersi->id != session('versi')))
+                <div class="col-sm-4 mb-3">
+                    <a href="{{url('/perjadin')}}" class="nav-link" onclick="showAlert(event)">
+                    <div class="card" style="max-width: 21rem; height: 23rem;" data-aos="zoom-in" data-aos-delay="100" data-aos-duration="1000">
+                        <img src="{{asset('/assets/images/3 - perjadin (home).svg')}}" class="card-img-top pb-4 mt-3" alt="...">
+                        <div class="card-body">
+                        <h5 class="card-title fw-bold">Perjalanan Dinas</h5>
+                        <p class="card-text small text-justify">Pengajuan perjalanan dinas saat ini dapat dilakukan secara online dan akan diproses secara langsung sehingga keefisiensian waktu bisa dimanfaatkan secara maksimal.</p>
+                        </div>
+                    </div>
+                    </a>
                 </div>
-              </a>
-            </div>
-            <div class="col-sm-4 mb-3">
-              <a href="{{url('/kegiatan')}}" class="nav-link">
-              <div class="card" style="max-width: 21rem; height: 23rem;" data-aos="zoom-in" data-aos-delay="100" data-aos-duration="1000">
-                <img src="{{asset('/assets/images/4 - informasi kegiatan.png')}}" class="card-img-top mt-3" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title fw-bold">Program Kegiatan</h5>
-                      <p class="card-text small text-justify">Pengajuan Program Kegiatan saat ini dapat dilakukan secara online hanya dengan melengkapi formulir program yang diajukan akan segera diproses oleh pihak keuangan.</p>
+                <div class="col-sm-4 mb-3">
+                    <a href="{{url('/kegiatan')}}" class="nav-link" onclick="showAlert(event)">
+                    <div class="card" style="max-width: 21rem; height: 23rem;" data-aos="zoom-in" data-aos-delay="100" data-aos-duration="1000">
+                    <img src="{{asset('/assets/images/4 - informasi kegiatan.png')}}" class="card-img-top mt-3" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">Program Kegiatan</h5>
+                            <p class="card-text small text-justify">Pengajuan Program Kegiatan saat ini dapat dilakukan secara online hanya dengan melengkapi formulir program yang diajukan akan segera diproses oleh pihak keuangan.</p>
+                    </div>
+                    </div>
+                </a>
                 </div>
-              </div>
-            </a>
-            </div>
+            @else
+                <div class="col-sm-4 mb-3">
+                    <a href="{{url('/perjadin')}}" class="nav-link">
+                    <div class="card" style="max-width: 21rem; height: 23rem;" data-aos="zoom-in" data-aos-delay="100" data-aos-duration="1000">
+                        <img src="{{asset('/assets/images/3 - perjadin (home).svg')}}" class="card-img-top pb-4 mt-3" alt="...">
+                        <div class="card-body">
+                        <h5 class="card-title fw-bold">Perjalanan Dinas</h5>
+                        <p class="card-text small text-justify">Pengajuan perjalanan dinas saat ini dapat dilakukan secara online dan akan diproses secara langsung sehingga keefisiensian waktu bisa dimanfaatkan secara maksimal.</p>
+                        </div>
+                    </div>
+                    </a>
+                </div>
+                <div class="col-sm-4 mb-3">
+                    <a href="{{url('/kegiatan')}}" class="nav-link">
+                    <div class="card" style="max-width: 21rem; height: 23rem;" data-aos="zoom-in" data-aos-delay="100" data-aos-duration="1000">
+                    <img src="{{asset('/assets/images/4 - informasi kegiatan.png')}}" class="card-img-top mt-3" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">Program Kegiatan</h5>
+                            <p class="card-text small text-justify">Pengajuan Program Kegiatan saat ini dapat dilakukan secara online hanya dengan melengkapi formulir program yang diajukan akan segera diproses oleh pihak keuangan.</p>
+                    </div>
+                    </div>
+                </a>
+                </div>
+            @endif
+
             <div class="col-sm-4 mb-3">
               <a href="{{url('/fasilitas')}}" class="nav-link">
               <div class="card" style="max-width: 21rem; height: 23rem;" data-aos="zoom-in" data-aos-delay="100" data-aos-duration="1000">
@@ -78,7 +113,7 @@
               </div>
             </a>
             </div>
-            
+
             {{-- end --}}
           </div>
         </div>

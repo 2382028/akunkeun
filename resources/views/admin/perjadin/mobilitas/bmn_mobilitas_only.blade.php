@@ -24,8 +24,8 @@
         }
     </style>
 </head>
-<section class="mb-5">
-    <div class="container">
+<section class="mt-5">
+    <div class="container mt-5">
         <div class="row">
             <div class="col-lg-10 mx-auto">
                 <h3 class="fw-bold text-secondary">Pengajuan Penggunaan Kendaraan</h3>
@@ -44,23 +44,26 @@
                                     <select class="form-select" id="perjadinSebelumnya" name="perjadinSebelumnya">
                                         <option value="" disabled selected class="default-option">Pilih Perjadin Sebelumnya</option>
                                         @foreach ($mobilitass as $mobilitas)
-                                            <option value="{{$mobilitas->id}}"
-                                                data-nama_kegiatan="{{$mobilitas->nama_kegiatan}}"
-                                                data-tgl_keberangkatan="{{$mobilitas->tgl_keberangkatan}}"
-                                                data-tgl_selesai="{{$mobilitas->tgl_selesai}}"
-                                                data-tgl_mulai2="{{$mobilitas->tgl_mulai}}"
-                                                data-provinsi="{{$mobilitas->provinsi}}"
-                                                data-kabupaten_kota="{{$mobilitas->kabupaten_kota}}"
-                                                data-alamat="{{$mobilitas->alamat}}"
-                                            >{{$mobilitas->nama_kegiatan}}</option>
+                                        <option value="{{$mobilitas->id}}"
+                                        data-nama_kegiatan="{{$mobilitas->nama_kegiatan}}"
+                                        data-surat_undangan="{{$mobilitas->surat_undangan}}"
+                                        data-tgl_keberangkatan="{{$mobilitas->tgl_keberangkatan}}"
+                                        data-tgl_selesai="{{$mobilitas->tgl_selesai}}"
+                                        data-tgl_mulai2="{{$mobilitas->tgl_mulai}}"
+                                        data-provinsi="{{$mobilitas->provinsi}}"
+                                        data-kabupaten_kota="{{$mobilitas->kabupaten_kota}}"
+                                        data-alamat="{{$mobilitas->alamat}}"
+                                        >{{$mobilitas->nama_kegiatan}}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="col-md-3">
                                     <label for="ket_mobilitas">Keterangan Mobilitas<span class="text-danger">*</span></label>
+                                    <input type="hidden" id="suratUndangan" name="surat_undangan">
                                     <select class="form-select small-select" id="ket_mobilitas" name="ket_mobilitas">
                                         <option value="Antar">Antar</option>
                                         <option value="Jemput">Jemput</option>
+                                        <option value="Antar-Jemput">Antar - Jemput</option>
                                         <option value="Lainnya">Lainnya</option>
                                     </select>
                                 </div>
@@ -72,8 +75,8 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-12 mb-3">
-                                    <label for="konfirmasi" class="form-label">Apakah tanggal keberangkatan sama dengan tanggal selesai?</label>
+                                <div class="col-md-12 mb-3" id="konfirmasiContainer">
+                                    <label  for="konfirmasi" class="form-label">Apakah tanggal keberangkatan sama dengan tanggal selesai?</label>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="konfirmasi" id="ya" value="ya" checked>
                                         <label class="form-check-label" for="ya">Ya</label>
@@ -121,25 +124,27 @@
                             <div class="row">
                                 <div class="col-md-4 mb-3">
                                     <label for="pengemudi" class="form-label">Pengemudi<span class="text-danger">*</span></label>
-                                    <select class="form-select required2" aria-label=".form-select-sm example" name="pengemudi">
-                                        @foreach ($pengemudis as $pengemudi)
-                                            <option value="{{$pengemudi->id}}">{{$pengemudi->nama_lengkap}}</option>
-                                        @endforeach
+                                    <select class="form-select required2" aria-label=".form-select-sm example" name="pengemudi" id="pengemudiSelect" disabled>
+                                        <!-- Pilihan pengemudi akan diisi setelah cek mobilitas -->
                                     </select>
                                 </div>
                                 <div class="col-md-8 mb-3">
                                     <label for="kendaraan" class="form-label">Kendaraan<span id="kendaraanDinasText" class="text-secondary small d-none"> (Khusus untuk Kendaraan Dinas)</span><span class="text-danger">*</span></label>
-                                    <select class="form-select" aria-label=".form-select-sm example" name="kendaraan" id="kendaraanSelect">
-                                        @foreach ($kendaraans as $kendaraan)
-                                            <option value="{{$kendaraan->id}}">{{$kendaraan->merek}} [{{$kendaraan->no_polisi}}]</option>
-                                        @endforeach
+                                    <select class="form-select" aria-label=".form-select-sm example" name="kendaraan" id="kendaraanSelect" disabled>
+                                        <!-- Pilihan kendaraan akan diisi setelah cek mobilitas -->
                                     </select>
                                 </div>
                             </div>
-                            <div class="btns-group d-grid gap-2 col-6 mx-auto pb-3 mt-5">
-                                <button type="submit" class="btn btn-next btn-primary">Proses ke HKT</button>
+                            <!-- Tombol "Proses ke HKT" -->
+                            <div class="d-flex justify-content-between pb-3 mt-5">
+                                <!-- Tombol "Cek Mobilitas" di luar form, tetapi dalam flex row -->
+                                <button id="cekMobilitasBtn" class="btn btn-warning text-white col-3" disabled>Cek Mobilitas</button>
+                                
+                                <!-- Tombol "Proses ke HKT" tetap di dalam form -->
+                                <button id="prosesHKTBtn" type="submit" class="btn btn-primary col-3 " disabled>Proses ke HKT</button>
                             </div>
                         </form>
+                        
                     </div>
                 </div>
                 {{-- end card --}}
@@ -149,9 +154,139 @@
     </div>
 </section>
 
+<!-- Tambahkan script jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+    const perjadinSelect = $('#perjadinSebelumnya');
+    const konfirmasiContainer = $('#konfirmasiContainer');
+
+    // Fungsi untuk mengatur visibilitas konfirmasi
+    function toggleKonfirmasi() {
+        if (perjadinSelect.val()) {
+            konfirmasiContainer.hide(); // Sembunyikan jika ada value
+            $('#tidak').prop('checked', true); 
+        } else {
+            konfirmasiContainer.show(); // Tampilkan jika tidak ada value
+        }
+    }
+
+    // Panggil fungsi saat halaman dimuat dan saat nilai select berubah
+    toggleKonfirmasi();
+    perjadinSelect.on('change', toggleKonfirmasi);
+});
+
+</script>
+
+<script>
+      function toggleCekMobilitas() {
+        const tanggalKeberangkatan = $('#tgl_keberangkatan');
+        const tanggalSelesai = $('#tgl_selesai');
+        const cekMobilitasBtn = $('#cekMobilitasBtn');
+
+        if (tanggalKeberangkatan.val() && tanggalSelesai.val()) {
+            cekMobilitasBtn.prop('disabled', false);
+        } else {
+            cekMobilitasBtn.prop('disabled', true);
+        }
+    }
+
+    $(document).ready(function() {
+    // Ambil elemen yang dibutuhkan
+    var tanggalKeberangkatan = $('#tgl_keberangkatan');
+    var tanggalSelesai = $('#tgl_selesai');
+    var cekMobilitasBtn = $('#cekMobilitasBtn');
+    var prosesHKTBtn = $('#prosesHKTBtn');
+    var kendaraanSelect = $('#kendaraanSelect');
+    var pengemudiSelect = $('#pengemudiSelect');
+
+    toggleCekMobilitas();
+
+    // Disable tombol Cek Mobilitas sampai tanggal diisi
+    // function toggleCekMobilitas() {
+    //     if (tanggalKeberangkatan.val() && tanggalSelesai.val()) {
+    //         cekMobilitasBtn.prop('disabled', false);
+    //     } else {
+    //         cekMobilitasBtn.prop('disabled', true);
+    //     }
+    // }
+
+    // Disable tombol Proses ke HKT sampai mobilitas dicek
+    function toggleProsesHKT() {
+        if (kendaraanSelect.val() && pengemudiSelect.val()) {
+            prosesHKTBtn.prop('disabled', false);
+        } else {
+            prosesHKTBtn.prop('disabled', true);
+        }
+    }
+
+    // Aktifkan Cek Mobilitas jika tanggal keberangkatan dan selesai diisi
+    tanggalKeberangkatan.on('change', toggleCekMobilitas);
+    tanggalSelesai.on('change', toggleCekMobilitas);
+
+    // Tombol Cek Mobilitas event handler
+    cekMobilitasBtn.on('click', function(event) {
+         // Mencegah pengiriman form
+        event.preventDefault();
+
+        var tglKeberangkatan = tanggalKeberangkatan.val();
+        var tglSelesai = tanggalSelesai.val();
+
+        $.ajax({
+            url: '/api/cek-mobilitas',
+            type: 'GET',
+            data: {
+                tanggal_awal: tglKeberangkatan,
+                tanggal_akhir: tglSelesai
+            },
+            success: function(response) {
+                // Kosongkan pilihan yang ada sebelumnya
+                kendaraanSelect.empty();
+                pengemudiSelect.empty();
+
+                // Tambahkan kendaraan yang tersedia
+                if (response.kendaraans.length > 0) {
+                    $.each(response.kendaraans, function(index, kendaraan) {
+                        kendaraanSelect.append('<option value="' + kendaraan.id + '">' + kendaraan.merek + ' [' + kendaraan.no_polisi + ']</option>');
+                    });
+                } else {
+                    kendaraanSelect.append('<option value="">Tidak ada kendaraan yang tersedia</option>');
+                }
+
+                // Tambahkan pengemudi yang tersedia
+                if (response.pengemudis.length > 0) {
+                    $.each(response.pengemudis, function(index, pengemudi) {
+                        pengemudiSelect.append('<option value="' + pengemudi.id + '">' + pengemudi.nama_lengkap + '</option>');
+                    });
+                } else {
+                    pengemudiSelect.append('<option value="">Tidak ada pengemudi yang tersedia</option>');
+                }
+
+                // Enable select option setelah data berhasil diambil
+                kendaraanSelect.prop('disabled', false);
+                pengemudiSelect.prop('disabled', false);
+
+                // Aktifkan tombol Proses ke HKT jika pilihan tersedia
+                toggleProsesHKT();
+            },
+            error: function(xhr) {
+                alert('Terjadi kesalahan, silakan coba lagi.');
+            }
+        });
+    });
+
+    // Aktifkan tombol Proses ke HKT jika kendaraan dan pengemudi dipilih
+    kendaraanSelect.on('change', toggleProsesHKT);
+    pengemudiSelect.on('change', toggleProsesHKT);
+});
+
+</script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
     const perjadinSebelumnya = document.getElementById('perjadinSebelumnya');
+    const suratUndangan = document.getElementById('suratUndangan');
     const judulKegiatan = document.getElementById('floatingTextarea');
     const tglKeberangkatan = document.getElementById('tgl_keberangkatan');
     const jamKeberangkatan = document.getElementById('jam_keberangkatan');
@@ -182,17 +317,6 @@
         const selectedOption = perjadinSebelumnya.options[perjadinSebelumnya.selectedIndex];
 
         if (perjadinSebelumnya.value === "") {
-            // judulKegiatan.disabled = false;
-            // tglKeberangkatan.disabled = false;
-            // jamKeberangkatan.disabled = false;
-            // tglSelesai.disabled = false;
-            // jamSelesai.disabled = false;
-            // tglMulai.disabled = false;
-            // provinsi.disabled = false;
-            // kabupatenKota.disabled = false;
-            // alamat.disabled = false;
-            // desaKecamatan.disabled = false;
-            // radioButtons.forEach(rb => rb.disabled = false);
             perjadinSebelumnya.disabled =false;
 
             perjadinSebelumnya.classList.add('disabled-option');
@@ -200,19 +324,6 @@
             kendaraanDinasText.classList.remove('d-none');
         } else {
             perjadinSebelumnya.disabled =true;
-            // judulKegiatan.disabled = true;
-            // tglKeberangkatan.disabled = true;
-            // jamKeberangkatan.disabled = true;
-            // tglSelesai.disabled = true;
-            // jamSelesai.disabled = true;
-            // tglMulai.disabled = true;
-            // provinsi.disabled = true;
-            // kabupatenKota.disabled = true;
-            // alamat.disabled = true;
-            // desaKecamatan.disabled = true;
-
-             // Disable radio buttons
-            //  radioButtons.forEach(rb => rb.disabled = true);
 
              perjadinSebelumnya.classList.add('disabled-option');
             perjadinSebelumnyaText.classList.remove('d-none');
@@ -235,9 +346,14 @@
             provinsi.value = selectedOption.getAttribute('data-provinsi');
             kabupatenKota.value = selectedOption.getAttribute('data-kabupaten_kota');
             alamat.value = selectedOption.getAttribute('data-alamat');
+            suratUndangan.value = selectedOption.getAttribute('data-surat_undangan');
+
+            console.log('Surat Undangan:', suratUndangan.value);
+
+            toggleCekMobilitas();
         }
     }
-
+    
     perjadinSebelumnya.addEventListener('change', checkDefaultOption);
     checkDefaultOption();
 });

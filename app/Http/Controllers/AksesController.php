@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pegawai;
+use App\Models\Versi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -10,11 +11,35 @@ use Illuminate\Support\Facades\Hash;
 
 class AksesController extends Controller
 {
-    public function index() {
-        return view('akses', [
-            'title' => 'Akses Masuk',
-            'active' => 'index',
-        ]);
+   
+    public function index(Request $request) {
+        DB::table('notifications')
+        ->where('created_at', '<', now()->subMonth())
+        ->delete();
+
+        $role = $request->query('role');
+        
+
+        // dd($role);
+        if (!config('app.isMaintenance')) {
+            return view('akses', [
+                "versis" => Versi::all(),
+                'title' => 'Akses Masuk',
+                'active' => 'index',
+            ]);
+        } else {
+            if ($role == 'admin') {
+                return view('akses', [
+                    "versis" => Versi::all(),
+                    'title' => 'Akses Masuk',
+                    'active' => 'index',
+                ]);
+            } else {
+                return view('maintenance_page', [
+                    'role' => $role,
+                ]);
+            }
+        }
     }
 
     public function authenticate(Request $request)
@@ -23,12 +48,13 @@ class AksesController extends Controller
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
- 
+
         if (Auth::guard('pegawai')->attempt($credit)) {
             $request->session()->regenerate();
+            session(['versi' => $request->versi]);
             return redirect('/');
         }
- 
+
         return back()->with('LoginError', 'Akses masuk salah. Harap periksa kembali!');
     }
 
@@ -45,9 +71,9 @@ class AksesController extends Controller
 
     public function profile() {
         $pokja = DB::table('pegawais')
-                        ->join('jabatans', 'pegawais.jabatan_id', '=', 'jabatans.id')
-                        ->join('fungsis', 'jabatans.fungsi_id', '=', 'fungsis.id')
-                        ->select('pegawais.id as idPegawai', 'pegawais.nama_lengkap', 'jabatans.nama_jabatan', 'fungsis.nama_fungsi')
+                     
+                        ->join('fungsis', 'pegawais.fungsi_id', '=', 'fungsis.id')
+                        ->select('pegawais.id as idPegawai', 'pegawais.nama_lengkap', 'fungsis.nama_fungsi')
                         ->where('pegawais.id', auth('pegawai')->user()->id)
                         ->get();
         $tpengajuan = DB::table('info_perjadinlangsungs')

@@ -13,6 +13,7 @@ use App\Models\Ref_rkakl_suboutput;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
+use App\Models\Versi;
 
 class RkaklKomponenController extends Controller
 {
@@ -30,12 +31,12 @@ class RkaklKomponenController extends Controller
             ->get();
         return view('admin.referensi.rkakl.rkakl_komponen', [
             'title' => 'Rkakl Komponen',
-            'rkaklsatkers' => Ref_rkakl_satker::all(),
-            'rkaklprograms' => Ref_rkakl_program::all(),
-            'rkaklkegiatans' => Ref_rkakl_kegiatan::all(),
-            'rkakloutputs' => Ref_rkakl_output::all(),
-            'rkaklsuboutputs' => Ref_rkakl_suboutput::all(),
-            'rkaklkomponens' => $rkaklskomponen 
+            'rkaklsatkers' => Ref_rkakl_satker::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklprograms' => Ref_rkakl_program::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklkegiatans' => Ref_rkakl_kegiatan::where('versi_id', session('versi', '-1'))->get(),
+            'rkakloutputs' => Ref_rkakl_output::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklsuboutputs' => Ref_rkakl_suboutput::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklkomponens' => $rkaklskomponen
         ]);
     }
 
@@ -50,10 +51,12 @@ class RkaklKomponenController extends Controller
     // function store untuk proses data
     public function store(Request $request): RedirectResponse
     {
+        $versi = Versi::where('status', 'aktif')->get();
         DB::table('ref_rkakl_komponens')->insertOrIgnore([
             'ref_rkakl_suboutput_id' => $request->id_suboutput,
             'kode_komponen' => $request->kode_komponen,
             'nama_komponen' => $request->nama_komponen,
+            'versi_id' => session('versi'),
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -67,11 +70,11 @@ class RkaklKomponenController extends Controller
 
         return view('admin.referensi.rkakl.edit_rkakl_komponen', [
             'title' => 'Rkakl komponen',
-            'rkaklsatkers' => Ref_rkakl_satker::all(),
-            'rkaklprograms' => Ref_rkakl_program::all(),
-            'rkaklkegiatans' => Ref_rkakl_kegiatan::all(),
-            'rkakloutputs' => Ref_rkakl_output::all(),
-            'rkaklsuboutputs' => Ref_rkakl_suboutput::all(),
+            'rkaklsatkers' => Ref_rkakl_satker::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklprograms' => Ref_rkakl_program::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklkegiatans' => Ref_rkakl_kegiatan::where('versi_id', session('versi', '-1'))->get(),
+            'rkakloutputs' => Ref_rkakl_output::where('versi_id', session('versi', '-1'))->get(),
+            'rkaklsuboutputs' => Ref_rkakl_suboutput::where('versi_id', session('versi', '-1'))->get(),
             'rkaklkomponen' => Ref_rkakl_komponen::find($id),
         ]);
     }

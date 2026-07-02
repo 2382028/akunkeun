@@ -35,6 +35,7 @@
                     <thead>
                       <tr class="text-center small">
                         <th class="th-sm">No</th>
+                        <th class="th-sm">ID Kegiatan</th>
                         <th class="th-lg">Nama Kegiatan/Program</th>
                         <th class="th-md">Tanggal Mulai</th>
                         <th class="th-md">Status</th>
@@ -42,18 +43,89 @@
                       </tr>
                     </thead>
                     <tbody>
+
                       @foreach ($kegiatans as $kegiatan)
-                      <tr>
-                        <td class='text-center'>{{$loop->iteration}}</td>
-                        <td>{{$kegiatan->nama_kegiatan}}</td>
-                        <td class='text-center'>{{$kegiatan->tgl_mulai}}</td>
-                        <td class='text-center'>{{$kegiatan->status}} | {{$kegiatan->is_acceptBend}}</td>
-                        <td class='text-center'>
-                          <span class="page d-flex justify-content-center align-items-center">
-                            <a href="{{url('/detail-bendahara/' . $kegiatan->id)}}" class="btn btn-primary d-flex"><i class="fa-solid fa-check pt-1"></i> <p class="ps-1  m-0">Approval</p></a>
-                          </span>
-                        </td>
-                      </tr>
+                        @if ($status == 'approval-2')
+                            <tr>
+                                <td class='text-center'>{{$loop->iteration}}</td>
+                                <td>{{$kegiatan->id}}</td>
+                                <td>{{$kegiatan->nama_kegiatan}}</td>
+                                <td class='text-center'>{{$kegiatan->tgl_mulai}}</td>
+
+                                @if ($kegiatan->is_acceptKeu == 'selesai')
+                                    <td class='text-center'>{{$kegiatan->status}} | {{$kegiatan->is_acceptBend}}</td>
+                                    <td class='text-center'>
+                                        <span class="page d-flex justify-content-center align-items-center">
+                                            <a href="{{url('/detail-bendahara/' . $kegiatan->id)}}" class="btn btn-primary d-flex"><i class="fa-solid fa-check pt-1"></i> <p class="ps-1  m-0">Approval</p></a>
+                                        </span>
+                                    </td>
+                                @else
+                                    <td class='text-center'>Pelaporan/Verifikasi Keuangan</td>
+                                    <td class='text-center'>
+                                        <span class="page d-flex justify-content-center align-items-center">
+                                            <a href="{{url('/detail-bendahara/' . $kegiatan->id)}}" class="btn btn-dark d-flex"><i class="fa-solid fa-eye pt-1"></i> <p class="ps-1  m-0">Detail</p></a>
+                                        </span>
+                                    </td>
+                                @endif
+                            </tr>
+                        @elseif ($status == 'approval-1')
+                            <tr>
+                                <td class='text-center'>{{$loop->iteration}}</td>
+                                <td>{{$kegiatan->id}}</td>
+                                <td>{{$kegiatan->nama_kegiatan}}</td>
+                                <td class='text-center'>{{$kegiatan->tgl_mulai}}</td>
+                                <td class='text-center'>{{$kegiatan->status}} | {{$kegiatan->is_acceptBend}}</td>
+                                <td class='text-center'>
+                                    <span class="page d-flex justify-content-center align-items-center">
+                                        <a href="{{url('/detail-bendahara/' . $kegiatan->id)}}" class="btn btn-primary d-flex"><i class="fa-solid fa-check pt-1"></i> <p class="ps-1  m-0">Approval</p></a>
+                                    </span>
+                                </td>
+                            </tr>
+                        @elseif ($status == 'ditolak')
+                            <tr>
+                                <td class='text-center'>{{$loop->iteration}}</td>
+                                <td>{{$kegiatan->id}}</td>
+                                <td>{{$kegiatan->nama_kegiatan}}</td>
+                                <td class='text-center'>{{$kegiatan->tgl_mulai}}</td>
+                                <td class='text-center'>{{$kegiatan->status}} | {{$kegiatan->is_acceptBend}}</td>
+                                <td class='text-center'>
+                                    <span class="page d-flex justify-content-center align-items-center">
+                                        <a href="{{url('/detail-bendahara/' . $kegiatan->id)}}" class="btn btn-primary d-flex"><i class="fa-solid fa-eye pt-1"></i> <p class="ps-1  m-0"> Detail</p></a>
+                                    </span>
+                                </td>
+                            </tr>
+                        @elseif ($status == 'selesai')
+                            <tr>
+                                <td class='text-center'>{{$loop->iteration}}</td>
+                                <td>{{$kegiatan->id}}</td>
+                                <td>{{$kegiatan->nama_kegiatan}}</td>
+                                <td class='text-center'>{{$kegiatan->tgl_mulai}}</td>
+                                <td class='text-center'>{{$kegiatan->status}} | {{$kegiatan->is_acceptBend}}</td>
+                                <td class='text-center'>
+                                    <div class="row">
+                                        <span class="page d-flex justify-content-center align-items-center">
+                                            <a href="{{url('/detail-bendahara/' . $kegiatan->id)}}" class="btn btn-primary d-flex me-2"><i class="fa-solid fa-eye pt-1"></i> <p class="ps-1  m-0"> Detail</p></a>
+                                            <a href="{{url('/kegiatan-bendahara/rpd/' . $kegiatan->id)}}" target="_blank" class="btn me-2 btn-warning d-flex"><i class="fa-solid fa-print pt-1"></i> <p class="ps-1  m-0"> RPD</p></a>
+                                            <div class="dropdown">
+                                                <button class="btn btn-warning dropdown-toggle d-flex align-items-center" type="button" id="dropdownRPD" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fa-solid fa-print pt-1"></i>
+                                                    <p class="ps-1 m-0">RPD Kategori</p>
+                                                </button>
+                                                <ul class="dropdown-menu" aria-labelledby="dropdownRPD">
+                                                    <li><a class="dropdown-item" href="{{ url('/kegiatan-bendahara/rpd-kat/' . $kegiatan->id . '/Panitia') }}" target="_blank">Panitia</a></li>
+                                                    <li><a class="dropdown-item" href="{{ url('/kegiatan-bendahara/rpd-kat/' . $kegiatan->id . '/Narasumber') }}" target="_blank">Narasumber</a></li>
+                                                    <li><a class="dropdown-item" href="{{ url('/kegiatan-bendahara/rpd-kat/' . $kegiatan->id . '/Moderator') }}" target="_blank">Moderator</a></li>
+                                                    <li><a class="dropdown-item" href="{{ url('/kegiatan-bendahara/rpd-kat/' . $kegiatan->id . '/Supir') }}" target="_blank">Supir</a></li>
+                                                </ul>
+                                            </div>
+
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        @endif
+
                       @endforeach
                     </tbody>
                   </table>

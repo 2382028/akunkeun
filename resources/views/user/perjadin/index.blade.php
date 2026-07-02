@@ -33,15 +33,20 @@
                             </div>
                             <div class="mb-3 row">
                                 <div class="col-md-12">
-                                    <label for="" class="form-label">Pemberi Surat Undangan</label>
-                                    <input type="text" name="pemberi_undangan" id="" class="form-control">
+                                    <label for="" class="form-label">Pemberi Surat Undangan<span class="text-danger">*</span></label>
+                                    <input type="text" name="pemberi_undangan" id="" class="form-control" required>
                                 </div>
                                 </div>
-                                <div class="col-md-4 mb-3">
+                                <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="" class="form-label">Nomor Surat Undangan<span class="text-danger">*</span></label>
+                                    <input type="text" name="no_undangan" id="no_undangan" class="form-control" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
                                     <label for="" class="form-label">Tanggal Surat Undangan<span class="text-danger">*</span></label>
                                     <input type="date" name="tanggal_surat" id="tgl_surat" class="form-control" required>
                                 </div>
-
+                            </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12 mb-3">
@@ -78,8 +83,8 @@
                                     <input type="text" name="kabupaten_kota" id="" class="form-control" style="text-transform: capitalize" required>
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                    <label for="" class="form-label">Desa/Kecamatan</label>
-                                    <input type="text" name="" id="" class="form-control">
+                                    <label for="tempat_kegiatan" class="form-label">Tempat Kegiatan<span class="text-danger">*</span></label>
+                                    <input type="text" name="tempat_kegiatan" id="tempat_kegiatan" class="form-control" required>
                                 </div>
                             </div>
                             <div class="mb-3 row">
@@ -119,6 +124,69 @@
     </div>
 </section>
 @endsection
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const keberangkatanInput = document.getElementById('tgl_keberangkatan');
+    const mulaiInput = document.getElementById('tgl_mulai');
+    const selesaiInput = document.getElementById('tgl_selesai');
+
+    function validateTanggal() {
+        const keberangkatan = new Date(keberangkatanInput.value);
+        const mulai = new Date(mulaiInput.value);
+        const selesai = new Date(selesaiInput.value);
+
+        // Aturan 1: Keberangkatan ≤ Mulai
+        if (mulai < keberangkatan) {
+            alert('Tanggal Mulai tidak boleh lebih awal dari Tanggal Keberangkatan!');
+            mulaiInput.value = keberangkatanInput.value;
+        }
+
+        // Aturan 2: Keberangkatan ≤ Selesai
+        if (selesai < keberangkatan) {
+            alert('Tanggal Selesai tidak boleh lebih awal dari Tanggal Keberangkatan!');
+            selesaiInput.value = keberangkatanInput.value;
+        }
+
+        // Aturan 3: Mulai ≤ Selesai
+        if (selesai < mulai) {
+            alert('Tanggal Selesai tidak boleh lebih awal dari Tanggal Mulai!');
+            selesaiInput.value = mulaiInput.value;
+        }
+    }
+
+    // Jalankan saat salah satu tanggal diubah
+    keberangkatanInput.addEventListener('change', validateTanggal);
+    mulaiInput.addEventListener('change', validateTanggal);
+    selesaiInput.addEventListener('change', validateTanggal);
+
+    // Cek ulang saat submit form
+    const form = keberangkatanInput.closest('form');
+    form.addEventListener('submit', function(e) {
+        const keberangkatan = new Date(keberangkatanInput.value);
+        const mulai = new Date(mulaiInput.value);
+        const selesai = new Date(selesaiInput.value);
+
+        let errorMessage = '';
+
+        if (mulai < keberangkatan) {
+            errorMessage += '- Tanggal Mulai tidak boleh lebih awal dari Keberangkatan.\n';
+        }
+        if (selesai < keberangkatan) {
+            errorMessage += '- Tanggal Selesai tidak boleh lebih awal dari Keberangkatan.\n';
+        }
+        if (selesai < mulai) {
+            errorMessage += '- Tanggal Selesai tidak boleh lebih awal dari Tanggal Mulai.\n';
+        }
+
+        if (errorMessage !== '') {
+            alert('Perbaiki data berikut sebelum menyimpan:\n' + errorMessage);
+            e.preventDefault();
+        }
+    });
+});
+</script>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

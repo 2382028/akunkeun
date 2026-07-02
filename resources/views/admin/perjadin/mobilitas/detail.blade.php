@@ -86,7 +86,7 @@ use Carbon\Carbon;
                                       @endif                       -->
 
 
-                                                @if ($dokumen[0]->surat_undangan != null)
+                                                @if ($dokumen[0]->surat_undangan != null && $dokumen[0]->surat_undangan != '-')
                                                 <?php
                                                 $path = $dokumen[0]->surat_undangan;
                                                 $filename = basename($path);
@@ -94,6 +94,8 @@ use Carbon\Carbon;
                                                 <a href="{{url('/perjadin-getDokumen/' . $filename)}}" target="_blank" class="btn btn-sm btn-secondary">
                                                     <i class="fa-solid fa-eye"></i> Lihat Dokumen
                                                 </a>
+                                                @else
+                                                Tidak ada undangan
                                                 @endif
 
 
@@ -187,11 +189,10 @@ use Carbon\Carbon;
 
                         <div class="col-md-12 mb-3" id="divInformasiPeminjaman" style="display: none;">
                             <!-- Form untuk menambah mobilitas -->
-                            <form action="{{url('/c_tambahmobilitas')}}" method="post">
                                 @csrf
-                                <input type="hidden" name="idPerjadin" value="{{$perjadin->id}}">
-                                <h5 class="fw-bold">Informasi Peminjaman <button type="submit" class="btn btn-primary">+ Tambah Mobilitas</button></h5>
-                            </form>
+                                <input type="hidden" id="idPerjadin" name="idPerjadin" value="{{$perjadin->id}}">
+                                <h5 class="fw-bold">Informasi Peminjaman <button  data-bs-toggle="modal" data-bs-target="#tambah_mobilitas" type="button"  class="btn btn-primary">+ Tambah Mobilitas</button></h5>
+
 
                             <div class="table-responsive">
                                 <!-- Form utama untuk mengupdate mobilitas -->
@@ -206,8 +207,9 @@ use Carbon\Carbon;
                                                 <th class="th-sm">No</th>
                                                 <th class="th-md">Pengemudi</th>
                                                 <th class="th-md">Mobil</th>
-                                                <th class="th-md" style="min-width: 300px;">Tanggal</th>
-                                                <th class="th-lg-percent">Keterangan</th>
+                                                <th class="th-md" style="min-width: 270px;">Tanggal</th>
+                                                <th class="th-lg-percent" style="min-width: 120px;">Keterangan</th>
+                                                <th class="th-lg-percent">Gabung Surtug</th>
                                                 <th class="th-lg-percent">Aksi</th>
                                             </tr>
                                         </thead>
@@ -216,42 +218,43 @@ use Carbon\Carbon;
                                         @endphp
                                         @foreach ($mobilitass as $mobilitas)
                                         <tr>
-                                            <td>{{$loop->iteration}} <input type="hidden" name="idMobilitas_{{$nummobilitas}}" value="{{$mobilitas->id}}"></td>
-                                            <td>
-                                                <select class="form-select" aria-label="Default select example" name="supir_{{$nummobilitas}}">
-                                                    @foreach($pesertaPegawais as $pesertaPegawai)
-                                                    <option value="{{$pesertaPegawai->id}}" selected>{{$pesertaPegawai->nama_lengkap}}</option>
-                                                    @endforeach
-                                                    @foreach($pesertaNonPegawais as $pesertaNonPegawai)
-                                                    <option value="{{$pesertaNonPegawai->id}}" selected>{{$pesertaNonPegawai->nama_lengkap}}</option>
-                                                    @endforeach
-                                                    @foreach ($pengemudis as $pengemudi)
-                                                    @if ($pengemudi->id == $mobilitas->pegawai_id)
-                                                    <option value="{{$pengemudi->id}}" selected>{{$pengemudi->nama_lengkap}}</option>
-                                                    @endif
-                                                    <option value="{{$pengemudi->id}}">{{$pengemudi->nama_lengkap}}</option>
-                                                    @endforeach
-                                                </select>
+                                            <input type="hidden" name="kabupaten_kota_{{$nummobilitas}}" value="{{$mobilitas->kabupaten_kota}}">
+                                            <input type="hidden" name="provinsi_{{$nummobilitas}}" value="{{$mobilitas->provinsi}}">
+                                            <input type="hidden" name="alamat_{{$nummobilitas}}" value="{{$mobilitas->alamat}}">
+                                            <input type="hidden" name="nama_kegiatan_{{$nummobilitas}}" value="{{$mobilitas->nama_kegiatan}}">
+                                            <input type="hidden" name="supir_{{$nummobilitas}}" value="{{$mobilitas->id_pegawai}}">
+
+                                            <td class='text-center'>{{$loop->iteration}} <input type="hidden" name="idMobilitas_{{$nummobilitas}}" value="{{$mobilitas->id}}"></td>
+                                            <td class='text-center'>
+                                                {{$mobilitas->nama_lengkap}}
                                             </td>
-                                            <td>
-                                                <select class="form-select" aria-label="Default select example" name="mobil_{{$nummobilitas}}">
-                                                    @foreach ($kendaraans as $kendaraan)
-                                                    @if ($kendaraan->id == $mobilitas->kendaraan)
-                                                    <option value="{{$kendaraan->id}}" selected>{{$kendaraan->merek}} [{{$kendaraan->no_polisi}}]</option>
-                                                    @endif
-                                                    <option value="{{$kendaraan->id}}" selected>{{$kendaraan->merek}} [{{$kendaraan->no_polisi}}]</option>
-                                                    @endforeach
-                                                </select>
+                                            <td class='text-center'>
+                                                {{$mobilitas->merek}} [{{$mobilitas->no_polisi}}]
                                             </td>
-                                            <td class='text-center' style="min-width: 100px" id="tanggal_{{$nummobilitas}}">{{ Carbon::parse($perjadin->tgl_keberangkatan)->format('d-m-Y H:i') }}</td>
-                                            <td>
-                                                <select class="form-select keterangan-dropdown" aria-label="Default select example" name="ket_{{$nummobilitas}}" data-index="{{$nummobilitas}}">
-                                                    <option value="Antar">Antar</option>
-                                                    <option value="Jemput">Jemput</option>
-                                                    <option value="Antar-Jemput">Antar-Jemput</option>
-                                                    <option value="Lainnya">Lainnya</option>
-                                                </select>
+                                            <td class='text-center' style="min-width: 100px" id="tanggal_{{$nummobilitas}}">
+                                                <input id="" type="hidden" value="{{ Carbon::parse($mobilitas->tgl_keberangkatan)->format('d-m-Y H:i') }}" name="tglBerangkat_{{$nummobilitas}}">
+                                                <input id="" type="hidden" value="{{ Carbon::parse($mobilitas->tgl_selesai)->format('d-m-Y H:i') }}" name="tglSelesai_{{$nummobilitas}}">
+
+                                                {{ Carbon::parse($mobilitas->tgl_keberangkatan)->format('d-m-Y') }} s.d {{ Carbon::parse($mobilitas->tgl_selesai)->format('d-m-Y') }}</td>
+                                            <td class='text-center'>
+                                                <input type="hidden" name="ket_{{$nummobilitas}}" value="{{$mobilitas->ket_mobilitas}}">
+                                                {{$mobilitas->ket_mobilitas}}
                                             </td>
+                                            <td class="text-center align-middle">
+                                                <div class="d-flex align-items-center justify-content-center" style="transform: scale(1.5);">
+                                                    <!-- Teks 'Tidak' di kiri switch dengan ukuran kecil -->
+                                                    <span class="me-1" style="font-size: 0.6rem;">Tidak</span>
+
+                                                    <!-- Switch checkbox -->
+                                                    <div class="form-check form-switch">
+                                                        <input class="form-check-input" type="checkbox" id="gabungSurtug" name="gabungSurtug_{{$nummobilitas}}">
+                                                    </div>
+
+                                                    <!-- Teks 'Ya' di kanan switch dengan ukuran kecil -->
+                                                    <span style="font-size: 0.6rem; margin-left:-4px;">Ya</span>
+                                                </div>
+                                            </td>
+
                                             <td class='text-center'>
                                                 <input type="hidden" name="info_perjadinlangsung" value="{{ $perjadin->id }}">
                                                 <span>
@@ -280,7 +283,112 @@ use Carbon\Carbon;
                             </form>
                         </div>
 
+                        <!-- Modal Tambah Mobilitas -->
+                        <div class="modal fade" id="tambah_mobilitas" tabindex="-1" aria-labelledby="tambah_mobilitasLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="tambah_mobilitasLabel">Tambah Mobilitas</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="formTambahMobilitas" action="{{ url('/c_tambahmobilitas') }}" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="idPerjadin" value="{{$perjadin->id}}">
+                                            <div class="col-md-12">
+                                                <h6 class="text-secondary fw-bold mt-3">Informasi Dasar</h6><br>
+                                            </div>
+                                            {{-- <div class="mb-3 row">
+                                                <div class="col-md-12">
+                                                    <label for="gabungSurtug" class="form-label">Gabungkan Surtug</label>
+                                                    <div class="form-check form-switch">
+                                                        <input class="form-check-input" type="checkbox" id="gabungSurtug" name="gabungSurtug">
+                                                        <label class="form-check-label" for="gabungSurtug">Aktifkan untuk menggabungkan Surtug</label>
+                                                    </div>
+                                                </div>
+                                            </div> --}}
+                                            <div class="mb-3 row align-items-center">
+                                                    <div class="col-md-9">
+                                                        <label for="floatingTextarea">Judul Kegiatan<span class="text-danger">*</span></label>
+                                                        <textarea class="form-control mt-1" id="floatingTextarea" name="nama_kegiatan" required>{{$perjadin->nama_kegiatan}}</textarea>
+                                                    </div>
+                                                <div class="col-md-3">
+                                                    <label for="ket_mobilitas">Keterangan Mobilitas<span class="text-danger">*</span></label>
+                                                    <input type="hidden" id="suratUndangan" name="surat_undangan" value="{{$perjadin->surat_undangan}}">
+                                                    <select class="form-select small-select" id="ket_mobilitas" name="ket_mobilitas">
+                                                        <option value="Antar">Antar</option>
+                                                        <option value="Jemput">Jemput</option>
+                                                        <option value="Antar-Jemput">Antar - Jemput</option>
+                                                    </select>
+                                                </div>
+                                            </div>
 
+                                            <div class="row">
+
+                                                <div class="col-md-4 mb-3">
+                                                    <label for="tgl_keberangkatan" class="form-label">Tanggal Keberangkatan<span class="text-danger">*</span></label>
+                                                    <input type="date" name="tgl_keberangkatan" id="tgl_keberangkatan" class="form-control" value="{{ \Carbon\Carbon::parse($perjadin->tgl_keberangkatan)->format('Y-m-d') }}" required>
+                                                    <input type="time" name="jam_keberangkatan" id="jam_keberangkatan" class="form-control" value="{{ \Carbon\Carbon::parse($perjadin->tgl_keberangkatan)->format('H:i') }}" required>
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <label for="tgl_selesai" class="form-label">Tanggal Selesai<span class="text-danger">*</span></label>
+                                                    <input type="date" name="tgl_selesai" id="tgl_selesai" class="form-control" value="{{ \Carbon\Carbon::parse($perjadin->tgl_keberangkatan)->format('Y-m-d') }}" required>
+                                                    <input type="time" name="jam_selesai" id="jam_selesai" class="form-control" value="{{ \Carbon\Carbon::parse($perjadin->tgl_keberangkatan)->format('H:i') }}" required>
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <label for="tgl_mulai2" class="form-label">Tanggal Acara</label>
+                                                    <input type="date" name="tgl_mulai" id="tgl_mulai2" class="form-control" value="{{ \Carbon\Carbon::parse($perjadin->tgl_mulai)->format('Y-m-d')}}" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-4 mb-3">
+                                                    <label for="provinsi" class="form-label">Provinsi<span class="text-danger">*</span></label>
+                                                    <input type="text" id="provinsi" name="provinsi" class="form-control" style="text-transform: capitalize" placeholder="Masukkan Provinsi" value="{{ $perjadin->provinsi }}" readonly required>
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <label for="kabupaten_kota" class="form-label">Kota/Kabupaten<span class="text-danger">*</span></label>
+                                                    <input type="text" name="kabupaten_kota" id="kabupaten_kota" class="form-control" style="text-transform: capitalize" value="{{ $perjadin->kabupaten_kota }}" readonly required>
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <label for="desa_kecamatan" class="form-label">Desa/Kecamatan</label>
+                                                    <input type="text" name="desa_kecamatan" id="desa_kecamatan" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <div class="col-md-12">
+                                                    <label for="alamat">Alamat<span class="text-danger">*</span></label>
+                                                    <textarea class="form-control mt-1" id="alamat" name="alamat" readonly >{{ $perjadin->alamat }}</textarea>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-4 mb-3">
+                                                    <label for="pengemudi" class="form-label">Pengemudi<span class="text-danger">*</span></label>
+                                                    <select class="form-select required2" aria-label=".form-select-sm example" name="pengemudi" id="pengemudiSelect" disabled>
+                                                        <!-- Pilihan pengemudi akan diisi setelah cek mobilitas -->
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-8 mb-3">
+                                                    <label for="kendaraan" class="form-label">Kendaraan<span id="kendaraanDinasText" class="text-secondary small d-none"> (Khusus untuk Kendaraan Dinas)</span><span class="text-danger">*</span></label>
+                                                    <select class="form-select" aria-label=".form-select-sm example" name="kendaraan" id="kendaraanSelect" disabled>
+                                                        <!-- Pilihan kendaraan akan diisi setelah cek mobilitas -->
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <!-- Tombol "Proses ke HKT" -->
+                                            <div class="d-flex justify-content-between pb-3 mt-5">
+                                                <!-- Tombol "Cek Mobilitas" di luar form, tetapi dalam flex row -->
+                                                <button type="button" id="cekMobilitasBtn" class="btn btn-warning text-white col-3" >Cek Mobilitas</button>
+                                            </div>
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-danger text-white" data-bs-dismiss="modal">Batal</button>
+                                                <button type="submit" name="action" value="pegawai_id" class="btn btn-primary">Simpan</button>
+                                            </div>
+                                        </form>
+                                </div>
+                            </div>
+                        </div>
 
 
                         <!-- Modal Tolak Mobilitas -->
@@ -288,7 +396,7 @@ use Carbon\Carbon;
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="tolak_mobilitasLabel">Tolak Surat Tugas</h1>
+                                        <h1 class="modal-title fs-5" id="tolak_mobilitasLabel">Tolak Ajuan</h1>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
@@ -387,6 +495,135 @@ use Carbon\Carbon;
                                 document.getElementById("divInformasiPeminjaman").style.display = "block";
                             });
                         </script>
+
+<script>
+   document.addEventListener('DOMContentLoaded', function () {
+    const ketMobilitasSelect = document.getElementById('ket_mobilitas');
+    const tglKeberangkatanInput = document.getElementById('tgl_keberangkatan');
+    const tglSelesaiInput = document.getElementById('tgl_selesai');
+    const namaKegiatanTextarea = document.getElementById('floatingTextarea'); // Mengambil textarea untuk nama kegiatan
+
+    // Fungsi untuk mengupdate nilai input berdasarkan pilihan ket_mobilitas
+    function updateValues() {
+        const selectedValue = ketMobilitasSelect.value;
+
+        // Ambil nilai dari $perjadin
+        const tglKeberangkatan = '{{ \Carbon\Carbon::parse($perjadin->tgl_keberangkatan)->format('Y-m-d') }}';
+        const tglSelesai = '{{ \Carbon\Carbon::parse($perjadin->tgl_selesai)->format('Y-m-d') }}';
+        const namaKegiatan = '{{ $perjadin->nama_kegiatan }}'; // Ambil nama kegiatan
+
+        if (selectedValue === 'Jemput') {
+            tglKeberangkatanInput.value = tglSelesai; // set tgl_keberangkatan dengan tgl_selesai
+            tglSelesaiInput.value = tglSelesai; // set tgl_selesai dengan tgl_selesai
+            namaKegiatanTextarea.value = 'Menjemput Pelaksana Tugas ' + namaKegiatan; // update nama kegiatan
+        } else if (selectedValue === 'Antar') {
+            tglKeberangkatanInput.value = tglKeberangkatan; // set tgl_keberangkatan dengan tgl_keberangkatan
+            tglSelesaiInput.value = tglKeberangkatan; // set tgl_selesai dengan tgl_keberangkatan
+            namaKegiatanTextarea.value = 'Mengantar Pelaksana Tugas ' + namaKegiatan; // update nama kegiatan
+        } else if (selectedValue === 'Antar-Jemput') {
+            tglKeberangkatanInput.value = tglKeberangkatan; // set tgl_keberangkatan dengan tgl_keberangkatan
+            tglSelesaiInput.value = tglSelesai; // set tgl_selesai dengan tgl_selesai
+            namaKegiatanTextarea.value = 'Mengantar dan Menjemput Pelaksana Tugas ' + namaKegiatan; // reset nama kegiatan
+        }
+    }
+
+    // Update nilai saat modal pertama kali dibuka
+    updateValues();
+
+    ketMobilitasSelect.addEventListener('change', function () {
+        updateValues(); // Panggil fungsi untuk memperbarui nilai saat terjadi perubahan
+    });
+});
+
+</script>
+<script>
+    document.getElementById("cekMobilitasBtn").addEventListener("click", function() {
+    console.log("Button Cek Mobilitas diklik!");
+
+    // Ambil nilai tanggal dari input
+    const tglKeberangkatan = document.getElementById("tgl_keberangkatan").value;
+    const tglSelesai = document.getElementById("tgl_selesai").value;
+    const perjadinID = document.getElementById("idPerjadin").value;
+
+    $.ajax({
+        url: '/api/cek-mobilitas', // Ganti dengan URL API Anda
+        type: 'GET', // atau 'POST' tergantung pada API Anda
+        data: {
+            tanggal_awal: tglKeberangkatan,
+            tanggal_akhir: tglSelesai,
+            perjadinID: perjadinID
+        },
+        dataType: 'json',
+        success: function(response) {
+            const kendaraanSelect = $('#kendaraanSelect');
+            const pengemudiSelect = $('#pengemudiSelect');
+
+            // Kosongkan pilihan yang ada sebelumnya
+            kendaraanSelect.empty();
+            pengemudiSelect.empty();
+
+            if (response.kendaraans.length > 0) {
+                $.each(response.kendaraans, function(index, kendaraan) {
+                    kendaraanSelect.append(`<option value="${kendaraan.id}">${kendaraan.merek} [${kendaraan.no_polisi}]</option>`);
+                });
+            } else {
+                kendaraanSelect.append('<option value="">Tidak ada kendaraan yang tersedia</option>');
+            }
+
+            if (response.pengemudis.length > 0) {
+                $.each(response.pegawaiPengemudis, function(index, pegawaiPengemudi) {
+                    pengemudiSelect.append(`<option value="${pegawaiPengemudi.id}">${pegawaiPengemudi.nama_lengkap}</option>`);
+                });
+                $.each(response.pengemudis, function(index, pengemudi) {
+                    pengemudiSelect.append(`<option value="${pengemudi.id}">${pengemudi.nama_lengkap}</option>`);
+                });
+            } else {
+                pengemudiSelect.append('<option value="">Tidak ada pengemudi yang tersedia</option>');
+            }
+
+            // Enable select option setelah data berhasil diambil
+            kendaraanSelect.prop('disabled', false);
+                pengemudiSelect.prop('disabled', false);
+
+        },
+        error: function(xhr, status, error) {
+            console.error('Error fetching data: ', error);
+        }
+    });
+});
+
+</script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.querySelector('form');
+
+        form.addEventListener('submit', function (event) {
+            const tglKeberangkatan = document.getElementById('tgl_keberangkatan').value;
+            const jamKeberangkatan = document.getElementById('jam_keberangkatan').value;
+            const tglSelesai = document.getElementById('tgl_selesai').value;
+            const jamSelesai = document.getElementById('jam_selesai').value;
+
+            if (!tglKeberangkatan || !jamKeberangkatan || !tglSelesai || !jamSelesai) {
+                alert('Semua field tanggal dan waktu harus diisi.');
+                event.preventDefault();
+                return false;
+            }
+
+            const keberangkatan = new Date(`${tglKeberangkatan}T${jamKeberangkatan}`);
+            const selesai = new Date(`${tglSelesai}T${jamSelesai}`);
+
+            if (isNaN(keberangkatan.getTime()) || isNaN(selesai.getTime())) {
+                alert('Format tanggal atau waktu tidak valid.');
+                event.preventDefault();
+                return false;
+            }
+
+            return true;
+        });
+    });
+    </script>
 
                         <script src="{{asset('public/assets/js/pdfselected.js')}}"></script>
 

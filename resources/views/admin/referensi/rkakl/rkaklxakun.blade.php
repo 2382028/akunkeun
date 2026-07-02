@@ -39,6 +39,7 @@
                 <thead>
                   <tr class="text-center small">
                     <th class="th-sm">No</th>
+                    <th class="th-md">ID</th>
                     <th class="th-md">Kode Induk</th>
                     <th class="th-md">Uraian Akun</th>
                     <th class="th-md">Uraian Komponen</th>
@@ -49,6 +50,7 @@
                 @foreach ($akunxrkakls as $akunxrkakl)
                 <tr>
                 <td class='text-center'></td>
+                  <td class='text-center'>{{ $akunxrkakl->id }}</td>
                   <td class='text-center'>{{ $akunxrkakl->kode_satker }}.
                     {{ $akunxrkakl->kode_program }}.
                     {{ $akunxrkakl->kode_kegiatan }}.

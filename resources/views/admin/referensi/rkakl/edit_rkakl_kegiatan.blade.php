@@ -52,7 +52,7 @@
               </div>
               {{-- start button --}}
               <div class="modal-footer">
-                <a class="btn btn-secondary" href="{{url('/admin-rkakl_program')}}" role="button">Kembali</a>
+                <a class="btn btn-secondary" href="{{url('/admin-rkakl_kegiatan')}}" role="button">Kembali</a>
                 <button type="submit" class="btn btn-primary">Update</button>
               </div>
             </form>

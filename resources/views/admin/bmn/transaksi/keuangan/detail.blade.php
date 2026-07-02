@@ -70,7 +70,11 @@
                                     <td class='text-center'>{{$loop->iteration}}</td>
                                     <td>{{$dokumen->nama_dokumen}}</td>
                                     <td class='text-center'>
-                                        <a href="{{asset('public/storage/' . $dokumen->file)}}" target="_blank" class="btn btn-secondary btn-sm"><i class="fa-solid fa-eye"></i> Lihat</a>
+                                      <?php
+                                        $path = $dokumen->file;
+                                        $filename = basename($path);
+                                        ?>
+                                        <a href="{{'/getDokumenService/' . $filename}}" target="_blank" class="btn btn-secondary btn-sm"><i class="fa-solid fa-eye"></i> Lihat</a>
                                     </td>
                                     <td>
                                         <span>

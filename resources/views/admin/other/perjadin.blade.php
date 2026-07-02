@@ -13,45 +13,72 @@
           <div class="card-body content">
 
             <!-- Laporan Perjadin Langsung -->
-            
+
             <div class="row">
-            <div class="col-md-12 mb-3 text-end">
-                      <button id="exportButton" class="btn btn-success"><i class="fa-solid fa-print"></i> Export to Excel</button>
+                <div class="col-md-12 mb-3">
+                    <!-- Tombol Export di luar Form -->
+                    <div class="d-inline float-end">
+                        <button id="exportButton" class="btn btn-success me-2">
+                            <i class="fa-solid fa-print"></i> Export to Excel
+                        </button>
                     </div>
-            <form action="{{url('/cu_spby_perjadin')}}" method="post">
-            @csrf
+
+                    <!-- Form dengan tombol Simpan -->
+                    {{-- <button type="submit" class="btn btn-success">Simpan Perubahan</button> --}}
+
+                </div>
+                <form action="{{url('/cu_spby_perjadin')}}" method="post" style="display: inline;">
+                    @csrf
                 <div class="table-responsive">
-                    
                     <table id="myTable" class="table table-bordered data-table" style="width: 100%">
                       <thead>
                         <tr class="text-center small">
                           <th class="th-sm">No</th>
-                          <th class="th-sm">No Kegiatan</th>
+                          <th class="th-sm">ID Kegiatan</th>
+                          <th class="th-md">Kota</th>
+                          <th class="th-sm">Jumlah Hari</th>
+                          <th class="th-md">Tanggal Perjadin</th>
                           <th class="th-md">Nama</th>
                           <th class="th-lg">Kegiatan</th>
-                          <th class="th-md">MAK</th>
-                          <th class="th-md">Uang Harian</th>
-                          <th class="th-sm">Pph21 [%]</th>
-                          <th class="th-sm">Pph22 [%]</th>
-                          <th class="th-sm">Pph23 [%]</th>
-                          <th class="th-sm">PPN [%]</th>
-                          <th class="th-md">Uang yang dibayarkan</th>
-                          <th class="th-md">Tanggal Pembayaran</th>
-                          <th class="th-md">Status Pembayaran</th>
+                          <th class="th-md">No Surtug</th>
+                          <th class="th-md">Nominal Bayar</th>
+                          <th class="th-md">Tgl Terima Berkas</th>
+                          <th class="th-md">Tgl Berkas Lengkap</th>
+                          <th class="th-md">Tgl Surtug</th>
                           <th class="th-sm">Undangan</th>
                           <th class="th-sm">Surat Tugas</th>
                           <th class="th-sm">SPPD</th>
                           <th class="th-sm">Laporan Perjadin</th>
-                          <th class="th-sm">Lap. Pengeluaran</th>
+                          <th class="th-sm">Bukti Pengeluaran</th>
+                          <th class="th-md">BBM</th>
+                          <th class="th-md">e-Toll</th>
+                          <th  class="th-md">Penginapan</th>
+                          <th class="th-md">Transportasi</th>
+                          <th class="th-md">Pesawat</th>
+                          <th class="th-md">Kereta</th>
+                          <th class="th-md">Travel</th>
+                          <th class="th-md">Fasilitas Lainnya</th>
+                          <th class="th-md">MAK</th>
+                          <th class="th-md">Tanggal Pembayaran</th>
+                          <th class="th-md">Uang Harian</th>
+                          <th class="th-md">Uang Fullday</th>
+                          <th class="th-md">Uang Fullboard</th>
+                          <th class="th-md">Uang Reprentasi</th>
+                          <th class="th-sm">Pph21 [%]</th>
+                          <th class="th-sm">Pph22 [%]</th>
+                          <th class="th-sm">Pph23 [%]</th>
+                          <th class="th-sm">PPN [%]</th>
+
+                          <th class="th-sm">Total Pembayaran</th>
+                          <th class="th-md">Status Pembayaran</th>
                           <th class="th-md">Tanggal Update Laporan</th>
-                          <th class="th-md">Fasilitas</th>
                           <th class="th-md">Status Perjalanan Dinas</th>
                           <th class="th-md">Tanggal Kwitansi</th>
                           <th class="th-md">No Kwitansi</th>
                           <th class="th-md">Tanggal SPBY</th>
                           <th class="th-md">SPBY</th>
-                          <th class="th-md">DRPP</th>
                           <th class="th-md">Jurnal</th>
+                          <th class="th-md">DRPP</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -60,38 +87,32 @@
                         $numnonpegawai = 0;
                       @endphp
                       @foreach ($perjadins as $perjadin)
+
                       <tr>
                           <td class="text-center">{{$loop->iteration}}</td>
                           <td class="text-center">{{$perjadin->idPerjadin}}</td>
-                          <td>{{$perjadin->nama_lengkap}}</td>
-                          <td>{{$perjadin->nama_kegiatan}}, {{$perjadin->tgl_mulai}} s.d {{$perjadin->tgl_selesai}}, di {{$perjadin->alamat}}</td>
-                          <td>
-                            @foreach ($akuns as $akun)
-                              @if ($perjadin->MAK == $akun->idAkun)
-                              {{$akun->kode_satker}}.{{$akun->kode_program}}.{{$akun->kode_kegiatan}}.{{$akun->kode_output}}.{{$akun->kode_sub_output}}.{{$akun->kode_komponen}}.{{$akun->kode_sub_kegiatan}}.{{$akun->kode_akun}}
-                              @endif
-                            @endforeach
-                          </td>
-                          <td>{{$perjadin->uang_harian}}</td>
-                          <td>{{$perjadin->persen_pajak}}</td>
-                          <td>{{$perjadin->pph22}}</td>
-                          <td>{{$perjadin->pph23}}</td>
-                          <td>{{$perjadin->ppn}}</td>
-                          <td>{{$perjadin->jumlah_harga}}</td>
-                          <td>{{$perjadin->transaksi}}</td>
-                          <td>{{$perjadin->status_pembayaran}}</td>
+                          <td> Bandung - {{$perjadin->Kota}}</td>
+                          <td class="text-center th-sm small">{{$perjadin->Jumlah_Hari}}</td>
+                          <td>{{$perjadin->Tanggal_Perjadin}}</td>
+                          <td>{{$perjadin->Nama}}</td>
+                          <td>{{$perjadin->Kegiatan}}</td>
+                          <td>{{$perjadin->No_Surtug}}</td>
+                          <td>{{ number_format($perjadin->Nominal_Bayar, 0, ',', '.') }}</td>
+                          <td>{{\Carbon\Carbon::parse($perjadin->Tgl_Terima_Berkas)->format('d-m-Y H:i')}}</td>
+                          <td>{{\Carbon\Carbon::parse($perjadin->Tgl_Berkas_Lengkap)->format('d-m-Y H:i')}}</td>
+                          <td>{{\Carbon\Carbon::parse($perjadin->Tgl_Surtug)->format('d-m-Y H:i')}}</td>
                           <td class="text-center">
-                            @if ($perjadin->surat_undangan != null)
+                            @if ($perjadin->Undangan != null)
                               <span>&#x2713;</span><br>
-                              <a href="{{asset('public/storage/' . $perjadin->surat_undangan)}}" target="_blank">[Lihat Dokumen]</a>
+                              <a href="{{asset('public/storage/' . $perjadin->Undangan)}}" target="_blank">[Lihat Dokumen]</a>
                             @else
                               <span>&#x2717;</span>
                             @endif
                           </td>
                           <td class="text-center">
-                            @if ($perjadin->surat_tugas != null)
+                            @if ($perjadin->Surat_Tugas != null)
                               <span>&#x2713;</span><br>
-                              <a href="{{asset('public/storage/' . $perjadin->surat_tugas)}}" target="_blank">[Lihat Dokumen]</a>
+                              <a href="{{asset('public/storage/' . $perjadin->Surat_Tugas)}}" target="_blank">[Lihat Dokumen]</a>
                             @else
                               <span>&#x2717;</span>
                             @endif
@@ -105,7 +126,7 @@
                             @endif
                           </td>
                           <td class="text-center">
-                            @if ($perjadin->lap_perjadin != null)
+                            @if ($perjadin->Laporan_Perjadin != null)
                               <span>&#x2713;</span><br>
                               <a href="{{asset('/note-perjadin-laporan/' . $perjadin->idPerjadin)}}" target="_blank">[Lihat Dokumen]</a>
                             @else
@@ -113,80 +134,94 @@
                             @endif
                           </td>
                           <td class="text-center">
-                            @if ($perjadin->lap_pengeluaran != null)
+                            @if ($perjadin->Bukti_Pengeluaran != null)
                               <span>&#x2713;</span><br>
-                              <a href="{{asset('public/storage/' . $perjadin->lap_pengeluaran)}}" target="_blank">[Lihat Dokumen]</a>
+                              <a href="{{asset('public/storage/' . $perjadin->Bukti_Pengeluaran)}}" target="_blank">[Lihat Dokumen]</a>
                             @else
                               <span>&#x2717;</span>
                             @endif
                           </td>
-                          <td>{{$perjadin->tanggal_dokumen}}</td>
+
+                          <td>{{$perjadin->BBM}}</td>
+                          <td>{{$perjadin->e_Toll}}</td>
+                          <td>{{$perjadin->Penginapan}}</td>
+                          <td>{{$perjadin->Transportasi}}</td>
+                          <td>{{$perjadin->Pesawat}}</td>
+                          <td>{{$perjadin->Kereta}}</td>
+                          <td>{{$perjadin->Travel}}</td>
+                          <td>{{$perjadin->Fasilitas_Lainnya}}</td>
+                          <td>{{$perjadin->MAK}}</td>
+                          <td>{{$perjadin->Tanggal_Pembayaran}}</td>
+                          <td>{{ number_format($perjadin->Uang_Harian, 0, ',', '.') }}</td>
+                          <td>{{ number_format($perjadin->Uang_Fullday, 0, ',', '.') }}</td>
+                          <td>{{ number_format($perjadin->Uang_Fullboard, 0, ',', '.') }}</td>
+                          <td>{{ number_format($perjadin->Uang_Representasi, 0, ',', '.') }}</td>
+                          <td>{{$perjadin->Pph21}}</td>
+                          <td>{{$perjadin->Pph22}}</td>
+                          <td>{{$perjadin->Pph23}}</td>
+                          <td>{{$perjadin->PPN}}</td>
+                          <td>{{ number_format($perjadin->Total_Pembayaran, 0, ',', '.') }}</td>
+                          <td>{{$perjadin->Status_Pembayaran}}</td>
+                          <td>{{\Carbon\Carbon::parse($perjadin->Tanggal_Update_Laporan)->format('d-m-Y H:i')}}</td>
+                          <td>{{$perjadin->Status_Perjalanan_Dinas}}</td>
+
+                          <td><input type="date" class="form-control dateInput" id="exampleInputEmail1" name="tglkwitansi_{{$numpegawai}}" value="{{$perjadin->Tanggal_Kwitansi}}"></td>
+                          <td><input type="text" class="form-control textInput" id="exampleInputEmail1" name="kwitansi_{{$numpegawai}}" value="{{$perjadin->No_Kwitansi}}"></td>
+                          <td><input type="date" class="form-control dateInput" id="exampleInputEmail1" name="tglSpby_{{$numpegawai}}" value="{{$perjadin->Tanggal_SPBY}}" readonly></td>
+
                           <td>
-                            <ul>
-                              {{-- {{$perjadin->}} --}}
-                              @foreach ($fasilitas as $item)
-                                @if ($perjadin->idPerjadin == $item->info_perjadinlangsung)
-                                  <li>{{$item->nama}} ({{$item->jumlah_frekuensi}}x, {{$item->satuan}}-{{$item->satuan}}) [Rp. {{$item->jumlah_harga}} - {{$item->status}}]</li>
-                                @endif
-                              @endforeach
-                            </ul>
-                          </td>
-                          <td>{{$perjadin->status_pengajuan}}</td>
-                          <td><input type="date" class="form-control dateInput" id="exampleInputEmail1" name="tglkwitansi_{{$numpegawai}}" value="{{$perjadin->tgl_kwitansi}}"></td>
-                          <td><input type="text" class="form-control textInput" id="exampleInputEmail1" name="kwitansi_{{$numpegawai}}" value="{{$perjadin->no_kwitansi}}"></td>
-                          <td>{{$perjadin->tgl_mulai}}</td>
-                          <td>
-                            <input type="text" class="form-control textInput" id="exampleInputEmail1" name="spby_{{$numpegawai}}" value="{{$perjadin->spby}}">
+                            <input type="text" class="form-control textInput" id="exampleInputEmail1" name="spby_{{$numpegawai}}" value="{{$perjadin->SPBY}}" readonly>
                             <input type="hidden" name="idKeuangan_{{$numpegawai}}" value="{{$perjadin->IdKeuangan}}">
                           </td>
+
                           <td>
-                            <input type="text" class="form-control textInput" id="exampleInputEmail1" name="drpp_{{$numpegawai}}" value="{{$perjadin->drpp}}">
+                            @php
+                                $jurnalValue = $perjadin->Jurnal === 'Sudah Jurnal' ? 'Sudah Jurnal' : 'Belum Jurnal';
+                            @endphp
+
+                            <select class="form-select jurnalSelect" name="jurnal_{{$numpegawai}}" disabled>
+                                <option value="Belum Jurnal" @if($jurnalValue === 'Belum Jurnal') selected @endif>Belum Jurnal</option>
+                                <option value="Sudah Jurnal" @if($jurnalValue === 'Sudah Jurnal') selected @endif>Sudah Jurnal</option>
+                            </select>
+
+
                           </td>
                           <td>
-                          <select class="form-select jurnalSelect" aria-label="Default select example" name="jurnal_{{$numpegawai}}">
-                            <option value="{{$perjadin->jurnal}}">{{$perjadin->jurnal}}</option>
-                            <option value="Belum Jurnal">Belum Jurnal</option>
-                            <option value="Sudah Jurnal">Sudah Jurnal</option>
-                          </select>
+                            <input type="text" class="form-control textInput" id="exampleInputEmail1" name="drpp_{{$numpegawai}}" value="{{$perjadin->DRPP}}">
                           </td>
                       </tr>
                         @php
                           $numpegawai++;
                         @endphp
                       @endforeach
+
                       @foreach ($perjadinNons as $perjadinNon)
+
                       <tr>
                           <td class="text-center">{{$loop->iteration}}</td>
                           <td class="text-center">{{$perjadinNon->idPerjadin}}</td>
-                          <td>{{$perjadinNon->nama_lengkap}}</td>
-                          <td>{{$perjadinNon->nama_kegiatan}}, {{$perjadinNon->tgl_mulai}} s.d {{$perjadinNon->tgl_selesai}}, di {{$perjadinNon->alamat}}</td>
-                          <td>
-                            @foreach ($akuns as $akun)
-                              @if ($perjadinNon->MAK == $akun->idAkun)
-                              {{$akun->kode_satker}}.{{$akun->kode_program}}.{{$akun->kode_kegiatan}}.{{$akun->kode_output}}.{{$akun->kode_sub_output}}.{{$akun->kode_komponen}}.{{$akun->kode_sub_kegiatan}}.{{$akun->kode_akun}}
-                              @endif
-                            @endforeach
-                          </td>
-                          <td>{{$perjadinNon->uang_harian}}</td>
-                          <td>{{$perjadinNon->persen_pajak}}</td>
-                          <td>{{$perjadinNon->pph22}}</td>
-                          <td>{{$perjadinNon->pph23}}</td>
-                          <td>{{$perjadinNon->ppn}}</td>
-                          <td>{{$perjadinNon->jumlah_harga}}</td>
-                          <td>{{$perjadinNon->transaksi}}</td>
-                          <td>{{$perjadinNon->status_pembayaran}}</td>
+                          <td> Bandung - {{$perjadinNon->Kota}}</td>
+                          <td class="text-center th-sm small">{{$perjadinNon->Jumlah_Hari}}</td>
+                          <td>{{$perjadinNon->Tanggal_Perjadin}}</td>
+                          <td>{{$perjadinNon->Nama}}</td>
+                          <td>{{$perjadinNon->Kegiatan}}</td>
+                          <td>{{$perjadinNon->No_Surtug}}</td>
+                          <td>{{ number_format($perjadinNon->Nominal_Bayar, 0, ',', '.') }}</td>
+                          <td>{{$perjadinNon->Tgl_Terima_Berkas}}</td>
+                          <td>{{$perjadinNon->Tgl_Berkas_Lengkap}}</td>
+                          <td>{{$perjadinNon->Tgl_Surtug}}</td>
                           <td class="text-center">
-                            @if ($perjadinNon->surat_undangan != null)
+                            @if ($perjadinNon->Undangan != null)
                               <span>&#x2713;</span><br>
-                              <a href="{{asset('public/storage/' . $perjadinNon->surat_undangan)}}" target="_blank">[Lihat Dokumen]</a>
+                              <a href="{{asset('public/storage/' . $perjadinNon->Undangan)}}" target="_blank">[Lihat Dokumen]</a>
                             @else
                               <span>&#x2717;</span>
                             @endif
                           </td>
                           <td class="text-center">
-                            @if ($perjadinNon->surat_tugas != null)
+                            @if ($perjadinNon->Surat_Tugas != null)
                               <span>&#x2713;</span><br>
-                              <a href="{{asset('public/storage/' . $perjadinNon->surat_tugas)}}" target="_blank">[Lihat Dokumen]</a>
+                              <a href="{{asset('public/storage/' . $perjadinNon->Surat_Tugas)}}" target="_blank">[Lihat Dokumen]</a>
                             @else
                               <span>&#x2717;</span>
                             @endif
@@ -200,7 +235,7 @@
                             @endif
                           </td>
                           <td class="text-center">
-                            @if ($perjadinNon->lap_perjadin != null)
+                            @if ($perjadinNon->Laporan_Perjadin != null)
                               <span>&#x2713;</span><br>
                               <a href="{{asset('/note-perjadin-laporan/' . $perjadinNon->idPerjadin)}}" target="_blank">[Lihat Dokumen]</a>
                             @else
@@ -208,47 +243,66 @@
                             @endif
                           </td>
                           <td class="text-center">
-                            @if ($perjadinNon->lap_pengeluaran != null)
+                            @if ($perjadinNon->Bukti_Pengeluaran != null)
                               <span>&#x2713;</span><br>
-                              <a href="{{asset('public/storage/' . $perjadinNon->lap_pengeluaran)}}" target="_blank">[Lihat Dokumen]</a>
+                              <a href="{{asset('public/storage/' . $perjadinNon->Bukti_Pengeluaran)}}" target="_blank">[Lihat Dokumen]</a>
                             @else
                               <span>&#x2717;</span>
                             @endif
                           </td>
-                          <td>{{$perjadinNon->tanggal_dokumen}}</td>
-                          <td >
-                            <ul>
-                              {{-- {{$perjadinNon->}} --}}
-                              @foreach ($fasilitas as $item)
-                                @if ($perjadinNon->idPerjadin == $item->info_perjadinlangsung)
-                                  <li>{{$item->nama}} ({{$item->jumlah_frekuensi}}x, {{$item->satuan}}-{{$item->satuan}}) [Rp. {{$item->jumlah_harga}} - {{$item->status}}]</li>
-                                @endif
-                              @endforeach
-                            </ul>
-                          </td>
-                          <td>{{$perjadinNon->status_pengajuan}}</td>
-                          <td><input type="date" class="form-control dateInput" id="exampleInputEmail1" name="tglkwitansiNon_{{$numnonpegawai}}" value="{{$perjadinNon->tgl_kwitansi}}"></td>
-                          <td><input type="text" class="form-control textInput" id="exampleInputEmail1" name="kwitansiNon_{{$numnonpegawai}}" value="{{$perjadinNon->no_kwitansi}}"></td>
-                          <td>{{$perjadinNon->tgl_mulai}}</td>
+
+                          <td>{{$perjadinNon->BBM}}</td>
+                          <td>{{$perjadinNon->e_Toll}}</td>
+                          <td>{{$perjadinNon->Penginapan}}</td>
+                          <td>{{$perjadinNon->Transportasi}}</td>
+                          <td>{{$perjadinNon->Pesawat}}</td>
+                          <td>{{$perjadinNon->Kereta}}</td>
+                          <td>{{$perjadinNon->Travel}}</td>
+                          <td>{{$perjadinNon->Fasilitas_Lainnya}}</td>
+                          <td>{{$perjadinNon->MAK}}</td>
+                          <td>{{$perjadinNon->Tanggal_Pembayaran}}</td>
+                          <td>{{ number_format($perjadinNon->Uang_Harian, 0, ',', '.') }}</td>
+                          <td>{{ number_format($perjadinNon->Uang_Fullday, 0, ',', '.') }}</td>
+                          <td>{{ number_format($perjadinNon->Uang_Fullboard, 0, ',', '.') }}</td>
+                          <td>{{ number_format($perjadinNon->Uang_Representasi, 0, ',', '.') }}</td>
+                          <td>{{$perjadinNon->Pph21}}</td>
+                          <td>{{$perjadinNon->Pph22}}</td>
+                          <td>{{$perjadinNon->Pph23}}</td>
+                          <td>{{$perjadinNon->PPN}}</td>
+                          <td>{{ number_format($perjadinNon->Total_Pembayaran, 0, ',', '.') }}</td>
+                          <td>{{$perjadinNon->Status_Pembayaran}}</td>
+                          <td>{{$perjadinNon->Tanggal_Update_Laporan}}</td>
+                          <td>{{$perjadinNon->Status_Perjalanan_Dinas}}</td>
+
+                          <td><input type="date" class="form-control dateInput" id="exampleInputEmail1" name="tglkwitansiNon_{{$numnonpegawai}}" value="{{$perjadinNon->Tanggal_Kwitansi}}"></td>
+                          <td><input type="text" class="form-control textInput" id="exampleInputEmail1" name="kwitansiNon_{{$numnonpegawai}}" value="{{$perjadinNon->No_Kwitansi}}"></td>
+
+                          <td><input type="date" class="form-control dateInput" id="exampleInputEmail1" name="tglSpbyNon_{{$numnonpegawai}}" value="{{$perjadinNon->Tanggal_SPBY}}" readonly></td>
                           <td>
-                            <input type="text" class="form-control textInput" id="exampleInputEmail1" name="spbyNon_{{$numnonpegawai}}" value="{{$perjadinNon->spby}}">
-                            <input type="hidden" name="idKeuanganNon_{{$numpegawai}}" value="{{$perjadinNon->IdKeuangan}}">
+                            <input type="text" class="form-control textInput" id="exampleInputEmail1" name="spbyNon_{{$numnonpegawai}}" value="{{$perjadinNon->SPBY}}" readonly>
+                            <input type="hidden" name="idKeuanganNon_{{$numnonpegawai}}" value="{{$perjadinNon->IdKeuangan}}">
+                          </td>
+
+                          <td>
+                            @php
+                            $jurnalValue = $perjadinNon->Jurnal === 'Sudah Jurnal' ? 'Sudah Jurnal' : 'Belum Jurnal';
+                        @endphp
+
+                        <select class="form-select jurnalSelect" aria-label="Default select example" name="jurnalNon_{{$numnonpegawai}}">
+                            <option value="Belum Jurnal" @if($jurnalValue === 'Belum Jurnal') selected @endif>Belum Jurnal</option>
+                            <option value="Sudah Jurnal" @if($jurnalValue === 'Sudah Jurnal') selected @endif>Sudah Jurnal</option>
+                        </select>
+
                           </td>
                           <td>
-                            <input type="text" class="form-control textInput" id="exampleInputEmail1" name="drppNon_{{$numnonpegawai}}" value="{{$perjadinNon->drpp}}">
-                          </td>
-                          <td>
-                          <select class="form-select jurnalSelect" aria-label="Default select example" name="jurnalNon_{{$numnonpegawai}}">
-                            <option value="{{$perjadinNon->jurnal}}">{{$perjadinNon->jurnal}}</option>
-                            <option value="Belum Jurnal">Belum Jurnal</option>
-                            <option value="Sudah Jurnal">Sudah Jurnal</option>
-                          </select>
+                            <input type="text" class="form-control textInput" id="exampleInputEmail1" name="drppNon_{{$numnonpegawai}}" value="{{$perjadinNon->DRPP}}">
                           </td>
                       </tr>
                         @php
                           $numnonpegawai++;
                         @endphp
                       @endforeach
+
                       </tbody>
                       <tfoot>
                         <tr id="totalRow">
@@ -270,6 +324,8 @@
                     </table>
                 </div>
                 <div class="container text-center mt-5 mb-5">
+                  <input type="hidden" name="mulai" value="{{$mulai}}">
+                  <input type="hidden" name="sampai" value="{{$sampai}}">
                   <input type="hidden" name="numPegawaiLaporan" value="{{$numpegawai}}">
                   <input type="hidden" name="numNonPegawaiLaporan" value="{{$numnonpegawai}}">
                   <button type="submit" class="btn btn-success">Simpan Pembaharuan</button>
