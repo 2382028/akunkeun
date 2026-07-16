@@ -426,7 +426,13 @@
                       <li class=" list-group-item list-group-item-action">
                         <a href="{{url('/bmn/data')}}" class="nav-link px-1 sidebar-link py-1 text-white" aria-current="true">
                           <span class="me-2 "><i class="fa-solid fa-box"></i></span>
-                          <span>Data BMN</span>
+                          <span>Data BMN Kendaraan</span>
+                        </a>
+                      </li>
+                      <li class=" list-group-item list-group-item-action">
+                        <a href="{{url('/data_assets')}}" class="nav-link px-1 sidebar-link py-1 text-white" aria-current="true">
+                          <span class="me-2 "><i class="fa-solid fa-building-columns"></i></span>
+                          <span>Data BMN Aset</span>
                         </a>
                       </li>
                       <li class=" list-group-item list-group-item-action">
