@@ -33,7 +33,7 @@
                                     <td class=''>{{$asset->nama_merek}}</td>
                                     <td class='text-center'>{{$asset->status_peminjaman}}</td>
                                     <td class="text-center">
-                                        @if ($asset->kategori == 1 && $asset->status_peminjaman === 'Tidak Dipakai')
+                                        @if ($asset->kategori == 1 && ($asset->status_peminjaman === 'Tidak Dipakai' || $asset->status_peminjaman === 'Tidak Digunakan'))
                                             @if ($activeVersi && ($activeVersi->id != session('versi')))
                                                 <a href="{{ url('/peminjaman/' . $asset->id) }}" class="btn btn-primary btn-sm" onclick="showAlert(event)">Pinjam</a>
                                             @else

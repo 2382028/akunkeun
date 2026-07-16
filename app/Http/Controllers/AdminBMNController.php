@@ -1603,7 +1603,6 @@ class AdminBMNController extends Controller
                 'tgl_beli' => $request->tgl_beli,
                 'jenis_perawatan' => $request->perawatan,
                 'status_kondisi' => $request->kondisi,
-                'status_peminjaman' => 'Tidak Digunakan',
                 'kategori' => $request->dapat_dipinjami,
                 'updated_at' => now()->format('Y-m-d H:i:s'),
         ]);
