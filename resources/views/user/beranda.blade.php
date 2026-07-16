@@ -298,11 +298,10 @@ document.addEventListener('DOMContentLoaded', function () {
         maxVisible = Math.max(maxVisible, 1); // minimal 1
 
         if (isExpanded) {
-            // Tampilkan semua data, aktifkan scroll tapi KUNCI TINGGI agar tidak tembus ke bawah
+            // Tampilkan semua data, biarkan tabel memanjang ke bawah (dropdown)
             allRows.forEach(function(r) { r.style.display = ''; });
-            var maxContainerHeight = maxVisible * rowH;
-            container.style.maxHeight = maxContainerHeight + 'px';
-            container.style.overflowY = 'auto';
+            container.style.maxHeight = 'none';
+            container.style.overflowY = 'visible';
             if (moreText) moreText.textContent = 'Sembunyikan';
             if (moreIcon) {
                 moreIcon.classList.remove('fa-angles-down');
