@@ -169,11 +169,11 @@
                     </h6>
                     <span id="riwayat-counter" class="text-muted" style="font-size: 0.7rem;"></span>
                 </div>
-                <div class="table-responsive" style="flex: 1; min-height: 0; overflow: hidden; border: 1px solid #d4d8dd; border-radius: 6px;" id="riwayat-table-container">
-                    <table class="table table-hover table-bordered mb-0" style="font-size: 0.72rem; border-color: #d4d8dd;" id="riwayat-table">
+                <div class="table-responsive" style="flex: 1; min-height: 0; overflow: hidden;" id="riwayat-table-container">
+                    <table class="table table-hover mb-0" style="font-size: 0.72rem; --bs-table-border-color: #d1d5db;" id="riwayat-table">
                         <thead id="riwayat-thead">
-                            <tr style="background-color: #f1f4f9; border-bottom: 2px solid #d4d8dd;">
-                                <th class="text-muted fw-semibold py-1 ps-2" style="width: 5%;">No</th>
+                            <tr style="background-color: #f8f9fb;">
+                                <th class="text-muted fw-semibold py-1 ps-2 text-center" style="width: 5%; border-right: 1px solid #d1d5db;">No</th>
                                 <th class="text-muted fw-semibold py-1" style="width: 35%;">Nama Kegiatan</th>
                                 <th class="text-muted fw-semibold py-1" style="width: 20%;">Kategori</th>
                                 <th class="text-muted fw-semibold py-1" style="width: 20%;">Status</th>
@@ -204,7 +204,7 @@
                                         };
                                     @endphp
                                     <tr class="riwayat-row" data-index="{{ $index }}">
-                                        <td class="ps-2 py-2">{{ $index + 1 }}</td>
+                                        <td class="py-2 text-center" style="border-right: 1px solid #d1d5db; font-weight: 600;">{{ $index + 1 }}</td>
                                         <td class="py-2 fw-semibold text-dark">{{ Str::limit($item->nama ?? '-', 55) }}</td>
                                         <td class="py-2">
                                             <span class="badge rounded-pill" style="background-color: {{ $kategoriColor }}15; color: {{ $kategoriColor }}; font-weight: 600; padding: 3px 8px; font-size: 0.65rem;">
