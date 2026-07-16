@@ -234,8 +234,8 @@
                 </div>
                 {{-- Tombol lihat semua --}}
                 <div id="riwayat-footer" class="text-center mt-2" style="flex-shrink: 0; display: none;">
-                    <a href="{{ url('/perjadin/riwayat/pengajuan') }}" class="text-decoration-none" style="font-size: 0.72rem; color: #082A99;">
-                        <i class="fa-solid fa-angles-down me-1"></i>
+                    <a href="javascript:void(0)" id="toggle-riwayat-btn" class="text-decoration-none" style="font-size: 0.72rem; color: #082A99;">
+                        <i id="riwayat-more-icon" class="fa-solid fa-angles-down me-1"></i>
                         <span id="riwayat-more-text"></span>
                     </a>
                 </div>
@@ -246,21 +246,47 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+    var isExpanded = false;
+    var btn = document.getElementById('toggle-riwayat-btn');
+    if(btn) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            isExpanded = !isExpanded;
+            adjustRiwayatRows();
+        });
+    }
+
     function adjustRiwayatRows() {
         var allRows = document.querySelectorAll('#riwayat-tbody .riwayat-row');
         if (allRows.length === 0) return;
 
-        // Tampilkan semua dulu untuk bisa ukur
-        allRows.forEach(function(r) { r.style.display = ''; });
-
-        // Hitung ruang yang tersedia
         var container = document.getElementById('riwayat-table-container');
         var wrapper   = container.closest('.dashboard-table-wrapper');
         var header    = wrapper.querySelector('.d-flex.align-items-center');
-        var footer    = document.getElementById('riwayat-footer');
+        var footerEl  = document.getElementById('riwayat-footer');
         var thead     = document.getElementById('riwayat-thead');
+        var moreText  = document.getElementById('riwayat-more-text');
+        var moreIcon  = document.getElementById('riwayat-more-icon');
+        var counter   = document.getElementById('riwayat-counter');
 
-        // Dapatkan total tinggi section dari atas tabel sampai bawah viewport
+        if (isExpanded) {
+            // Tampilkan semua data, aktifkan scroll
+            allRows.forEach(function(r) { r.style.display = ''; });
+            container.style.overflowY = 'auto';
+            if (moreText) moreText.textContent = 'Sembunyikan';
+            if (moreIcon) {
+                moreIcon.classList.remove('fa-angles-down');
+                moreIcon.classList.add('fa-angles-up');
+            }
+            if (counter) counter.textContent = 'Menampilkan semua ' + allRows.length + ' data';
+            return;
+        }
+
+        // Tampilkan semua dulu untuk bisa ukur
+        allRows.forEach(function(r) { r.style.display = ''; });
+        container.style.overflowY = 'hidden';
+
+        // Hitung ruang yang tersedia
         var wrapperRect = wrapper.getBoundingClientRect();
         var headerH  = header ? header.offsetHeight + 8 : 0; // +mb-2
         var theadH   = thead ? thead.offsetHeight : 0;
@@ -285,23 +311,21 @@ document.addEventListener('DOMContentLoaded', function () {
             if (idx >= maxVisible) {
                 row.style.display = 'none';
                 hidden++;
-            } else {
-                row.style.display = '';
             }
         });
 
-        // Update counter & footer
-        var counter = document.getElementById('riwayat-counter');
-        var footerEl = document.getElementById('riwayat-footer');
-        var moreText = document.getElementById('riwayat-more-text');
-
         var totalRows = allRows.length;
         var showing   = Math.min(maxVisible, totalRows);
+        
         if (counter) counter.textContent = 'Menampilkan ' + showing + ' dari ' + totalRows + ' data';
 
         if (hidden > 0) {
             footerEl.style.display = '';
-            if (moreText) moreText.textContent = 'Lihat ' + hidden + ' data lainnya di Riwayat';
+            if (moreText) moreText.textContent = 'Lihat ' + hidden + ' data lainnya di bawah';
+            if (moreIcon) {
+                moreIcon.classList.remove('fa-angles-up');
+                moreIcon.classList.add('fa-angles-down');
+            }
         } else {
             footerEl.style.display = 'none';
         }
