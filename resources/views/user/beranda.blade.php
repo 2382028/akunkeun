@@ -169,10 +169,10 @@
                     </h6>
                     <span id="riwayat-counter" class="text-muted" style="font-size: 0.7rem;"></span>
                 </div>
-                <div class="table-responsive" style="flex: 1; min-height: 0; overflow: hidden;" id="riwayat-table-container">
-                    <table class="table table-hover mb-0" style="font-size: 0.72rem;" id="riwayat-table">
+                <div class="table-responsive" style="flex: 1; min-height: 0; overflow: hidden; border: 1px solid #d4d8dd; border-radius: 6px;" id="riwayat-table-container">
+                    <table class="table table-hover table-bordered mb-0" style="font-size: 0.72rem; border-color: #d4d8dd;" id="riwayat-table">
                         <thead id="riwayat-thead">
-                            <tr style="background-color: #f8f9fb;">
+                            <tr style="background-color: #f1f4f9; border-bottom: 2px solid #d4d8dd;">
                                 <th class="text-muted fw-semibold py-1 ps-2" style="width: 5%;">No</th>
                                 <th class="text-muted fw-semibold py-1" style="width: 35%;">Nama Kegiatan</th>
                                 <th class="text-muted fw-semibold py-1" style="width: 20%;">Kategori</th>
