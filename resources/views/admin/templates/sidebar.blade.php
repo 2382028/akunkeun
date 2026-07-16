@@ -415,6 +415,56 @@
                 </div>
                 @if ((auth('administrator')->user()->role == 'Master') || (auth('administrator')->user()->role == 'BMN'))
                 <div class="accordion-item">
+                  <h2 class="accordion-header " id="flush-headingBmn">
+                    <a href="" class="accordion-button collapsed text-decoration-none custom-button py-3" data-bs-toggle="collapse" data-bs-target="#flush-collapseBmn" aria-expanded="false" aria-controls="flush-collapseBmn">
+                      <span class="me-2"><i class="fa-solid fa-boxes-stacked"></i></span>
+                      <span>BMN & Aset</span>
+                    </a>
+                  </h2>
+                  <div id="flush-collapseBmn" class="accordion-collapse collapse" aria-labelledby="flush-headingBmn" data-bs-parent="#accordionFlushExample">
+                    <ul class="navbar-nav list-group list-group-flush ps-5">
+                      <li class=" list-group-item list-group-item-action">
+                        <a href="{{url('/bmn/data')}}" class="nav-link px-1 sidebar-link py-1 text-white" aria-current="true">
+                          <span class="me-2 "><i class="fa-solid fa-box"></i></span>
+                          <span>Data BMN</span>
+                        </a>
+                      </li>
+                      <li class=" list-group-item list-group-item-action">
+                        <a href="{{url('/ruangan/data')}}" class="nav-link px-1 sidebar-link py-1 text-white" aria-current="true">
+                          <span class="me-2 "><i class="fa-solid fa-door-open"></i></span>
+                          <span>Data Ruangan</span>
+                        </a>
+                      </li>
+                      <li class=" list-group-item list-group-item-action">
+                        <a href="{{url('/bmn/rekap')}}" class="nav-link px-1 sidebar-link py-1 text-white" aria-current="true">
+                          <span class="me-2 "><i class="fa-solid fa-clipboard-list"></i></span>
+                          <span>Rekapitulasi BMN</span>
+                        </a>
+                      </li>
+                      <li class=" list-group-item list-group-item-action">
+                        <a href="{{url('/pemeliharaan-admin')}}" class="nav-link px-1 sidebar-link py-1 text-white" aria-current="true">
+                          <span class="me-2 "><i class="fa-solid fa-toolbox"></i></span>
+                          <span>Pemeliharaan</span>
+                        </a>
+                      </li>
+                      <li class=" list-group-item list-group-item-action">
+                        <a href="{{url('/penyewaan_aset/pengajuan')}}" class="nav-link px-1 sidebar-link py-1 text-white" aria-current="true">
+                          <span class="me-2 "><i class="fa-solid fa-handshake"></i></span>
+                          <span>Penyewaan Aset</span>
+                        </a>
+                      </li>
+                      <li class=" list-group-item list-group-item-action">
+                        <a href="{{url('/penyewaan_aset/rekap-sewa')}}" class="nav-link px-1 sidebar-link py-1 text-white" aria-current="true">
+                          <span class="me-2 "><i class="fa-solid fa-file-invoice"></i></span>
+                          <span>Rekap Penyewaan</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                @endif
+                @if ((auth('administrator')->user()->role == 'Master') || (auth('administrator')->user()->role == 'BMN'))
+                <div class="accordion-item">
                   <h2 class="accordion-header " id="flush-headingSix">
                     <a href="" class="accordion-button collapsed text-decoration-none custom-button py-3" data-bs-toggle="collapse" data-bs-target="#flush-collapseSix" aria-expanded="false" aria-controls="flush-collapseSix">
                       <span class="me-2"><i class="fa-solid fa-folder-open"></i></span>
