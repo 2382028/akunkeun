@@ -1,233 +1,315 @@
-@extends('user.templates.template')
-
-@php
-    $activeVersi = \App\Models\Versi::where('status', 'aktif')->first() ?? (object) ['id' => '-1','versi' => 'Default Versi'];
-@endphp
+@extends('user.templates.sidebar')
 
 @section('content')
-    {{-- jumbotron --}}
-    <section >
-      <div class="jumbo top-nav pt-5" style="width: 100%;" >
-          {{-- content --}}
-          <div class="container center-item">
-              {{-- row --}}
-              <div class="row align-items-center text-secondary">
-                  <div class="col-12 col-md-6 col-lg-6 order-md-2 mb-3 mobile" data-aos="fade-up" data-aos-delay="100" data-aos-duration="1000">
-                      <img src="{{asset('/assets/images/jumbotron.png')}}" class="img-fluid mw-md-170 mw-lg-150 mb-6 mb-md-0" alt="" style="max-width: 400px; float: right;">
-                  </div>
-                  <div class="col-12 col-md-6 col-lg-6 order-md-1" data-aos="fade-up" data-aos-delay="100" data-aos-duration="1000">
-                      <div class="mb-3">
-                          <div class="col mb-1">
-                              <img src="{{ asset('/assets/images/icon akunkeun.png') }}" style="max-width: 150px;" alt="">
-                          </div>
-                          <br>
-                          <h1 class="text-md-start fw-bold">
-                              AKUNKEUN
-                            </h1>
-                          <p class="lead text-md-start text-muted mb-3 mb-lg-8 small">Aplikasi Kegiatan dan Urusan Keuangan</p>
-                      </div>
-                      <div class="d-flex mb-3">
-                        @if ($activeVersi && ($activeVersi->id != session('versi')))
-                            <a href="{{url('/perjadin')}}" class="btn btn-primary btn-sm small fw-bold text-white" onclick="showAlert(event)">Ajukan Perjalanan Dinas!</a>
-                            <a href="{{url('/kegiatan')}}" class="btn btn-warning btn-sm small fw-bold text-white mx-1" onclick="showAlert(event)">Buat Program Kegiatan!</a>
-                        @else
-                            <a href="{{url('/perjadin')}}" class="btn btn-primary btn-sm small fw-bold text-white">Ajukan Perjalanan Dinas!</a>
-                            <a href="{{url('/kegiatan')}}" class="btn btn-warning btn-sm small fw-bold text-white mx-1">Buat Program Kegiatan!</a>
-                        @endif
-                      </div>
-                      <div class="mb-3">
-                          <img src="{{asset('/assets/images/LLDIKTI4 final1.png')}}" width="150px" alt="">
-                          @auth
-                            <span class="badge text-bg-success">Hai {{ auth('pegawai')->user()->nama_lengkap }}</span>
-                          @endauth
-                      </div>
-                  </div>
-              </div>
-              {{-- end row --}}
-          </div>
-      </div>
-  </section>
 
-      <!-- Fitur Aplikasi Akunkeun -->
-      <section>
-        <div class="container mt-5">
-          <h3 class="fw-bold text-secondary">Fitur Aplikasi Akunkeun</h3>
-          <div class="row mt-3">
-            {{-- start --}}
-            @if ($activeVersi && ($activeVersi->id != session('versi')))
-                <div class="col-sm-4 mb-3">
-                    <a href="{{url('/perjadin')}}" class="nav-link" onclick="showAlert(event)">
-                    <div class="card" style="max-width: 21rem; height: 23rem;" data-aos="zoom-in" data-aos-delay="100" data-aos-duration="1000">
-                        <img src="{{asset('/assets/images/3 - perjadin (home).svg')}}" class="card-img-top pb-4 mt-3" alt="...">
-                        <div class="card-body">
-                        <h5 class="card-title fw-bold">Perjalanan Dinas</h5>
-                        <p class="card-text small text-justify">Pengajuan perjalanan dinas saat ini dapat dilakukan secara online dan akan diproses secara langsung sehingga keefisiensian waktu bisa dimanfaatkan secara maksimal.</p>
+    <div style="background-color: #f4f7fe; min-height: calc(100vh - 100px); padding-bottom: 1rem; display: flex; flex-direction: column;">
+    {{-- Dashboard Cards --}}
+    <section class="pt-4">
+        <div class="container-fluid px-4">
+            <div class="row g-3">
+
+                {{-- Kartu 1: Program Kegiatan --}}
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="dashboard-card" style="border-top: 4px solid #456dee; background: linear-gradient(to bottom right, #ffffff, #f5f8ff); padding: 1.2rem;">
+                        <div class="row align-items-center h-100">
+                            {{-- Kiri --}}
+                            <div class="col-6 border-end pe-3 text-center">
+                                <div class="d-flex align-items-center justify-content-center mb-2">
+                                    <div class="dashboard-card-icon" style="width: 32px; height: 32px; background: linear-gradient(135deg, #082A99, #456dee); color: #ffffff; box-shadow: 0 4px 10px rgba(69, 109, 238, 0.3);">
+                                        <i class="fa-solid fa-calendar-check" style="font-size: 0.85rem;"></i>
+                                    </div>
+                                    <h6 class="fw-bold text-secondary mb-0 ms-2" style="font-size: 0.8rem; text-align: left; line-height: 1.1;">Program Kegiatan</h6>
+                                </div>
+                                <div class="mt-3">
+                                    <a href="{{ url('/perjadin/riwayat/pengajuan') }}" class="text-decoration-none d-block">
+                                        <span class="dashboard-total text-dark" style="font-size: 2.4rem; line-height: 1; cursor: pointer;">{{ $kegiatanTotal ?? 0 }}</span>
+                                        <div class="text-muted" style="font-size: 0.7rem; margin-top: 2px;">Total Kegiatan</div>
+                                    </a>
+                                </div>
+                                <div class="mt-2 text-success fw-bold" style="font-size: 0.75rem;">
+                                    <a href="{{ url('/perjadin/riwayat/selesai') }}" class="text-success text-decoration-none">
+                                        <i class="fa-solid fa-check-circle me-1"></i>{{ $kegiatanSelesai ?? 0 }} Selesai
+                                    </a>
+                                </div>
+                            </div>
+                            {{-- Kanan --}}
+                            <div class="col-6 ps-3">
+                                <div class="d-flex flex-column gap-2" style="font-size: 0.75rem;">
+                                    <a href="{{ url('/perjadin/riwayat/revisi') }}" class="text-decoration-none d-flex justify-content-between align-items-center bg-white border rounded p-1 px-2 shadow-sm">
+                                        <span class="text-muted"><i class="fa-solid fa-file-pen me-1" style="color: #b8860b;"></i> Draf/Revisi:</span>
+                                        <span class="fw-bold text-dark">{{ ($kegiatanDraf ?? 0) + ($kegiatanRevisi ?? 0) }}</span>
+                                    </a>
+                                    <a href="{{ url('/perjadin/riwayat/proses') }}" class="text-decoration-none d-flex justify-content-between align-items-center bg-white border rounded p-1 px-2 shadow-sm">
+                                        <span class="text-muted"><i class="fa-solid fa-spinner me-1" style="color: #0275d8;"></i> Proses:</span>
+                                        <span class="fw-bold text-dark">{{ $kegiatanProses ?? 0 }}</span>
+                                    </a>
+                                    <a href="{{ url('/perjadin/riwayat/pelaporan') }}" class="text-decoration-none d-flex justify-content-between align-items-center bg-white border rounded p-1 px-2 shadow-sm">
+                                        <span class="text-muted"><i class="fa-solid fa-file-invoice me-1" style="color: #0dcaf0;"></i> Pelaporan:</span>
+                                        <span class="fw-bold text-dark">{{ $kegiatanPelaporan ?? 0 }}</span>
+                                    </a>
+                                    <a href="{{ url('/perjadin/riwayat/ditolak') }}" class="text-decoration-none d-flex justify-content-between align-items-center bg-white border rounded p-1 px-2 shadow-sm" style="background-color: #fcf6f6 !important; border-color: #f5c2c7 !important;">
+                                        <span class="text-danger"><i class="fa-solid fa-ban me-1"></i> Ditolak:</span>
+                                        <span class="fw-bold text-danger">{{ $kegiatanDitolak ?? 0 }}</span>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    </a>
                 </div>
-                <div class="col-sm-4 mb-3">
-                    <a href="{{url('/kegiatan')}}" class="nav-link" onclick="showAlert(event)">
-                    <div class="card" style="max-width: 21rem; height: 23rem;" data-aos="zoom-in" data-aos-delay="100" data-aos-duration="1000">
-                    <img src="{{asset('/assets/images/4 - informasi kegiatan.png')}}" class="card-img-top mt-3" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold">Program Kegiatan</h5>
-                            <p class="card-text small text-justify">Pengajuan Program Kegiatan saat ini dapat dilakukan secara online hanya dengan melengkapi formulir program yang diajukan akan segera diproses oleh pihak keuangan.</p>
-                    </div>
-                    </div>
-                </a>
-                </div>
-            @else
-                <div class="col-sm-4 mb-3">
-                    <a href="{{url('/perjadin')}}" class="nav-link">
-                    <div class="card" style="max-width: 21rem; height: 23rem;" data-aos="zoom-in" data-aos-delay="100" data-aos-duration="1000">
-                        <img src="{{asset('/assets/images/3 - perjadin (home).svg')}}" class="card-img-top pb-4 mt-3" alt="...">
-                        <div class="card-body">
-                        <h5 class="card-title fw-bold">Perjalanan Dinas</h5>
-                        <p class="card-text small text-justify">Pengajuan perjalanan dinas saat ini dapat dilakukan secara online dan akan diproses secara langsung sehingga keefisiensian waktu bisa dimanfaatkan secara maksimal.</p>
+
+                {{-- Kartu 2: Perjalanan Dinas --}}
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="dashboard-card" style="border-top: 4px solid #fda10d; background: linear-gradient(to bottom right, #ffffff, #fffaf0); padding: 1.2rem;">
+                        <div class="row align-items-center h-100">
+                            {{-- Kiri --}}
+                            <div class="col-6 border-end pe-3 text-center">
+                                <div class="d-flex align-items-center justify-content-center mb-2">
+                                    <div class="dashboard-card-icon" style="width: 32px; height: 32px; background: linear-gradient(135deg, #f35515, #fda10d); color: #ffffff; box-shadow: 0 4px 10px rgba(253, 161, 13, 0.3);">
+                                        <i class="fa-solid fa-plane-departure" style="font-size: 0.85rem;"></i>
+                                    </div>
+                                    <h6 class="fw-bold text-secondary mb-0 ms-2" style="font-size: 0.8rem; text-align: left; line-height: 1.1;">Perjalanan Dinas</h6>
+                                </div>
+                                <div class="mt-3">
+                                    <a href="{{ url('/perjadin/riwayat/pengajuan') }}" class="text-decoration-none d-block">
+                                        <span class="dashboard-total text-dark" style="font-size: 2.4rem; line-height: 1; cursor: pointer;">{{ $perjadinTotal ?? 0 }}</span>
+                                        <div class="text-muted" style="font-size: 0.7rem; margin-top: 2px;">Total Perjalanan</div>
+                                    </a>
+                                </div>
+                                <div class="mt-2 text-success fw-bold" style="font-size: 0.75rem;">
+                                    <a href="{{ url('/perjadin/riwayat/selesai') }}" class="text-success text-decoration-none">
+                                        <i class="fa-solid fa-check-circle me-1"></i>{{ $perjadinSelesai ?? 0 }} Selesai
+                                    </a>
+                                </div>
+                            </div>
+                            {{-- Kanan --}}
+                            <div class="col-6 ps-3">
+                                <div class="d-flex flex-column gap-2" style="font-size: 0.75rem;">
+                                    <a href="{{ url('/perjadin/riwayat/revisi') }}" class="text-decoration-none d-flex justify-content-between align-items-center bg-white border rounded p-1 px-2 shadow-sm">
+                                        <span class="text-muted"><i class="fa-solid fa-file-pen me-1" style="color: #b8860b;"></i> Draf/Revisi:</span>
+                                        <span class="fw-bold text-dark">{{ ($perjadinDraf ?? 0) + ($perjadinRevisi ?? 0) }}</span>
+                                    </a>
+                                    <a href="{{ url('/perjadin/riwayat/proses') }}" class="text-decoration-none d-flex justify-content-between align-items-center bg-white border rounded p-1 px-2 shadow-sm">
+                                        <span class="text-muted"><i class="fa-solid fa-spinner me-1" style="color: #0275d8;"></i> Proses:</span>
+                                        <span class="fw-bold text-dark">{{ $perjadinProses ?? 0 }}</span>
+                                    </a>
+                                    <a href="{{ url('/perjadin/riwayat/pelaporan') }}" class="text-decoration-none d-flex justify-content-between align-items-center bg-white border rounded p-1 px-2 shadow-sm">
+                                        <span class="text-muted"><i class="fa-solid fa-file-invoice me-1" style="color: #0dcaf0;"></i> Pelaporan:</span>
+                                        <span class="fw-bold text-dark">{{ $perjadinPelaporan ?? 0 }}</span>
+                                    </a>
+                                    <a href="{{ url('/perjadin/riwayat/ditolak') }}" class="text-decoration-none d-flex justify-content-between align-items-center bg-white border rounded p-1 px-2 shadow-sm" style="background-color: #fcf6f6 !important; border-color: #f5c2c7 !important;">
+                                        <span class="text-danger"><i class="fa-solid fa-ban me-1"></i> Ditolak:</span>
+                                        <span class="fw-bold text-danger">{{ $perjadinDitolak ?? 0 }}</span>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    </a>
                 </div>
-                <div class="col-sm-4 mb-3">
-                    <a href="{{url('/kegiatan')}}" class="nav-link">
-                    <div class="card" style="max-width: 21rem; height: 23rem;" data-aos="zoom-in" data-aos-delay="100" data-aos-duration="1000">
-                    <img src="{{asset('/assets/images/4 - informasi kegiatan.png')}}" class="card-img-top mt-3" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold">Program Kegiatan</h5>
-                            <p class="card-text small text-justify">Pengajuan Program Kegiatan saat ini dapat dilakukan secara online hanya dengan melengkapi formulir program yang diajukan akan segera diproses oleh pihak keuangan.</p>
-                    </div>
-                    </div>
-                </a>
-                </div>
-            @endif
 
-            <div class="col-sm-4 mb-3">
-              <a href="{{url('/fasilitas')}}" class="nav-link">
-              <div class="card" style="max-width: 21rem; height: 23rem;" data-aos="zoom-in" data-aos-delay="100" data-aos-duration="1000">
-                <img src="{{asset('/assets/images/5 - peminjaman asset.png')}}" class="card-img-top mt-3" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title fw-bold">Peminjaman Aset BMN</h5>
-                  <p class="card-text small text-justify">Peminjaman aset BMN saat ini dapat dilakukan secara online, pengaju hanya perlu memilih assets yang akan dipinjam lalu pihak BMN akan segera memprosesnya.</p>
+                {{-- Kartu 3: Pengajuan Pemeliharaan --}}
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="dashboard-card" style="border-top: 4px solid #2CCE82; background: linear-gradient(to bottom right, #ffffff, #f2fcf7); padding: 1.2rem;">
+                        <div class="row align-items-center h-100">
+                            {{-- Kiri --}}
+                            <div class="col-6 border-end pe-3 text-center">
+                                <div class="d-flex align-items-center justify-content-center mb-2">
+                                    <div class="dashboard-card-icon" style="width: 32px; height: 32px; background: linear-gradient(135deg, #1fa867, #2CCE82); color: #ffffff; box-shadow: 0 4px 10px rgba(44, 206, 130, 0.3);">
+                                        <i class="fa-solid fa-screwdriver-wrench" style="font-size: 0.85rem;"></i>
+                                    </div>
+                                    <h6 class="fw-bold text-secondary mb-0 ms-2" style="font-size: 0.8rem; text-align: left; line-height: 1.1;">Pengajuan Pemeliharaan</h6>
+                                </div>
+                                <div class="mt-3">
+                                    <a href="{{ url('/pemeliharaan-pegawai') }}" class="text-decoration-none d-block">
+                                        <span class="dashboard-total text-dark" style="font-size: 2.4rem; line-height: 1; cursor: pointer;">{{ $pemeliharaanTotal ?? 0 }}</span>
+                                        <div class="text-muted" style="font-size: 0.7rem; margin-top: 2px;">Total Pengajuan</div>
+                                    </a>
+                                </div>
+                                <div class="mt-2 text-success fw-bold" style="font-size: 0.75rem;">
+                                    <a href="{{ url('/pemeliharaan-pegawai') }}" class="text-success text-decoration-none">
+                                        <i class="fa-solid fa-check-circle me-1"></i>{{ $pemeliharaanSelesai ?? 0 }} Selesai
+                                    </a>
+                                </div>
+                            </div>
+                            {{-- Kanan --}}
+                            <div class="col-6 ps-3 d-flex flex-column justify-content-center h-100">
+                                <div class="d-flex flex-column gap-2" style="font-size: 0.75rem;">
+                                    <a href="{{ url('/pemeliharaan-pegawai') }}" class="text-decoration-none d-flex justify-content-between align-items-center bg-white border rounded p-1 px-2 shadow-sm">
+                                        <span class="text-muted"><i class="fa-solid fa-spinner me-1" style="color: #0275d8;"></i> Proses:</span>
+                                        <span class="fw-bold text-dark">{{ $pemeliharaanProses ?? 0 }}</span>
+                                    </a>
+                                    <a href="{{ url('/pemeliharaan-pegawai') }}" class="text-decoration-none d-flex justify-content-between align-items-center bg-white border rounded p-1 px-2 shadow-sm opacity-0">
+                                        <span class="text-muted">-</span>
+                                        <span class="fw-bold">-</span>
+                                    </a>
+                                    <a href="{{ url('/pemeliharaan-pegawai') }}" class="text-decoration-none d-flex justify-content-between align-items-center bg-white border rounded p-1 px-2 shadow-sm opacity-0">
+                                        <span class="text-muted">-</span>
+                                        <span class="fw-bold">-</span>
+                                    </a>
+                                    <a href="{{ url('/pemeliharaan-pegawai') }}" class="text-decoration-none d-flex justify-content-between align-items-center bg-white border rounded p-1 px-2 shadow-sm opacity-0">
+                                        <span class="text-muted">-</span>
+                                        <span class="fw-bold">-</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </a>
+
             </div>
-
-            {{-- end --}}
-          </div>
         </div>
-      </section>
+    </section>
 
-      <!-- Menu Lain-->
-      <section id="menu" class="mt-5">
-          <div class="container mt-5">
-              <div class="row">
-                  <div class="col-md-12">
-                    <div class="card mb-3 p-3 border-0 text-secondary" >
-                      <div class="row d-flex align-items-center" data-aos="fade-up" data-aos-delay="100" data-aos-duration="1000">
-                        <div class="col-12 col-md-5 col-lg-5 mb-3">
-                          <img src="{{asset('/assets/images/beranda-perjadin.png')}}" class="img-fluid rounded-start" alt="">
-                        </div>
-                        <div class="col-12 col-md-2 col-lg-2 mb-3 align-self-center ">
-                          <div class="circle-with-text bg-light fw-bold h3">
-                            01
-                          </div>
-                        </div>
-                        <div class="col-12 col-md-5 col-lg-5 mb-3">
-                          <h3 class="card-title fw-bold">Perjalanan Dinas</h3>
-                          <p class="card-text small">Pengajuan perjalanan dinas sekarang bisa dilakukan secara online dan akan diproses secara langsung sehingga keefisiensian waktu bisa dimanfaatkan secara maksimal, proses pengajuan ada 2 tahap yaitu mengisi surat undangan dan surat tugas lalu mengisi data orang yang akan diajukan melakukan perjalan dinas.</p>
-                          <div class="text-center mb-3 small">
-                            <figure class="figure text-center">
-                              <img src="{{asset('/assets/images/1 - perjadin.png')}}" class="figure-img img-fluid rounded" width="100" alt="...">
-                              <figcaption class="figure-caption">1. Informasi Perjadin</figcaption>
-                            </figure>
-                            <figure class="figure text-center mx-2">
-                                <img src="{{asset('/assets/images/4 - informasi kegiatan.png')}}" class="figure-img img-fluid rounded" width="100" alt="...">
-                                <figcaption class="figure-caption">2. Informasi Peserta</figcaption>
-                            </figure>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="card mb-3 p-3 border-0 text-secondary" data-aos="fade-up" >
-                    <div class="row d-flex align-items-center" data-aos-delay="100" data-aos-duration="1000">
-                      <div class="col-12 col-md-5 col-lg-5 order-md-3 mb-3">
-                        <img src="{{asset('/assets/images/beranda-kegiatan.png')}}" class="img-fluid rounded-start" alt="">
-                      </div>
-                      <div class="col-12 col-md-2 col-lg-2 order-md-2 mb-3 align-self-center ">
-                        <div class="circle-with-text bg-light fw-bold h3">
-                          02
-                        </div>
-                      </div>
-                      <div class="col-12 col-md-5 col-lg-5 order-md-1 mb-3">
-                        <h3 class="card-title fw-bold ">Program Kegiatan</h3>
-                        <p class="card-text small">Pengajuan Program Kegiatan sekarang bisa dilakukan secara online pengaju hanya tinggal melengkapi formulirnya maka program yang diajukan akan diproses oleh pihak keuangan. ada 6 tahap proses pengajuan program seperti ilustrasi dibawah.</p>
-                        <div class="text-center mb-3 small">
-                          <figure class="figure text-center">
-                            <img src="{{asset('/assets/images/1 - perjadin.png')}}" class="figure-img img-fluid rounded" width="100" alt="...">
-                            <figcaption class="figure-caption">1. Judul Program</figcaption>
-                          </figure>
-                          <figure class="figure text-center mx-2">
-                              <img src="{{asset('/assets/images/4 - informasi kegiatan.png')}}" class="figure-img img-fluid rounded" width="100" alt="...">
-                              <figcaption class="figure-caption">2. Informasi Kegiatan</figcaption>
-                          </figure>
-                          <figure class="figure text-center mx-2">
-                              <img src="{{asset('/assets/images/2 - peserta.png')}}" class="figure-img img-fluid rounded" width="100" alt="...">
-                              <figcaption class="figure-caption">3. Informasi Orang</figcaption>
-                          </figure>
-                          <figure class="figure text-center mx-2">
-                              <img src="{{asset('/assets/images/6 - fasilitas.png')}}" class="figure-img img-fluid rounded" width="100" alt="...">
-                              <figcaption class="figure-caption">4. Fasilitas</figcaption>
-                          </figure>
-                          <figure class="figure text-center mx-2">
-                              <img src="{{asset('/assets/images/6 - fasilitas.png')}}" class="figure-img img-fluid rounded" width="100" alt="...">
-                              <figcaption class="figure-caption">5. Mobilisasi</figcaption>
-                          </figure>
-                          <figure class="figure text-center mx-2">
-                              <img src="{{asset('/assets/images/5 - peminjaman asset.png')}}" class="figure-img img-fluid rounded" width="100" alt="...">
-                              <figcaption class="figure-caption">6. Sarana dan Prasarana</figcaption>
-                          </figure>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+    {{-- Riwayat Pengajuan Terbaru --}}
+    <section class="mt-3" style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
+        <div class="container-fluid px-4" style="display: flex; flex-direction: column; height: 100%;">
+            <div class="dashboard-table-wrapper p-3" style="display: flex; flex-direction: column; flex: 1; min-height: 0;">
+                <div class="d-flex align-items-center justify-content-between mb-2" style="flex-shrink: 0;">
+                    <h6 class="fw-bold text-secondary mb-0" style="font-size: 0.85rem;">
+                        <i class="fa-solid fa-clock-rotate-left me-2" style="color: #082A99;"></i>Riwayat Pengajuan Terbaru
+                    </h6>
+                    <span id="riwayat-counter" class="text-muted" style="font-size: 0.7rem;"></span>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="card mb-3 p-3 border-0 text-secondary" >
-                    <div class="row d-flex align-items-center" data-aos="fade-up" data-aos-delay="100" data-aos-duration="1000">
-                      <div class="col-12 col-md-5 col-lg-5 mb-3" >
-                        <img src="{{asset('/assets/images/beranda-bmn.png')}}" class="img-fluid rounded-start" alt="">
-                      </div>
-                      <div class="col-12 col-md-2 col-lg-2 mb-3 align-self-center ">
-                        <div class="circle-with-text bg-light fw-bold h3">
-                          03
-                        </div>
-                      </div>
-                      <div class="col-12 col-md-5 col-lg-5 mb-3">
-                        <h3 class="card-title fw-bold">Peminjaman Aset BMN</h3>
-                        <p class="card-text small">Peminjaman assets BMN sekarang bisa dilakukan secara online, pengaju hanya tinggal memilih assets yang akan dipinjamkan lalu pihak BMN akan memprosesnya. adapun fiktur untuk permohonan perbaikan assets yang sedang dipinjam jika ada masalah yang terdapat pada barang yang dipinjam.</p>
-                        <div class="text-center mb-3 small">
-                          <figure class="figure text-center">
-                            <img src="{{asset('/assets/images/1 - perjadin.png')}}" class="figure-img img-fluid rounded" width="100" alt="...">
-                            <figcaption class="figure-caption">1. Formulir Peminjaman</figcaption>
-                          </figure>
-                          <figure class="figure text-center mx-2">
-                              <img src="{{asset('/assets/images/4 - informasi kegiatan.png')}}" class="figure-img img-fluid rounded" width="100" alt="...">
-                              <figcaption class="figure-caption">2. Pemilihan Aset</figcaption>
-                          </figure>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                <div class="table-responsive" style="flex: 1; min-height: 0; overflow: hidden;" id="riwayat-table-container">
+                    <table class="table table-hover mb-0" style="font-size: 0.72rem;" id="riwayat-table">
+                        <thead id="riwayat-thead">
+                            <tr style="background-color: #f8f9fb;">
+                                <th class="text-muted fw-semibold py-1 ps-2" style="width: 5%;">No</th>
+                                <th class="text-muted fw-semibold py-1" style="width: 35%;">Nama Kegiatan</th>
+                                <th class="text-muted fw-semibold py-1" style="width: 20%;">Kategori</th>
+                                <th class="text-muted fw-semibold py-1" style="width: 20%;">Status</th>
+                                <th class="text-muted fw-semibold py-1" style="width: 20%;">Terakhir Diperbarui</th>
+                            </tr>
+                        </thead>
+                        <tbody id="riwayat-tbody">
+                            @if(isset($recentActivity) && count($recentActivity) > 0)
+                                @foreach($recentActivity as $index => $item)
+                                    @php
+                                        $kategoriColor = match($item->kategori ?? '') {
+                                            'Perjalanan Dinas' => '#fda10d',
+                                            'Perjadin Kegiatan' => '#456dee',
+                                            'Pemeliharaan' => '#2CCE82',
+                                            default => '#6c757d',
+                                        };
+                                        $statusRaw = strtolower($item->status ?? '');
+                                        $statusLabel = ucfirst($item->status ?? '-');
+                                        $statusStyle = match(true) {
+                                            str_contains($statusRaw, 'draf') => 'background: #fff3cd; color: #856404;',
+                                            str_contains($statusRaw, 'pengajuan') || str_contains($statusRaw, 'usulan') || str_contains($statusRaw, 'menunggu') => 'background: #cfe2ff; color: #084298;',
+                                            str_contains($statusRaw, 'proses') || str_contains($statusRaw, 'disetujui') || str_contains($statusRaw, 'pengecekan') || str_contains($statusRaw, 'diterima') => 'background: #d1e7dd; color: #0f5132;',
+                                            str_contains($statusRaw, 'revisi') => 'background: #fff3cd; color: #856404;',
+                                            str_contains($statusRaw, 'tolak') || str_contains($statusRaw, 'batal') => 'background: #f8d7da; color: #842029;',
+                                            str_contains($statusRaw, 'selesai') => 'background: #d1e7dd; color: #0f5132;',
+                                            str_contains($statusRaw, 'pelaporan') || str_contains($statusRaw, 'pemeriksaan') => 'background: #e2e3f1; color: #3d3d6b;',
+                                            default => 'background: #e9ecef; color: #495057;',
+                                        };
+                                    @endphp
+                                    <tr class="riwayat-row" data-index="{{ $index }}">
+                                        <td class="ps-2 py-2">{{ $index + 1 }}</td>
+                                        <td class="py-2 fw-semibold text-dark">{{ Str::limit($item->nama ?? '-', 55) }}</td>
+                                        <td class="py-2">
+                                            <span class="badge rounded-pill" style="background-color: {{ $kategoriColor }}15; color: {{ $kategoriColor }}; font-weight: 600; padding: 3px 8px; font-size: 0.65rem;">
+                                                {{ $item->kategori ?? '-' }}
+                                            </span>
+                                        </td>
+                                        <td class="py-2">
+                                            <span class="badge rounded-pill" style="{{ $statusStyle }} font-weight: 600; padding: 3px 8px; font-size: 0.65rem;">
+                                                {{ $statusLabel }}
+                                            </span>
+                                        </td>
+                                        <td class="py-2 text-muted">
+                                            {{ \Carbon\Carbon::parse($item->updated_at)->translatedFormat('d M Y, H:i') }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="5" class="text-center py-4 text-muted">
+                                        <i class="fa-solid fa-inbox mb-1" style="font-size: 1.5rem; color: #c5c9d3;"></i>
+                                        <p class="mb-0 mt-1" style="font-size: 0.75rem;">Belum ada riwayat pengajuan.</p>
+                                    </td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
                 </div>
-              </div>
-          </div>
-        </section>
+                {{-- Tombol lihat semua --}}
+                <div id="riwayat-footer" class="text-center mt-2" style="flex-shrink: 0; display: none;">
+                    <a href="{{ url('/perjadin/riwayat/pengajuan') }}" class="text-decoration-none" style="font-size: 0.72rem; color: #082A99;">
+                        <i class="fa-solid fa-angles-down me-1"></i>
+                        <span id="riwayat-more-text"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    function adjustRiwayatRows() {
+        var allRows = document.querySelectorAll('#riwayat-tbody .riwayat-row');
+        if (allRows.length === 0) return;
+
+        // Tampilkan semua dulu untuk bisa ukur
+        allRows.forEach(function(r) { r.style.display = ''; });
+
+        // Hitung ruang yang tersedia
+        var container = document.getElementById('riwayat-table-container');
+        var wrapper   = container.closest('.dashboard-table-wrapper');
+        var header    = wrapper.querySelector('.d-flex.align-items-center');
+        var footer    = document.getElementById('riwayat-footer');
+        var thead     = document.getElementById('riwayat-thead');
+
+        // Dapatkan total tinggi section dari atas tabel sampai bawah viewport
+        var wrapperRect = wrapper.getBoundingClientRect();
+        var headerH  = header ? header.offsetHeight + 8 : 0; // +mb-2
+        var theadH   = thead ? thead.offsetHeight : 0;
+        var footerH  = 28; // perkiraan tinggi footer link
+        var paddingV = 24; // padding wrapper (p-3 = 16px top + 16px bottom)
+        var marginBot = 16; // margin section bawah
+
+        // Ruang vertikal yang tersedia untuk baris tbody
+        var availH = window.innerHeight - wrapperRect.top - headerH - theadH - footerH - paddingV - marginBot;
+        availH = Math.max(availH, 60); // minimal tampil 1 baris
+
+        // Ukur tinggi 1 baris (pakai baris pertama)
+        var firstRow = allRows[0];
+        var rowH = firstRow.offsetHeight || 34; // fallback 34px
+
+        var maxVisible = Math.floor(availH / rowH);
+        maxVisible = Math.max(maxVisible, 1); // minimal 1
+
+        // Terapkan: sembunyikan row di luar batas
+        var hidden = 0;
+        allRows.forEach(function(row, idx) {
+            if (idx >= maxVisible) {
+                row.style.display = 'none';
+                hidden++;
+            } else {
+                row.style.display = '';
+            }
+        });
+
+        // Update counter & footer
+        var counter = document.getElementById('riwayat-counter');
+        var footerEl = document.getElementById('riwayat-footer');
+        var moreText = document.getElementById('riwayat-more-text');
+
+        var totalRows = allRows.length;
+        var showing   = Math.min(maxVisible, totalRows);
+        if (counter) counter.textContent = 'Menampilkan ' + showing + ' dari ' + totalRows + ' data';
+
+        if (hidden > 0) {
+            footerEl.style.display = '';
+            if (moreText) moreText.textContent = 'Lihat ' + hidden + ' data lainnya di Riwayat';
+        } else {
+            footerEl.style.display = 'none';
+        }
+    }
+
+    // Jalankan saat load & saat resize
+    adjustRiwayatRows();
+    window.addEventListener('resize', adjustRiwayatRows);
+});
+</script>
 @endsection

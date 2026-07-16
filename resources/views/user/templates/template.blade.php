@@ -61,7 +61,7 @@
 
     <title>{{ $title }} | Aplikasi Keuangan dan Urusan Kegiatan</title>
 </head>
-<body id="{{ $active }}" class="bg-white">
+<body id="{{ $active }}" class="bg-white d-flex flex-column min-vh-100">
 
 
 <!-- Awal Navbar -->
@@ -70,16 +70,13 @@
     @endphp
 
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fw-bold small text-secondary fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="{{ url('/') }}">
-                <img src="{{ asset('/assets/images/brand-logo.png') }}" alt="" width="150">
+        <div class="container-fluid px-md-5">
+            <a class="navbar-brand d-flex align-items-center" href="{{ url('/') }}">
+                <img src="{{ asset('/assets/images/brand-logo.png') }}" alt="" width="130">
+                @if (session('versi') != null)
+                    <span class="ms-2 badge rounded-pill" style="background-color: #e9ecef; color: #495057; font-size: 0.7rem; font-weight: 600; padding: 5px 12px; letter-spacing: 0.5px;">TA {{ \App\Models\Versi::find(session('versi'))->versi ?? '-' }}</span>
+                @endif
             </a>
-            @if (session('versi') != null)
-                <div class="font-bold"
-                    style="background-color: #f8f9fa; padding: 10px; border: 1px solid #ddd; border-radius: 5px; display: inline-block;">
-                    TA-{{ \App\Models\Versi::find(session('versi'))->versi ?? 'Tidak Ada Tahun' }}
-                </div>
-            @endif
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -91,10 +88,25 @@
                 {{-- Sembunyikan menu jika sedang di page login pegawai --}}
                 @unless ($isLoginPegawai)
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0 links">
-                        <li class="nav-item">
-                            <a data-active="index" class="nav-link" aria-current="page"
-                                href="{{ url('/') }}">Beranda</a>
-                        </li>
+                        @if(isset($active) && $active == 'index')
+                            <li class="nav-item">
+                                <a data-active="index" class="nav-link active" aria-current="page"
+                                    href="{{ url('/') }}">Dashboard</a>
+                            </li>
+                        @else
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Dashboard
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{{ url('/') }}"><i class="fa-solid fa-home me-2"></i>Kembali ke Dashboard</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{{ url('/kegiatan/riwayat/pengajuan') }}">Kegiatanku Perjadin Kegiatan</a></li>
+                                    <li><a class="dropdown-item" href="{{ url('/perjadin/riwayat/pengajuan') }}">Kegiatanku Perjalanan Dinas</a></li>
+                                    <li><a class="dropdown-item" href="{{ url('/pemeliharaan-pegawai') }}">Kegiatanku Pemeliharaan</a></li>
+                                </ul>
+                            </li>
+                        @endif
                         @php
                             $activeVersi =
                                 \App\Models\Versi::where('status', 'aktif')->first() ??
@@ -127,26 +139,6 @@
                         <li class="nav-item">
                             <a data-active="pemeliharaan" class="nav-link"
                                 href="{{ url('/pemeliharaan-pegawai/pengajuan') }}">Pengajuan Pemeliharaan</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-active="kegiatanku_perjadin" href="#"
-                                id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Kegiatanku
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li class="nav-item">
-                                    <a class="nav-link dropdown-item"
-                                        href="{{ url('/perjadin/riwayat/' . 'pengajuan') }}">Perjalanan Dinas</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link dropdown-item"
-                                        href="{{ url('/kegiatan/riwayat/' . 'pengajuan') }}">Program Kegiatan</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link dropdown-item"
-                                        href="{{ url('/pemeliharaan-pegawai') }}">Pemeliharaan</a>
-                                </li>
-                            </ul>
                         </li>
                     </ul>
                 @endunless
@@ -185,14 +177,21 @@
                             </ul>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-active="profile" href="#" role="button"
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" data-active="profile" href="#" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fa-solid fa-user"></i> <span
-                                    class="">{{ auth('pegawai')->user()->nama_lengkap }}</span>
+                                @php
+                                    $namaLengkap = auth('pegawai')->user()->nama_lengkap;
+                                    $namaParts = explode(',', $namaLengkap);
+                                    $namaDepan = $namaParts[0];
+                                    $namaBersih = preg_replace('/\b(Dr\.|Drs\.|Ir\.|Prof\.|H\.|Hj\.|Dr|Drs|Ir|Prof|H|Hj)\b/i', '', $namaDepan);
+                                    $namaBersih = trim(preg_replace('/\s+/', ' ', $namaBersih));
+                                @endphp
+                                <i class="fa-solid fa-circle-user fs-4 me-2" style="color: #082A99;"></i>
+                                <span class="">{{ $namaBersih }}</span>
                             </a>
-                            <ul class="dropdown-menu">
+                            <ul class="dropdown-menu dropdown-menu-end">
 
-                                <li><a class="dropdown-item" href="{{ url('/profile') }}">Profile</a></li>
+                                <li><a class="dropdown-item" href="{{ url('/profile') }}"><i class="fa-solid fa-user me-2"></i>Profile</a></li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
@@ -319,102 +318,14 @@
 
 
     {{-- Footer --}}
-    <section class="footer mt-auto">
-      <div class="container text-secondary">
-        <div class="row">
-          {{-- state1 --}}
-          <div class="col-lg-6">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="d-flex align-items-center justify-content-between footer-img">
-                                <img src="{{ asset('/assets/images/brand-logo.png') }}" alt="AKUNKEUN"
-                                    width="120">
-                                <img src="{{ asset('/assets/images/LLDIKTI4 final1.png') }}" width="120"
-                                    alt="LLDIKTI4">
-                            </div>
-                            <p class="small mt-3">Akunkeun atau Aplikasi Kegiatan dan Urusan Keuangan adalah sebuah
-                                aplikasi yang dirancang untuk memudahkan proses pelaksanaan perjalanan dinas dan
-                                pemeliharaan barang milik negara di lingkungan LLDIKTI Wilayah IV.</p>
-                        </div>
-                        <div class="col-sm-6 mb-3">
-                            <h5 class="fw-bold">Layanan</h5>
-                            @php
-                                $activeVersi =
-                                    \App\Models\Versi::where('status', 'aktif')->first() ??
-                                    (object) ['id' => '-1', 'versi' => 'Default Versi'];
-                            @endphp
-
-                            @if ($activeVersi && $activeVersi->id != session('versi'))
-                                <ul class="list-group list-group-flush text-secondary mt-3">
-                                    <li class="list-group-item small small"><a href="" class="nav-link"
-                                            onclick="showAlert(event)">Perjalanan Dinas</a></li>
-                                    <li class="list-group-item small"><a href="" class="nav-link"
-                                            onclick="showAlert(event)">Program Kegiatan</a></li>
-                                    <li class="list-group-item small"><a href="{{ url('/fasilitas') }}"
-                                            class="nav-link">Peminjaman Assets BMN</a></li>
-                                    {{-- <li class="list-group-item small"><a href="{{url('/riwayat_barang/'.'digunakan')}}" class="nav-link">Permohonan Service</a></li> --}}
-                                    <li class="list-group-item small"><a href="{{ url('/pemeliharaan-pegawai') }}"
-                                            class="nav-link">Pemeliharaan BMN</a></li>
-                                </ul>
-                            @else
-                                <ul class="list-group list-group-flush text-secondary mt-3">
-                                    <li class="list-group-item small small"><a href="{{ url('/perjadin') }}"
-                                            class="nav-link">Perjalanan Dinas</a></li>
-                                    <li class="list-group-item small"><a href="{{ url('/kegiatan') }}"
-                                            class="nav-link">Program Kegiatan</a></li>
-                                    <li class="list-group-item small"><a href="{{ url('/fasilitas') }}"
-                                            class="nav-link">Peminjaman Assets BMN</a></li>
-                                    <li class="list-group-item small"><a href="{{ url('/pemeliharaan-pegawai') }}"
-                                            class="nav-link">Pemeliharaan BMN</a></li>
-                                    {{-- <li class="list-group-item small"><a href="{{url('/riwayat_barang/'.'digunakan')}}" class="nav-link">Permohonan Service</a></li> --}}
-                                </ul>
-                            @endif
-
-                        </div>
-                    </div>
-                </div>
-              {{-- state2 --}}
-              <div class="col-lg-6">
-                <div class="row">
-                  <div class="col-sm-5 mb-3">
-                      <h5 class="fw-bold">Link</h5>
-                      <ul class="list-group list-group-flush text-secondary mt-3">
-                          <li class="list-group-item small small"><a href="" class="nav-link">LLDIKTI4</a></li>
-                          <li class="list-group-item small small"><a href="" class="nav-link">Simojang</a></li>
-                          <li class="list-group-item small small"><a href="" class="nav-link">SIPPA</a></li>
-                      </ul>
-                  </div>
-
-                  <div class="col-sm-7 mb-3">
-                    <h5 class="fw-bold">Informasi Kontak</h5>
-                    <div class="row row-cols-2  small">
-                      <div class="col-2 text-end">
-                        <i class="fa-solid fa-phone"></i>
-                      </div>
-                      <div class="col-md-10 ">
-                        <p>+022 7275630, +022 7274377</p>
-                      </div>
-                      <div class="col-2 text-end">
-                        <i class="fa-solid fa-location-dot"></i>
-                      </div>
-                      <div class="col-md-10">
-                        <p>informasi@lldikti4.or.id</p>
-                      </div>
-                      <div class="col-2 text-end">
-                        <i class="fa-solid fa-envelope"></i>
-                      </div>
-                      <div class="col-md-10">
-                        <p>Jalan Penghulu H. Hasan Mustofa No. 38 Bandung 40124</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-        </div>
-        <hr class="container mt-5">
-        <div class="container mb-3 text-center">
-            <p class="small">copyright {{$activeVersi->versi}}, Akunkeun - Aplikasi Kegiatan dan Urusan Keuangan</p>
+    <section class="footer pt-4 pb-4 bg-white mt-auto border-top">
+        <div class="container text-center">
+            @php
+                $activeVersi =
+                    \App\Models\Versi::where('status', 'aktif')->first() ??
+                    (object) ['id' => '-1', 'versi' => 'Default Versi'];
+            @endphp
+            <p class="small text-muted mb-0">copyright {{$activeVersi->versi}}, Akunkeun - Aplikasi Kegiatan dan Urusan Keuangan</p>
         </div>
     </section>
 

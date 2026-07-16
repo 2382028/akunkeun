@@ -270,6 +270,137 @@ tr:nth-child(even) {
   }
 }
 
+/* ==========================================
+   Dashboard Styles
+   ========================================== */
+
+.dashboard-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  height: 100%;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+}
+
+.dashboard-card-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.dashboard-total {
+  font-family: 'Poppins', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  line-height: 1;
+  margin-right: 6px;
+}
+
+.dashboard-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge-draft {
+  background: #fff8e6;
+  color: #b8860b;
+}
+
+.badge-revisi {
+  background: #fff0f0;
+  color: #cc3333;
+}
+
+.badge-proses {
+  background: #e8f4fd;
+  color: #0275d8;
+}
+
+.badge-ok {
+  background: #eafaf1;
+  color: #27ae60;
+}
+
+.dashboard-link {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #082A99;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.dashboard-link:hover {
+  color: #456dee;
+  text-decoration: none;
+}
+
+.dashboard-link i {
+  transition: transform 0.2s ease;
+}
+
+.dashboard-link:hover i {
+  transform: translateX(3px);
+}
+
+.dashboard-table-wrapper {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+}
+
+.dashboard-table-wrapper .table {
+  margin-bottom: 0;
+}
+
+.dashboard-table-wrapper .table thead th {
+  border-bottom: 2px solid #eef0f5;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.dashboard-table-wrapper .table tbody tr {
+  background-color: transparent;
+  transition: background-color 0.15s ease;
+}
+
+.dashboard-table-wrapper .table tbody tr:hover {
+  background-color: #f8f9fb;
+}
+
+.dashboard-table-wrapper .table tbody td {
+  border-bottom: 1px solid #f0f1f5;
+  vertical-align: middle;
+}
+
+/* Override alternating row color for dashboard table */
+.dashboard-table-wrapper .table tbody tr:nth-child(even) {
+  background-color: transparent;
+}
+.dashboard-table-wrapper .table tbody tr:nth-child(even):hover {
+  background-color: #f8f9fb;
+}
+
 
 
 

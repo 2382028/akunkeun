@@ -1,4 +1,4 @@
-@extends('user.templates.template')
+@extends('user.templates.sidebar')
 
 @section('content')
 <style>
@@ -32,7 +32,7 @@
                                                 <div class="col-9">{{$kegiatan->nama_kegiatan}}</div>
                                             </div>
                                             <div class="row mb-3">
-                                                <div class="col-3">Jenis Kegiatan</div>
+                                                <div class="col-3">Metode Kegiatan</div>
                                                 <div class="col-9">{{$kegiatan->jenis_kegiatan}}</div>
                                             </div>
                                             <div class="row mb-3">

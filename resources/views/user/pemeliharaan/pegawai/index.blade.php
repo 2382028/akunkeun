@@ -1,10 +1,10 @@
-@extends('user.templates.template')
+@extends('user.templates.sidebar')
 @section('content')
-    <section id="beranda" class="pb-5 mt-5 pt-5">
+    <section id="beranda" class="pb-5 pt-4">
         <div class="container">
             <div class="row mb-3 align-items-center">
                 <div class="col-md-6">
-                    <h4 class="fw-bold text-secondary">Kegiatanku | Pemeliharaan</h4>
+                    <h4 class="fw-bold text-secondary">Riwayat Pemeliharaan</h4>
                 </div>
                 <div class="col-md-6 text-end">
                     <a href="{{ url('/pemeliharaan-pegawai/pengajuan') }}"
@@ -21,7 +21,7 @@
                     <div class="col-md-12">
                         @if ($riwayat->count() > 0)
                             <div class="table-responsive">
-                                <table id="example1" class="table table-bordered data-table" style="width: 100%">
+                                <table id="example1" class="table table-bordered data-table table-sm" style="width: 100%; font-size: 13px;">
                                     <thead>
                                         <tr class="text-center small">
                                             <th>No.</th>

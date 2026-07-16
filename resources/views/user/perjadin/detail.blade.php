@@ -1,4 +1,4 @@
-@extends('user.templates.template')
+@extends('user.templates.sidebar')
 
 <!-- Tambahkan ini di dalam <head> -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">

@@ -1,10 +1,10 @@
-@extends('user.templates.template')
+@extends('user.templates.sidebar')
 @php
     $activeVersi = \App\Models\Versi::where('status', 'aktif')->first() ?? (object) ['id' => '-1','versi' => 'Default Versi'];
 @endphp
 
 @section('content')
-    <div class="container mt-5 mb-5 pt-5">
+    <div class="container mt-4 mb-5">
         <div class="row mb-3">
             <h3 class="fw-bold text-secondary">Barang Milik Negara (BMN) | LLDIKTI 4</h3>
         </div>

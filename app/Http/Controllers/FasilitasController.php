@@ -16,7 +16,7 @@ class FasilitasController extends Controller
     {
         return view('user.fasilitas.index', [
             'title' => 'Fasilitas BMN LLDIKTI 4',
-            'active' => 'fasilitas',
+            'active' => 'peminjaman',
             'assets' => Asset::where('status_peminjaman', 'Tidak Dipakai')->get()
         ]);
     }
@@ -25,7 +25,7 @@ class FasilitasController extends Controller
     {
         return view('user.fasilitas.peminjaman', [
             'title' => 'Form Peminjaman Barang',
-            'active' => 'fasilitas',
+            'active' => 'peminjaman',
             'asset' => Asset::find($id)
         ]);
 

@@ -2,7 +2,7 @@
 use Carbon\Carbon;
 @endphp
 
-@extends('user.templates.template')
+@extends('user.templates.sidebar')
 
 @section('content')
     <div class="container my-5">

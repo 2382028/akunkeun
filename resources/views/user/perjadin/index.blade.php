@@ -1,11 +1,11 @@
-@extends('user.templates.template')
+@extends('user.templates.sidebar')
 
 @section('content')
 <section class="mb-5">
     <div class="container">
         <div class="row">
             <div class="col-lg-10 mx-auto">
-                <div style="margin-top: 100px">
+                <div class="mt-4">
                     <h3 class="fw-bold text-secondary">Pengajuan Perjalanan Dinas</h3>
                 </div>
                 {{-- card --}}
@@ -25,37 +25,36 @@
                             <div class="col-md-12">
                                 <h6 class="text-secondary fw-bold mt-3">Informasi Dasar</h6><br>
                             </div>
-                            <div class="mb-3 row">
-                                <div class="col-md-12">
-                                    <label for="floatingTextarea">Judul Kegiatan (Sesuai dengan Surat Undangan)<span class="text-danger">*</span></label>
-                                    <textarea class="form-control mt-1" id="floatingTextarea" name="nama_kegiatan" required></textarea>
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label for="floatingTextarea" class="form-label">Judul Kegiatan (Sesuai dengan Surat Undangan)<span class="text-danger">*</span></label>
+                                    <textarea class="form-control" id="floatingTextarea" name="nama_kegiatan" rows="2" required></textarea>
                                 </div>
                             </div>
-                            <div class="mb-3 row">
-                                <div class="col-md-12">
+                            
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
                                     <label for="" class="form-label">Pemberi Surat Undangan<span class="text-danger">*</span></label>
                                     <input type="text" name="pemberi_undangan" id="" class="form-control" required>
                                 </div>
-                                </div>
-                                <div class="row">
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label for="" class="form-label">Nomor Surat Undangan<span class="text-danger">*</span></label>
                                     <input type="text" name="no_undangan" id="no_undangan" class="form-control" required>
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label for="" class="form-label">Tanggal Surat Undangan<span class="text-danger">*</span></label>
                                     <input type="date" name="tanggal_surat" id="tgl_surat" class="form-control" required>
                                 </div>
                             </div>
-                            </div>
+                            
                             <div class="row">
-                                <div class="col-md-12 mb-3">
-                                    <label for="konfirmasi" class="form-label">Apakah tanggal keberangkatan sama dengan tanggal mulai acara?</label>
-                                    <div class="form-check">
+                                <div class="col-md-12 mb-2">
+                                    <label for="konfirmasi" class="form-label d-block">Apakah tanggal keberangkatan sama dengan tanggal mulai acara?</label>
+                                    <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" name="konfirmasi" id="ya" value="ya" checked>
                                         <label class="form-check-label" for="ya">Ya</label>
                                     </div>
-                                    <div class="form-check">
+                                    <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" name="konfirmasi" id="tidak" value="tidak">
                                         <label class="form-check-label" for="tidak">Tidak</label>
                                     </div>
@@ -73,6 +72,7 @@
                                     <input type="datetime-local" name="tgl_selesai" id="tgl_selesai" class="form-control" required>
                                 </div>
                             </div>
+                            
                             <div class="row">
                                 <div class="col-md-4 mb-3">
                                     <label for="provinsi" class="form-label">Provinsi<span class="text-danger">*</span></label>
@@ -87,10 +87,11 @@
                                     <input type="text" name="tempat_kegiatan" id="tempat_kegiatan" class="form-control" required>
                                 </div>
                             </div>
-                            <div class="mb-3 row">
-                                <div class="col-md-12">
-                                    <label for="floatingTextarea">Alamat<span class="text-danger">*</span></label>
-                                    <textarea class="form-control mt-1" id="floatingTextarea" name="alamat" required></textarea>
+                            
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label for="floatingTextarea" class="form-label">Alamat<span class="text-danger">*</span></label>
+                                    <textarea class="form-control" id="floatingTextarea" name="alamat" rows="2" required></textarea>
                                 </div>
                             </div>
                             <div class="row">

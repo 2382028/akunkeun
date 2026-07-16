@@ -292,7 +292,7 @@ public function destroySuratPemeliharaan($nomor_surat)
         return view('user.pemeliharaan.pegawai.index', [
             'riwayat' => $riwayat,
             'title' => 'Riwayat Pemeliharaan',
-            'active' => 'kegiatanku_perjadin'
+            'active' => 'riwayat_pemeliharaan'
         ]);
     }
     public function pengajuan_pegawai()

@@ -197,106 +197,241 @@ class PerjadinController extends Controller
         );
     }
 
-    public function riwayat($status = 'pengajuan')
+    public function riwayat($status = 'semua')
     {
         $userId = auth('pegawai')->user()->id;
+        $versiId = session('versi');
 
-    // Hitung jumlah usulan untuk masing-masing status berdasarkan ID user yang login
-    $countDraf = DB::table('info_perjadinlangsungs')
-        ->join('pegawais', 'info_perjadinlangsungs.id_pengaju', '=', 'pegawais.id')
-        ->where(function($query) use ($userId) {
-            $query->where('pegawais.id', $userId)
-                  ->orWhere('info_perjadinlangsungs.id_pengaju', $userId);
-        })
-        ->where('info_perjadinlangsungs.status_pengajuan', 'Draf-pengajuan')
-        ->where('versi_id', session('versi'))
-        ->count();
+        // ==== COUNTS PERJALANAN DINAS ====
+        $countDrafPerjadin = DB::table('info_perjadinlangsungs')
+            ->where('id_pengaju', $userId)
+            ->where('status_pengajuan', 'Draf-pengajuan')
+            ->where('versi_id', $versiId)->count();
 
-    $countPengajuan = DB::table('info_perjadinlangsungs')
-        ->join('data_perjadinlangsungs', 'info_perjadinlangsungs.id', '=', 'data_perjadinlangsungs.info_perjadinlangsung')
-        ->where('data_perjadinlangsungs.pegawai_id', $userId)
-        ->where('info_perjadinlangsungs.status_pengajuan', 'pengajuan')
-        ->where('versi_id', session('versi'))
-        ->count();
+        $countPengajuanPerjadin = DB::table('info_perjadinlangsungs')
+            ->join('data_perjadinlangsungs', 'info_perjadinlangsungs.id', '=', 'data_perjadinlangsungs.info_perjadinlangsung')
+            ->where('data_perjadinlangsungs.pegawai_id', $userId)
+            ->where('info_perjadinlangsungs.status_pengajuan', 'pengajuan')
+            ->where('versi_id', $versiId)->count();
 
-    $countProses = DB::table('info_perjadinlangsungs')
-        ->join('data_perjadinlangsungs', 'info_perjadinlangsungs.id', '=', 'data_perjadinlangsungs.info_perjadinlangsung')
-        ->where('data_perjadinlangsungs.pegawai_id', $userId)
-        ->where('info_perjadinlangsungs.status_pengajuan', 'proses')
-        ->where('versi_id', session('versi'))
-        ->count();
+        $countProsesPerjadin = DB::table('info_perjadinlangsungs')
+            ->join('data_perjadinlangsungs', 'info_perjadinlangsungs.id', '=', 'data_perjadinlangsungs.info_perjadinlangsung')
+            ->where('data_perjadinlangsungs.pegawai_id', $userId)
+            ->where('info_perjadinlangsungs.status_pengajuan', 'proses')
+            ->where('versi_id', $versiId)->count();
 
-    $countRevisi = DB::table('info_perjadinlangsungs')
-        ->join('data_perjadinlangsungs', 'info_perjadinlangsungs.id', '=', 'data_perjadinlangsungs.info_perjadinlangsung')
-        ->where('data_perjadinlangsungs.pegawai_id', $userId)
-        ->where('info_perjadinlangsungs.status_pengajuan', 'revisi')
-        ->where('versi_id', session('versi'))
-        ->count();
+        $countRevisiPerjadin = DB::table('info_perjadinlangsungs')
+            ->join('data_perjadinlangsungs', 'info_perjadinlangsungs.id', '=', 'data_perjadinlangsungs.info_perjadinlangsung')
+            ->where('data_perjadinlangsungs.pegawai_id', $userId)
+            ->where('info_perjadinlangsungs.status_pengajuan', 'revisi')
+            ->where('versi_id', $versiId)->count();
 
-    $countDitolak = DB::table('info_perjadinlangsungs')
-        ->join('data_perjadinlangsungs', 'info_perjadinlangsungs.id', '=', 'data_perjadinlangsungs.info_perjadinlangsung')
-        ->where('data_perjadinlangsungs.pegawai_id', $userId)
-        ->where('info_perjadinlangsungs.status_pengajuan', 'ditolak')
-        ->where('versi_id', session('versi'))
-        ->count();
+        $countDitolakPerjadin = DB::table('info_perjadinlangsungs')
+            ->join('data_perjadinlangsungs', 'info_perjadinlangsungs.id', '=', 'data_perjadinlangsungs.info_perjadinlangsung')
+            ->where('data_perjadinlangsungs.pegawai_id', $userId)
+            ->where('info_perjadinlangsungs.status_pengajuan', 'ditolak')
+            ->where('versi_id', $versiId)->count();
 
-    $countPelaporan = DB::table('info_perjadinlangsungs')
-        ->join('data_perjadinlangsungs', 'info_perjadinlangsungs.id', '=', 'data_perjadinlangsungs.info_perjadinlangsung')
-        ->where('data_perjadinlangsungs.pegawai_id', $userId)
-        ->where('info_perjadinlangsungs.status_pengajuan', 'pelaporan')
-        ->where('versi_id', session('versi'))
-        ->count();
+        $countPelaporanPerjadin = DB::table('info_perjadinlangsungs')
+            ->join('data_perjadinlangsungs', 'info_perjadinlangsungs.id', '=', 'data_perjadinlangsungs.info_perjadinlangsung')
+            ->where('data_perjadinlangsungs.pegawai_id', $userId)
+            ->where('info_perjadinlangsungs.status_pengajuan', 'pelaporan')
+            ->where('versi_id', $versiId)->count();
 
-    $countSelesai = DB::table('info_perjadinlangsungs')
-        ->join('data_perjadinlangsungs', 'info_perjadinlangsungs.id', '=', 'data_perjadinlangsungs.info_perjadinlangsung')
-        ->where('data_perjadinlangsungs.pegawai_id', $userId)
-        ->where('info_perjadinlangsungs.status_pengajuan', 'selesai')
-        ->where('versi_id', session('versi'))
-        ->count();
+        $countSelesaiPerjadin = DB::table('info_perjadinlangsungs')
+            ->join('data_perjadinlangsungs', 'info_perjadinlangsungs.id', '=', 'data_perjadinlangsungs.info_perjadinlangsung')
+            ->where('data_perjadinlangsungs.pegawai_id', $userId)
+            ->where('info_perjadinlangsungs.status_pengajuan', 'selesai')
+            ->where('versi_id', $versiId)->count();
 
-        // $perjadins = Info_perjadinlangsung::where('status_pengajuan', $status)->get();
-        if ($status == 'Draf-pengajuan') {
-            $riwayatPerjadin = DB::table('info_perjadinlangsungs')
-            ->join('pegawais', 'info_perjadinlangsungs.id_pengaju', '=', 'pegawais.id')
-            ->select('info_perjadinlangsungs.id as idPerjadin', 'info_perjadinlangsungs.nama_kegiatan', 'info_perjadinlangsungs.tgl_keberangkatan', 'info_perjadinlangsungs.status_pengajuan', 'info_perjadinlangsungs.status_pengajuan_detail',   'info_perjadinlangsungs.is_acceptBend','info_perjadinlangsungs.alasan_penolakan' ,'pegawais.id')
-            ->where(function($query) use ($userId) {
-                $query->where('pegawais.id', $userId)
-                      ->orWhere('info_perjadinlangsungs.id_pengaju', $userId);
+
+        // ==== COUNTS PROGRAM KEGIATAN ====
+        $countDrafKegiatan = DB::table('data_perjadinkegiatans')
+            ->where(function ($query) use ($userId) {
+                $query->where('data_perjadinkegiatans.id_pengaju', $userId)
+                    ->orWhereExists(function ($q) use ($userId) {
+                        $q->select(DB::raw(1))->from('perangkat_acaras')
+                          ->whereColumn('perangkat_acaras.data_perjadin_kegiatan', 'data_perjadinkegiatans.id')
+                          ->where('perangkat_acaras.pegawai_id', $userId);
+                    });
             })
-            ->where('info_perjadinlangsungs.status_pengajuan', $status)
-            ->where('versi_id', session('versi'))
-            ->get();
-        } else {
-            $riwayatPerjadin = DB::table('info_perjadinlangsungs')
+            ->where('data_perjadinkegiatans.versi_id', $versiId)
+            ->where(function($q){
+                $q->where('data_perjadinkegiatans.status_pengajuan', 'Draf-pengajuan')
+                  ->orWhereNull('data_perjadinkegiatans.status_pengajuan');
+            })->count();
+
+        $countPengajuanKegiatan = DB::table('data_perjadinkegiatans')
+            ->where(function ($query) use ($userId) {
+                $query->where('data_perjadinkegiatans.id_pengaju', $userId)
+                    ->orWhereExists(function ($q) use ($userId) {
+                        $q->select(DB::raw(1))->from('perangkat_acaras')
+                          ->whereColumn('perangkat_acaras.data_perjadin_kegiatan', 'data_perjadinkegiatans.id')
+                          ->where('perangkat_acaras.pegawai_id', $userId);
+                    });
+            })
+            ->where('data_perjadinkegiatans.versi_id', $versiId)
+            ->where('data_perjadinkegiatans.status_pengajuan', 'pengajuan')->count();
+
+        $countProsesKegiatan = DB::table('data_perjadinkegiatans')
+            ->where(function ($query) use ($userId) {
+                $query->where('data_perjadinkegiatans.id_pengaju', $userId)
+                    ->orWhereExists(function ($q) use ($userId) {
+                        $q->select(DB::raw(1))->from('perangkat_acaras')
+                          ->whereColumn('perangkat_acaras.data_perjadin_kegiatan', 'data_perjadinkegiatans.id')
+                          ->where('perangkat_acaras.pegawai_id', $userId);
+                    });
+            })
+            ->where('data_perjadinkegiatans.versi_id', $versiId)
+            ->where('data_perjadinkegiatans.status_pengajuan', 'proses')->count();
+
+        $countRevisiKegiatan = DB::table('data_perjadinkegiatans')
+            ->where(function ($query) use ($userId) {
+                $query->where('data_perjadinkegiatans.id_pengaju', $userId)
+                    ->orWhereExists(function ($q) use ($userId) {
+                        $q->select(DB::raw(1))->from('perangkat_acaras')
+                          ->whereColumn('perangkat_acaras.data_perjadin_kegiatan', 'data_perjadinkegiatans.id')
+                          ->where('perangkat_acaras.pegawai_id', $userId);
+                    });
+            })
+            ->where('data_perjadinkegiatans.versi_id', $versiId)
+            ->where('data_perjadinkegiatans.status_pengajuan', 'revisi')->count();
+
+        $countDitolakKegiatan = DB::table('data_perjadinkegiatans')
+            ->where(function ($query) use ($userId) {
+                $query->where('data_perjadinkegiatans.id_pengaju', $userId)
+                    ->orWhereExists(function ($q) use ($userId) {
+                        $q->select(DB::raw(1))->from('perangkat_acaras')
+                          ->whereColumn('perangkat_acaras.data_perjadin_kegiatan', 'data_perjadinkegiatans.id')
+                          ->where('perangkat_acaras.pegawai_id', $userId);
+                    });
+            })
+            ->where('data_perjadinkegiatans.versi_id', $versiId)
+            ->where('data_perjadinkegiatans.status_pengajuan', 'ditolak')->count();
+
+        $countPelaporanKegiatan = DB::table('data_perjadinkegiatans')
+            ->where(function ($query) use ($userId) {
+                $query->where('data_perjadinkegiatans.id_pengaju', $userId)
+                    ->orWhereExists(function ($q) use ($userId) {
+                        $q->select(DB::raw(1))->from('perangkat_acaras')
+                          ->whereColumn('perangkat_acaras.data_perjadin_kegiatan', 'data_perjadinkegiatans.id')
+                          ->where('perangkat_acaras.pegawai_id', $userId);
+                    });
+            })
+            ->where('data_perjadinkegiatans.versi_id', $versiId)
+            ->where('data_perjadinkegiatans.status_pengajuan', 'pelaporan')->count();
+
+        $countSelesaiKegiatan = DB::table('data_perjadinkegiatans')
+            ->where(function ($query) use ($userId) {
+                $query->where('data_perjadinkegiatans.id_pengaju', $userId)
+                    ->orWhereExists(function ($q) use ($userId) {
+                        $q->select(DB::raw(1))->from('perangkat_acaras')
+                          ->whereColumn('perangkat_acaras.data_perjadin_kegiatan', 'data_perjadinkegiatans.id')
+                          ->where('perangkat_acaras.pegawai_id', $userId);
+                    });
+            })
+            ->where('data_perjadinkegiatans.versi_id', $versiId)
+            ->where('data_perjadinkegiatans.status_pengajuan', 'selesai')->count();
+
+
+        // ==== TOTAL COUNTS ====
+        $countDraf = $countDrafPerjadin + $countDrafKegiatan;
+        $countPengajuan = $countPengajuanPerjadin + $countPengajuanKegiatan;
+        $countProses = $countProsesPerjadin + $countProsesKegiatan;
+        $countRevisi = $countRevisiPerjadin + $countRevisiKegiatan;
+        $countDitolak = $countDitolakPerjadin + $countDitolakKegiatan;
+        $countPelaporan = $countPelaporanPerjadin + $countPelaporanKegiatan;
+        $countSelesai = $countSelesaiPerjadin + $countSelesaiKegiatan;
+
+        // ==== FETCH DATA ====
+        $riwayatPerjadinDraf = collect();
+        $riwayatPerjadinOther = collect();
+        
+        if ($status == 'semua' || $status == 'Draf-pengajuan') {
+            $riwayatPerjadinDraf = DB::table('info_perjadinlangsungs')
+                ->select('info_perjadinlangsungs.id as idPerjadin', 'info_perjadinlangsungs.nama_kegiatan', 'info_perjadinlangsungs.tgl_keberangkatan', 'info_perjadinlangsungs.status_pengajuan', 'info_perjadinlangsungs.status_pengajuan_detail', 'info_perjadinlangsungs.is_acceptBend', 'info_perjadinlangsungs.alasan_penolakan', DB::raw('NULL as hasil'), DB::raw('"Perjalanan Dinas" as tipe'), DB::raw('NULL as jenis_kegiatan'))
+                ->where('info_perjadinlangsungs.id_pengaju', $userId)
+                ->where('info_perjadinlangsungs.status_pengajuan', 'Draf-pengajuan')
+                ->where('versi_id', $versiId)
+                ->get();
+        }
+
+        if ($status == 'semua' || $status != 'Draf-pengajuan') {
+            $query = DB::table('info_perjadinlangsungs')
                 ->join('data_perjadinlangsungs', 'data_perjadinlangsungs.info_perjadinlangsung', '=', 'info_perjadinlangsungs.id')
-                ->join('pegawais', 'data_perjadinlangsungs.pegawai_id', '=', 'pegawais.id')
                 ->leftJoin('dokumens', 'dokumens.info_perjadinlangsung_id', '=', 'info_perjadinlangsungs.id')
-                ->select('info_perjadinlangsungs.id as idPerjadin', 'info_perjadinlangsungs.nama_kegiatan', 'info_perjadinlangsungs.tgl_keberangkatan', 'info_perjadinlangsungs.status_pengajuan', 'info_perjadinlangsungs.status_pengajuan_detail',   'info_perjadinlangsungs.is_acceptBend','info_perjadinlangsungs.alasan_penolakan','data_perjadinlangsungs.pegawai_id','dokumens.hasil' ,'pegawais.id')
-                ->where('pegawais.id', auth('pegawai')->user()->id)
-                ->where('info_perjadinlangsungs.status_pengajuan', $status)
-                ->where(function ($query) {
-                    $query->where('data_perjadinlangsungs.status_pegawai', '!=', 'Supir')
-                        ->orWhere(function ($query) {
-                            $query->where('data_perjadinlangsungs.status_pegawai', '=', 'Supir')
-                                ->whereNotExists(function ($query) {
-                                    $query->select(DB::raw(1))
+                ->select('info_perjadinlangsungs.id as idPerjadin', 'info_perjadinlangsungs.nama_kegiatan', 'info_perjadinlangsungs.tgl_keberangkatan', 'info_perjadinlangsungs.status_pengajuan', 'info_perjadinlangsungs.status_pengajuan_detail', 'info_perjadinlangsungs.is_acceptBend', 'info_perjadinlangsungs.alasan_penolakan', 'dokumens.hasil', DB::raw('"Perjalanan Dinas" as tipe'), DB::raw('NULL as jenis_kegiatan'))
+                ->where('data_perjadinlangsungs.pegawai_id', $userId)
+                ->where('info_perjadinlangsungs.status_pengajuan', '!=', 'Draf-pengajuan')
+                ->where(function ($q) {
+                    $q->where('data_perjadinlangsungs.status_pegawai', '!=', 'Supir')
+                        ->orWhere(function ($q2) {
+                            $q2->where('data_perjadinlangsungs.status_pegawai', '=', 'Supir')
+                                ->whereNotExists(function ($q3) {
+                                    $q3->select(DB::raw(1))
                                         ->from('data_perjadinlangsungs as dp2')
                                         ->whereColumn('dp2.pegawai_id', 'data_perjadinlangsungs.pegawai_id')
                                         ->where('dp2.status_pegawai', '!=', 'Supir');
                                 });
                         });
                 })
-                ->where('versi_id', session('versi'))
-                ->get();
+                ->where('versi_id', $versiId);
+                
+            if ($status != 'semua') {
+                $query->where('info_perjadinlangsungs.status_pengajuan', $status);
+            }
+            $riwayatPerjadinOther = $query->get();
         }
+
+        $riwayatKegiatan = collect();
+        $queryKeg = DB::table('data_perjadinkegiatans')
+            ->select(
+                'data_perjadinkegiatans.id as idPerjadin', 
+                'data_perjadinkegiatans.nama_kegiatan', 
+                'data_perjadinkegiatans.tgl_mulai as tgl_keberangkatan', 
+                DB::raw('COALESCE(data_perjadinkegiatans.status_pengajuan, "Draf-pengajuan") as status_pengajuan'), 
+                'data_perjadinkegiatans.status_pengajuan_detail', 
+                DB::raw('NULL as is_acceptBend'), 
+                'data_perjadinkegiatans.alasan_penolakan', 
+                DB::raw('NULL as hasil'), 
+                DB::raw('"Program Kegiatan" as tipe'),
+                'data_perjadinkegiatans.jenis_kegiatan'
+            )
+            ->where(function ($query) use ($userId) {
+                $query->where('data_perjadinkegiatans.id_pengaju', $userId)
+                    ->orWhereExists(function ($q) use ($userId) {
+                        $q->select(DB::raw(1))->from('perangkat_acaras')
+                          ->whereColumn('perangkat_acaras.data_perjadin_kegiatan', 'data_perjadinkegiatans.id')
+                          ->where('perangkat_acaras.pegawai_id', $userId);
+                    });
+            })
+            ->where('data_perjadinkegiatans.versi_id', $versiId);
+
+        if ($status != 'semua') {
+            if ($status == 'Draf-pengajuan') {
+                $queryKeg->where(function($q){
+                    $q->where('data_perjadinkegiatans.status_pengajuan', 'Draf-pengajuan')
+                      ->orWhereNull('data_perjadinkegiatans.status_pengajuan');
+                });
+            } else {
+                $queryKeg->where('data_perjadinkegiatans.status_pengajuan', $status);
+            }
+        }
+        $riwayatKegiatan = $queryKeg->get();
+
+        // Merge all
+        $allRiwayat = $riwayatPerjadinDraf->concat($riwayatPerjadinOther)->concat($riwayatKegiatan);
+        
+        // Sort by date descending
+        $allRiwayat = $allRiwayat->sortByDesc('tgl_keberangkatan')->values();
 
         return view(
             'user.perjadin.riwayat',
             [
                 'title' => 'Kegiatanku',
-                'active' => 'kegiatanku_perjadin',
+                'active' => 'riwayat_pengajuan',
                 'status' => $status,
-                "perjadins" => $riwayatPerjadin,
+                "perjadins" => $allRiwayat,
                 'countDraf' => $countDraf,
                 'countPengajuan' => $countPengajuan,
                 'countProses' => $countProses,

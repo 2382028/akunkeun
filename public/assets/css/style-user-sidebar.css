@@ -1,0 +1,320 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+
+:root {
+  --sidebar-width: 250px;
+  --sidebar-bg: #082a99;
+  --sidebar-hover: #0b34b9;
+  --sidebar-active: #E9A336;
+  --topbar-height: 60px;
+}
+
+body.user-sidebar-layout {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== TOP NAVBAR ===== */
+.user-topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--topbar-height);
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  z-index: 1040;
+  display: flex;
+  align-items: center;
+  padding: 0 1.25rem;
+}
+
+.user-topbar .topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  margin-right: auto;
+}
+
+.user-topbar .topbar-brand img.logo-lldikti {
+  height: 24px;
+}
+
+.user-topbar .topbar-brand img.logo-akunkeun {
+  height: 24px;
+}
+
+.user-topbar .topbar-brand .brand-divider {
+  width: 1px;
+  height: 30px;
+  background: #d1d5db;
+  margin: 0 4px;
+}
+
+.user-topbar .topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+}
+
+.user-topbar .topbar-year {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #6b7280;
+  background: #f3f4f6;
+  padding: 4px 12px;
+  border-radius: 6px;
+  letter-spacing: 0.3px;
+}
+
+.user-topbar .topbar-notif {
+  position: relative;
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 6px;
+}
+
+.user-topbar .topbar-profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.user-topbar .topbar-profile-btn i {
+  font-size: 1.4rem;
+  color: var(--sidebar-bg);
+}
+
+/* ===== SIDEBAR ===== */
+.user-sidebar {
+  position: fixed;
+  top: var(--topbar-height);
+  left: 0;
+  bottom: 0;
+  width: var(--sidebar-width);
+  background: var(--sidebar-bg);
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 1030;
+  transition: transform 0.3s ease;
+  padding-top: 0.5rem;
+  transform: translateX(-100%); /* Hidden by default */
+}
+
+.user-sidebar.show {
+  transform: translateX(0); /* Shown when toggled */
+}
+
+.user-sidebar::-webkit-scrollbar {
+  width: 0;
+}
+
+.user-sidebar .sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.user-sidebar .sidebar-item {
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.user-sidebar .sidebar-link {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  color: rgba(255,255,255,0.85);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  gap: 12px;
+}
+
+.user-sidebar .sidebar-link:hover {
+  background: var(--sidebar-hover);
+  color: #fff;
+}
+
+.user-sidebar .sidebar-link.active {
+  background: var(--sidebar-active);
+  color: #fff;
+  font-weight: 600;
+}
+
+.user-sidebar .sidebar-link i {
+  width: 20px;
+  text-align: center;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+/* Submenu toggle */
+.user-sidebar .sidebar-toggle {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  color: rgba(255,255,255,0.85);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  gap: 12px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+
+.user-sidebar .sidebar-toggle:hover {
+  background: var(--sidebar-hover);
+  color: #fff;
+}
+
+.user-sidebar .sidebar-toggle i.toggle-icon {
+  margin-left: auto;
+  font-size: 0.65rem;
+  transition: transform 0.25s ease;
+}
+
+.user-sidebar .sidebar-toggle[aria-expanded="true"] i.toggle-icon {
+  transform: rotate(90deg);
+}
+
+.user-sidebar .sidebar-submenu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: rgba(0,0,0,0.15);
+}
+
+.user-sidebar .sidebar-submenu .sidebar-link {
+  padding: 10px 20px 10px 52px;
+  font-size: 0.78rem;
+}
+
+.user-sidebar .sidebar-section-label {
+  padding: 16px 20px 6px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: rgba(255,255,255,0.35);
+}
+
+/* ===== MAIN CONTENT ===== */
+.user-main-content {
+  margin-left: 0; /* Default no margin */
+  margin-top: var(--topbar-height);
+  min-height: calc(100vh - var(--topbar-height));
+  background: #f4f7fe;
+  display: flex;
+  flex-direction: column;
+  transition: margin-left 0.3s ease;
+}
+
+@media (min-width: 992px) {
+  body.sidebar-open .user-sidebar {
+    transform: translateX(0); /* Always show on desktop if body has sidebar-open */
+  }
+  body.sidebar-open .user-main-content {
+    margin-left: var(--sidebar-width); /* Push content on desktop if sidebar is open */
+  }
+}
+
+.user-main-content .content-body {
+  flex: 1;
+  padding: 0;
+}
+
+.user-main-content .content-footer {
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: #9ca3af;
+  border-top: 1px solid #e5e7eb;
+  background: #fff;
+}
+
+/* ===== SIDEBAR TOGGLE ===== */
+.sidebar-toggler-btn {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: #374151;
+  cursor: pointer;
+  padding: 4px 8px;
+  margin-right: 8px;
+}
+
+.user-sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 1025;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 991.98px) {
+
+  .user-sidebar {
+    transform: translateX(-100%);
+  }
+
+  .user-sidebar.show {
+    transform: translateX(0);
+  }
+
+  .user-sidebar-overlay.show {
+    display: block;
+  }
+
+  .user-main-content {
+    margin-left: 0 !important;
+  }
+
+  .user-topbar .topbar-brand .hide-mobile {
+    display: none;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .user-topbar .topbar-year {
+    display: none;
+  }
+  .user-topbar .topbar-profile-name {
+    display: none;
+  }
+}
+
+/* Table Action Buttons Optimization */
+.table td .btn,
+.table td .btn-sm {
+  padding: 0.2rem 0.5rem !important;
+  font-size: 0.75rem !important;
+  line-height: 1.5;
+  margin-bottom: 2px;
+}
+.table td form {
+  margin-bottom: 0 !important;
+}
+.table td .page-wrap {
+  margin-right: 3px !important;
+}

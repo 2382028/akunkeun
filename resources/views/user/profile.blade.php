@@ -1,25 +1,25 @@
-@extends('user.templates.template')
+@extends('user.templates.sidebar')
 
 @section('content')
     <!-- User Profile-->
-    <div class="container pt-5 mt-5">
+    <div class="container mt-4 mb-5">
         <div class="row">
             <div class="col-sm-4 user-side">
-                <ol class="navbar-nav list-group list-group-flush small ">
-                    <li class="nav-item list-group-item d-flex justify-content-between align-items-start mb-3">
-                        <div class="ms-2 me-auto text-secondaryi">
+                <ol class="navbar-nav list-group small">
+                    <li class="nav-item list-group-item shadow-sm border rounded d-flex justify-content-between align-items-start mb-3 p-3">
+                        <div class="ms-2 me-auto text-secondary">
                             <div class="fw-bold mb-2">Biodata</div>
                             <a data-active="user_profile" class="nav-link mb-2" aria-current="page" href="{{url('/profile')}}"><i class="fa-regular fa-user"></i> Profile Saya</a>
                         </div>
                     </li>
-                    <li class="nav-item list-group-item d-flex justify-content-between align-items-start mb-3">
+                    <li class="nav-item list-group-item shadow-sm border rounded d-flex justify-content-between align-items-start mb-3 p-3">
                         <div class="ms-2 me-auto text-secondary">
                             <div class="fw-bold mb-2">Kegiatanku</div>
                             <a data-active="kegiatanku_perjadin" class="nav-link mb-2" aria-current="page" href="{{url('/perjadin/riwayat/'. 'pengajuan')}}"><i class="fa-solid fa-car"></i> Perjalanan Dinas</a>
                             <a data-active="kegiatanku_program" class="nav-link mb-2" aria-current="page" href="{{url('/kegiatan/riwayat/' . 'pengajuan')}}"><i class="fa-regular fa-calendar"></i> Program Kegiatan</a>
                         </div>
                     </li>
-                    <li class="nav-item list-group-item d-flex justify-content-between align-items-start mb-3">
+                    <li class="nav-item list-group-item shadow-sm border rounded d-flex justify-content-between align-items-start mb-3 p-3">
                         <div class="ms-2 me-auto text-secondary">
                             <div class="fw-bold mb-2">Barangku</div>
                             <a data-active="" class="nav-link mb-2" aria-current="page" href="{{url('/riwayat_barang/' . 'digunakan')}}"><i class="fa-solid fa-box"></i> Barang Saya</a>
@@ -27,7 +27,7 @@
                             <a data-active="" class="nav-link mb-2" aria-current="page" href="{{url('/riwayat_barang/' . 'diservice')}}"><i class="fa-solid fa-gear"></i>   Service Barang</a>
                         </div>
                     </li>
-                    <li class="nav-item list-group-item d-flex justify-content-between align-items-start mb-3">
+                    <li class="nav-item list-group-item shadow-sm border rounded d-flex justify-content-between align-items-start mb-3 p-3">
                         <div class="ms-2 me-auto text-secondary">
                             <div class="fw-bold mb-2">Pengaturan</div>
                             <a data-active="" class="nav-link mb-2" aria-current="page" href="{{url('/profile/ubah-password')}}"><i class="fa-solid fa-key"></i>   Ubah Password</a>
@@ -42,8 +42,8 @@
             <div class="col-sm-8 content center-item">
                 <div class="row page_content page_1">
                     <div class="col-sm-12">
-                        <div class="card mb-3 text-secondary border-0">
-                            <div class="card-body">
+                        <div class="card mb-3 text-secondary shadow-sm border rounded">
+                            <div class="card-body p-4">
                                 <div class="position-relative mb-3 ">
                                     <img src="{{asset('public/assets/images/profile - header.jpeg')}}" class="card-img-top" alt="...">
                                     <img src="{{asset('public/assets/images/user-profile.png')}}" width="90px" class="bottomleft user-image" alt="">    
@@ -63,12 +63,12 @@
                                     </div>
                                 </div>
                                 <hr>
-                                <div class="row small user">
+                                <div class="row small user mt-4">
                                     <div class="col-md-6 mb-3 user-card-1">
-                                        <div class="card shadow-sm rounded-0">
+                                        <div class="card shadow-sm rounded border">
                                             <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col-md-12"><i class="fa-solid fa-car"></i> Perjalanan Dinas</div>
+                                                <div class="row mb-2">
+                                                    <div class="col-md-12 fw-bold"><i class="fa-solid fa-car text-primary"></i> Perjalanan Dinas</div>
                                                 </div>
                                                 <div class="row text-center">
                                                     <div class="col-md-4 ">
@@ -88,10 +88,10 @@
                                         </div>
                                     </div>
                                     <div class="col-md-6 mb-3 user-card-2">
-                                        <div class="card shadow-sm rounded-0">
+                                        <div class="card shadow-sm rounded border">
                                             <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col-md-12"><i class="fa-regular fa-calendar"></i> Program Kegiatan</div>
+                                                <div class="row mb-2">
+                                                    <div class="col-md-12 fw-bold"><i class="fa-regular fa-calendar text-warning"></i> Program Kegiatan</div>
                                                 </div>
                                                 <div class="row text-center">
                                                     <div class="col-md-4">
@@ -113,10 +113,10 @@
                                 </div>
                                 <div class="row small">
                                     <div class="col-md-6 mb-3 user-card-3">
-                                        <div class="card shadow-sm rounded-0">
+                                        <div class="card shadow-sm rounded border">
                                             <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col-md-12"><i class="fa-solid fa-box"></i> Barang Saya</div>
+                                                <div class="row mb-2">
+                                                    <div class="col-md-12 fw-bold"><i class="fa-solid fa-box text-success"></i> Barang Saya</div>
                                                 </div>
                                                 <div class="row text-center">
                                                     <div class="col-md-4">

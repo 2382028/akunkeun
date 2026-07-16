@@ -1,7 +1,7 @@
-@extends('user.templates.template')
+@extends('user.templates.sidebar')
 
 @section('content')
-    <section id="beranda" class="pb-5 mt-5 pt-5">
+    <section id="beranda" class="pb-5 pt-4">
         <div class="container">
             <div class="row mb-3">
                 <h3 class="fw-bold text-secondary">Barang Saya</h3>
@@ -39,10 +39,10 @@
                                             <thead>
                                                 <tr class="text-center small">
                                                     <th class="th-sm">No</th>
-                                                    <th class="th-md">Nama Barang</th>
-                                                    <th class="th-sm">Tanggal Peminjaman</th>
-                                                    <th class="th-lg">Status</th>
-                                                    <th class="th-lg-percent">Aksi</th>
+                                                    <th style="min-width: 200px;">Nama Barang</th>
+                                                    <th style="min-width: 150px;">Tanggal Peminjaman</th>
+                                                    <th style="min-width: 150px;">Status</th>
+                                                    <th style="min-width: 150px;">Aksi</th>
                                                 </tr>
                                             </thead>
                                             @foreach ($riwayats as $riwayat)

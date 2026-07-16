@@ -1,4 +1,4 @@
-@extends('user.templates.template')
+@extends('user.templates.sidebar')
 
 @section('content')
 <section class="mb-5">

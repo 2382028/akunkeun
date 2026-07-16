@@ -1,67 +1,66 @@
-@extends('user.templates.template')
+@extends('user.templates.sidebar')
 @php
     $activeVersi = \App\Models\Versi::where('status', 'aktif')->first() ?? (object) ['id' => '-1','versi' => 'Default Versi'];
 @endphp
 <style>
-    .btn-status {
-    min-width: 100px; /* Lebar minimum yang lebih kecil */
-    height: 30px;     /* Tinggi tombol lebih kecil */
-    padding: 4px 8px; /* Padding yang lebih kecil */
-    text-align: center; /* Pusatkan teks di tengah */
-    font-size: 12px;   /* Ukuran teks lebih kecil */
-    border-radius: 6px; /* Sudut tombol yang lebih halus dan kecil */
+.btn-status {
+    padding: 3px 8px;
+    text-align: center;
+    font-size: 12px;
+    border-radius: 4px;
+    white-space: nowrap;
 }
 
 .badge-count {
-    font-size: 10px; /* Ukuran teks badge lebih kecil */
-    padding: 3px 6px; /* Padding badge yang lebih kecil */
-    margin-left: 4px; /* Jarak kecil antara teks dan badge */
-    border-radius: 6px; /* Sudut badge yang lebih halus dan kecil */
+    font-size: 11px;
+    padding: 2px 5px;
+    margin-left: 4px;
+    border-radius: 4px;
 }
 </style>
 @section('content')
 
 <!-- Awal Form Perjalanan Dinas Biasa  -->
-<section id="beranda" class="pb-5 mt-5 pt-5">
+<section id="beranda" class="pb-5 mt-4 pt-4">
     <div class="container">
         <div class="row mb-3">
-            <h3 class="fw-bold text-secondary">Kegiatanku | Perjadin Kegiatan</h3>
+            <h4 class="fw-bold text-secondary">Kegiatanku | Perjadin Kegiatan</h4>
         </div>
         <div class="row mb-3">
-            <div class="d-flex justify-content-between mb-3">
-                <div>
+            <div class="d-flex flex-wrap gap-2 justify-content-between mb-3">
+                <div class="d-flex flex-wrap gap-2">
                     <!-- Draf: Kuning dengan teks hitam -->
-                    <a href="{{ url('/kegiatan/riwayat/' . 'Draf-pengajuan') }}" class="btn btn-warning btn-status btn-sm mx-2 " style="color: black;">
+                    <a href="{{ url('/kegiatan/riwayat/' . 'Draf-pengajuan') }}" class="btn btn-warning btn-status btn-sm " style="color: black;">
                         Draf <span class="badge badge-count" style="color: black;">{{ $countDraf }}</span>
                     </a>
 
                     <!-- Pengajuan: Biru Tua dengan teks putih -->
-                    <a href="{{ url('/kegiatan/riwayat/' . 'pengajuan') }}" class="btn btn-primary btn-status btn-sm mx-2" style="background-color: #004085; color: white;">
+                    <a href="{{ url('/kegiatan/riwayat/' . 'pengajuan') }}" class="btn btn-primary btn-status btn-sm" style="background-color: #004085; color: white;">
                         Pengajuan <span class="badge badge-count" style="color: white;">{{ $countPengajuan }}</span>
                     </a>
 
                     <!-- Pelaksanaan: Biru Muda dengan teks hitam -->
-                    <a href="{{ url('/kegiatan/riwayat/' . 'proses') }}" class="btn btn-info btn-status btn-sm mx-2" style="background-color: #87CEEB; color: black;">
+                    <a href="{{ url('/kegiatan/riwayat/' . 'proses') }}" class="btn btn-info btn-status btn-sm" style="background-color: #87CEEB; color: black;">
                         Pelaksanaan <span class="badge badge-count" style="color: black;">{{ $countProses }}</span>
                     </a>
 
                     <!-- Pelaporan: Hijau Muda dengan teks hitam -->
-                    <a href="{{url('/kegiatan/riwayat/' . 'pelaporan')}}" class="btn btn-light-green btn-status btn-sm mx-2" style="background-color: #90EE90; color: black;">
+                    <a href="{{url('/kegiatan/riwayat/' . 'pelaporan')}}" class="btn btn-light-green btn-status btn-sm" style="background-color: #90EE90; color: black;">
                         Pelaporan <span class="badge badge-count" style="color: black;">{{ $countPelaporan }}</span>
                     </a>
 
                     <!-- Selesai: Hijau Tua dengan teks putih -->
-                    <a href="{{ url('/kegiatan/riwayat/' . 'selesai') }}" class="btn btn-dark-green btn-status btn-sm mx-2" style="background-color: #006400; color: white;">
+                    <a href="{{ url('/kegiatan/riwayat/' . 'selesai') }}" class="btn btn-dark-green btn-status btn-sm" style="background-color: #006400; color: white;">
                         Selesai <span class="badge badge-count" style="color: white;">{{ $countSelesai }}</span>
                     </a>
 
                     <!-- Revisi: Oranye dengan teks hitam -->
-                    <a href="{{ url('/kegiatan/riwayat/' . 'revisi') }}" class="btn btn-orange btn-status btn-sm mx-2" style="background-color: #FFA500; color: black;">
+                    <a href="{{ url('/kegiatan/riwayat/' . 'revisi') }}" class="btn btn-orange btn-status btn-sm" style="background-color: #FFA500; color: black;">
                         Revisi <span class="badge badge-count" style="color: black;">{{ $countRevisi }}</span>
                     </a>
 
                     <!-- Ditolak: Merah dengan teks putih -->
-                    <a href="{{ url('/kegiatan/riwayat/' . 'ditolak') }}" class="btn btn-danger btn-status btn-sm mx-2" style="color: white;">
+                    <a href="{{ url('/kegiatan/riwayat/' . 'ditolak') }}" class="btn btn-danger btn-status btn-sm" style="color: white;">
                         Ditolak <span class="badge badge-count" style="color: white;">{{ $countDitolak }}</span>
                     </a>
                 </div>
@@ -69,12 +68,12 @@
                 <div>
                     @if ($activeVersi && ($activeVersi->id != session('versi')))
                         <!-- Tambah Kegiatan Baru -->
-                        <a  href="{{url('/kegiatan')}}" class="btn btn-status btn-neon text-white mb-3 btn-sm mx-2" onclick="showAlert(event)">
+                        <a  href="{{url('/kegiatan')}}" class="btn btn-status btn-neon text-white mb-3 btn-sm" onclick="showAlert(event)">
                             <i class="fa fa-plus"></i> Ajukan Kegiatan Baru
                         </a>
                     @else
                         <!-- Tambah Kegiatan Baru -->
-                        <a href="{{url('/kegiatan')}}" class="btn btn-status btn-neon text-white mb-3 btn-sm mx-2">
+                        <a href="{{url('/kegiatan')}}" class="btn btn-status btn-neon text-white mb-3 btn-sm">
                             <i class="fa fa-plus"></i> Ajukan Kegiatan Baru
                         </a>
                     @endif
@@ -96,13 +95,13 @@
                                             <h6 class="fw-bold text-secondary">Informasi Perjalanan</h6><br>
                                         </div>
                                     </div>
-                                    <table id="example" class="table table-bordered data-table" style="width: 100%">
+                                    <table id="example" class="table table-bordered table-sm data-table align-middle" style="width: 100%; font-size: 13px;">
                                         <thead>
                                         <tr class="text-center small">
                                             <th class="th-sm">No</th>
                                             <th class="th-sm">ID Kegiatan</th>
-                                            <th class="th-md">Judul Kegiatan</th>
-                                            <th class="th-md">Jenis Kegiatan</th>
+                                            <th style="width: 35%; min-width: 250px;">Judul Kegiatan</th>
+                                            <th style="min-width: 100px;">Jenis Kegiatan</th>
                                             <th class="th-md">Tanggal Keberangkatan</th>
                                             <th class="th-md">Status Berlangsung</th>
                                             @if ($status === 'revisi')
@@ -110,7 +109,7 @@
                                             @elseif ($status === 'ditolak')
                                                 <th class="th-md">Alasan Ditolak</th>
                                             @endif
-                                            <th class="th-lg-percent">Aksi</th>
+                                            <th style="width: 12%; min-width: 120px;">Aksi</th>
                                         </tr>
                                         </thead>
                                         @foreach ($kegiatans as $kegiatan)
