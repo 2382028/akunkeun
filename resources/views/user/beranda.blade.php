@@ -269,9 +269,39 @@ document.addEventListener('DOMContentLoaded', function () {
         var moreIcon  = document.getElementById('riwayat-more-icon');
         var counter   = document.getElementById('riwayat-counter');
 
+        // Hitung ruang yang tersedia dari awal layar (mengabaikan scroll sementara)
+        // Kita kunci perhitungan berdasarkan tinggi layar dan elemen lain, bukan posisi relatif yang berubah saat scroll
+        var headerH  = header ? header.offsetHeight + 8 : 0; // +mb-2
+        var theadH   = thead ? thead.offsetHeight : 0;
+        var footerH  = 28; // perkiraan tinggi footer link
+        var paddingV = 24; // padding wrapper (p-3 = 16px top + 16px bottom)
+        var marginBot = 16; // margin section bawah
+
+        // Secara default, wrapper tabel di dashboard ini mulai sekitar 450px dari atas layar 
+        // (setelah navbar dan 3 card kotak)
+        var estimatedTopOffset = 450; 
+        // Coba deteksi aslinya jika page tidak discroll, kalau tidak pakai fallback 450
+        var scrollY = window.pageYOffset || document.documentElement.scrollTop;
+        var absoluteTop = wrapper.getBoundingClientRect().top + scrollY;
+        if (absoluteTop > 100 && absoluteTop < 800) {
+            estimatedTopOffset = absoluteTop;
+        }
+
+        var availH = window.innerHeight - estimatedTopOffset - headerH - theadH - footerH - paddingV - marginBot;
+        availH = Math.max(availH, 60); // minimal tampil 1 baris
+
+        // Ukur tinggi 1 baris (pakai baris pertama)
+        var firstRow = allRows[0];
+        var rowH = firstRow.offsetHeight || 34; // fallback 34px
+
+        var maxVisible = Math.floor(availH / rowH);
+        maxVisible = Math.max(maxVisible, 1); // minimal 1
+
         if (isExpanded) {
-            // Tampilkan semua data, aktifkan scroll
+            // Tampilkan semua data, aktifkan scroll tapi KUNCI TINGGI agar tidak tembus ke bawah
             allRows.forEach(function(r) { r.style.display = ''; });
+            var maxContainerHeight = maxVisible * rowH;
+            container.style.maxHeight = maxContainerHeight + 'px';
             container.style.overflowY = 'auto';
             if (moreText) moreText.textContent = 'Sembunyikan';
             if (moreIcon) {
@@ -282,28 +312,10 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        // Tampilkan semua dulu untuk bisa ukur
+        // Jika tidak expand (Tutup)
         allRows.forEach(function(r) { r.style.display = ''; });
         container.style.overflowY = 'hidden';
-
-        // Hitung ruang yang tersedia
-        var wrapperRect = wrapper.getBoundingClientRect();
-        var headerH  = header ? header.offsetHeight + 8 : 0; // +mb-2
-        var theadH   = thead ? thead.offsetHeight : 0;
-        var footerH  = 28; // perkiraan tinggi footer link
-        var paddingV = 24; // padding wrapper (p-3 = 16px top + 16px bottom)
-        var marginBot = 16; // margin section bawah
-
-        // Ruang vertikal yang tersedia untuk baris tbody
-        var availH = window.innerHeight - wrapperRect.top - headerH - theadH - footerH - paddingV - marginBot;
-        availH = Math.max(availH, 60); // minimal tampil 1 baris
-
-        // Ukur tinggi 1 baris (pakai baris pertama)
-        var firstRow = allRows[0];
-        var rowH = firstRow.offsetHeight || 34; // fallback 34px
-
-        var maxVisible = Math.floor(availH / rowH);
-        maxVisible = Math.max(maxVisible, 1); // minimal 1
+        container.style.maxHeight = 'none';
 
         // Terapkan: sembunyikan row di luar batas
         var hidden = 0;

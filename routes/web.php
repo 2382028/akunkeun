@@ -732,7 +732,15 @@ Route::get('/', function () {
         );
 
     $recentKegiatan = DB::table('data_perjadinkegiatans')
-        ->where('data_perjadinkegiatans.id_pengaju', $userId)
+        ->where(function ($query) use ($userId) {
+            $query->where('data_perjadinkegiatans.id_pengaju', $userId)
+                ->orWhereExists(function ($q) use ($userId) {
+                    $q->select(DB::raw(1))
+                      ->from('perangkat_acaras')
+                      ->whereColumn('perangkat_acaras.data_perjadin_kegiatan', 'data_perjadinkegiatans.id')
+                      ->where('perangkat_acaras.pegawai_id', $userId);
+                });
+        })
         ->where('data_perjadinkegiatans.versi_id', $versiId)
         ->select(
             'data_perjadinkegiatans.nama_kegiatan as nama',
@@ -755,7 +763,7 @@ Route::get('/', function () {
 
     $recentActivity = $recentPerjadin->unionAll($recentKegiatan)->unionAll($recentPemeliharaan)
         ->orderBy('updated_at', 'desc')
-        ->limit(20)
+        ->limit(100)
         ->get();
 
     return view('user.beranda', [
