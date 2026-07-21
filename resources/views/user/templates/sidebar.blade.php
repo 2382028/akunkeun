@@ -117,15 +117,14 @@
 
     {{-- Pemeliharaan & Peminjaman --}}
     <li class="sidebar-item">
-      <button class="sidebar-toggle" data-bs-toggle="collapse" data-bs-target="#menuBMN" aria-expanded="{{ (isset($active) && in_array($active, ['peminjaman','pemeliharaan','barang_saya','riwayat_pemeliharaan'])) ? 'true' : 'false' }}">
+      <button class="sidebar-toggle" data-bs-toggle="collapse" data-bs-target="#menuBMN" aria-expanded="{{ (isset($active) && in_array($active, ['pemeliharaan','barang_saya','riwayat_pemeliharaan'])) ? 'true' : 'false' }}">
         <i class="fa-solid fa-screwdriver-wrench"></i><span>Pemeliharaan & Peminjaman</span>
         <i class="fa-solid fa-chevron-right toggle-icon"></i>
       </button>
-      <div class="collapse {{ (isset($active) && in_array($active, ['peminjaman','pemeliharaan','barang_saya','riwayat_pemeliharaan'])) ? 'show' : '' }}" id="menuBMN">
+      <div class="collapse {{ (isset($active) && in_array($active, ['pemeliharaan','barang_saya','riwayat_pemeliharaan'])) ? 'show' : '' }}" id="menuBMN">
         <ul class="sidebar-submenu">
-          <li><a href="{{ url('/fasilitas') }}" class="sidebar-link {{ (isset($active) && $active=='peminjaman') ? 'active' : '' }}"><i class="fa-solid fa-hand-holding"></i>Pengajuan Peminjaman</a></li>
+          <li><a href="{{ url('/riwayat_barang/pengajuan') }}" class="sidebar-link {{ (isset($active) && $active=='barang_saya') ? 'active' : '' }}"><i class="fa-solid fa-hand-holding"></i>Pengajuan Peminjaman</a></li>
           <li><a href="{{ url('/pemeliharaan-pegawai/pengajuan') }}" class="sidebar-link {{ (isset($active) && $active=='pemeliharaan') ? 'active' : '' }}"><i class="fa-solid fa-tools"></i>Pengajuan Pemeliharaan</a></li>
-          <li><a href="{{ url('/riwayat_barang/pengajuan') }}" class="sidebar-link {{ (isset($active) && $active=='barang_saya') ? 'active' : '' }}"><i class="fa-solid fa-box-open"></i>Barang Saya</a></li>
           <li><a href="{{ url('/pemeliharaan-pegawai') }}" class="sidebar-link {{ (isset($active) && $active=='riwayat_pemeliharaan') ? 'active' : '' }}"><i class="fa-solid fa-history"></i>Riwayat Pemeliharaan</a></li>
         </ul>
       </div>

@@ -305,7 +305,6 @@ class KegiatanController extends Controller
                 'data_bank' => $data_bank,
                 "nonpegawais" => $nonPegawais,
                 "jumlahHari" =>  $jumlahHari,
-                "nonpegawais" => Non_pegawai::all(),
                 'jumlah_kepanitiaan' => $nKepanitiaan,
                 "dokumens" => Laporan_perjadinkegiatan::where('data_perjadin_kegiatan', $id)
                 ->whereNotNull('file')->get(),
@@ -511,9 +510,7 @@ class KegiatanController extends Controller
             'data_bank' => $data_bank,
             'tambahPenginapanExists' => $tambahPenginapanExists,
             "perangkats" => Fasilitas::where('data_perjadinkegiatan_id', $id)->get(),
-            "pegawais" => Pegawai::all(),
             'mobilitasExists' => $mobilitasExists,
-            "nonpegawais" => Non_pegawai::all(),
             "perangkatPegawais" => $perangkatPegawai,
             "perangkatNonPegawais" => $perangkatNonPegawai,
             "jumlahHari" => $jumlahHari,
@@ -531,7 +528,6 @@ class KegiatanController extends Controller
             "mobilitas" => Mobilitas_perjadinkegiatan::where('data_perjadinkegiatan', $id)->get(),
             "dokumens" => Laporan_perjadinkegiatan::where('data_perjadin_kegiatan', $id)
             ->whereNotNull('file')->get(),
-            "kegiatan" => Data_perjadinkegiatan::find($id),
             "kebutuhans" => $kebutuhans,
             'ref_fasilitas' => DB::table('ref_fasilitas')->where('status','aktif')->where('terikat_pelaksana',0)->get(),
             'ref_fasilitas_pelaksana' => DB::table('ref_fasilitas')->where('status','aktif')->where('terikat_pelaksana',1)->get(),

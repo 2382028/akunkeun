@@ -4,15 +4,25 @@
     <section id="beranda" class="pb-5 pt-4">
         <div class="container">
             <div class="row mb-3">
-                <h3 class="fw-bold text-secondary">Barang Saya</h3>
+                <h5 class="fw-bold text-secondary">Pengajuan Peminjaman</h5>
             </div>
-            <div class="row mb-3">
-                <div class="scroll-page">
-                    <a href="{{url('/riwayat_barang/' . 'pengajuan')}}" class="page-wrap btn btn-sm mb-3 {{ $status == 'pengajuan' ? 'active-link' : '' }}">Pengajuan</a>
-                    <a href="{{url('/riwayat_barang/' . 'digunakan')}}" class="page-wrap btn btn-sm mb-3 {{ $status == 'digunakan' ? 'active-link' : '' }}">Barang Saya</a>
-                    <a href="{{url('/riwayat_barang/'. 'diservice')}}" class="page-wrap btn btn-sm mb-3 {{ $status == 'diservice' ? 'active-link' : '' }}">Sedang Service</a>
-                    <a href="{{url('/riwayat_barang/' . 'penolakan')}}" class="page-wrap btn btn-sm mb-3 {{ $status == 'penolakan' ? 'active-link' : '' }}">Penolakan</a>
-                    <a href="{{url('/riwayat_barang/' . 'selesai')}}" class="page-wrap btn btn-sm mb-3 {{ $status == 'selesai' ? 'active-link' : '' }}">Riwayat Peminjaman</a>
+            <div class="row mb-4">
+                <div class="col-12 d-flex flex-wrap gap-2">
+                    <a href="{{url('/riwayat_barang/pengajuan')}}" class="btn rounded-pill px-4 {{ $status == 'pengajuan' ? 'btn-primary shadow-sm' : 'btn-light text-secondary border' }}">
+                        <i class="fa-solid fa-file-signature me-1"></i> Pengajuan
+                    </a>
+                    <a href="{{url('/riwayat_barang/digunakan')}}" class="btn rounded-pill px-4 {{ $status == 'digunakan' ? 'btn-primary shadow-sm' : 'btn-light text-secondary border' }}">
+                        <i class="fa-solid fa-box-open me-1"></i> Barang Saya
+                    </a>
+                    <a href="{{url('/riwayat_barang/diservice')}}" class="btn rounded-pill px-4 {{ $status == 'diservice' ? 'btn-primary shadow-sm' : 'btn-light text-secondary border' }}">
+                        <i class="fa-solid fa-screwdriver-wrench me-1"></i> Sedang Service
+                    </a>
+                    <a href="{{url('/riwayat_barang/penolakan')}}" class="btn rounded-pill px-4 {{ $status == 'penolakan' ? 'btn-primary shadow-sm' : 'btn-light text-secondary border' }}">
+                        <i class="fa-solid fa-ban me-1"></i> Penolakan
+                    </a>
+                    <a href="{{url('/riwayat_barang/selesai')}}" class="btn rounded-pill px-4 {{ $status == 'selesai' ? 'btn-primary shadow-sm' : 'btn-light text-secondary border' }}">
+                        <i class="fa-solid fa-clock-rotate-left me-1"></i> Riwayat Peminjaman
+                    </a>
                 </div>
             </div>
             <div class="row">
@@ -30,23 +40,23 @@
                                                 <h6 class="fw-bold text-secondary">Pengajuan Peminjaman Barang</h6><br>
                                             </div>
                                             <div>
-                                                <a href="{{asset('/fasilitas')}}" class="btn btn-neon text-white mb-3" type="button">
+                                                <a href="{{asset('/fasilitas')}}" class="btn btn-neon text-white btn-sm mb-3" type="button">
                                                     <i class="fa fa-plus"></i> Pinjam Barang Baru
                                                 </a>
                                             </div>                                            
                                         </div>
-                                        <table id="example" class="table table-bordered data-table" style="width: 100%">
+                                        <table id="example" class="table table-bordered table-sm data-table" style="width: 100%; font-size: 0.95rem;">
                                             <thead>
-                                                <tr class="text-center small">
+                                                <tr class="text-center small align-middle">
                                                     <th class="th-sm">No</th>
                                                     <th style="min-width: 200px;">Nama Barang</th>
                                                     <th style="min-width: 150px;">Tanggal Peminjaman</th>
                                                     <th style="min-width: 150px;">Status</th>
-                                                    <th style="min-width: 150px;">Aksi</th>
+                                                    <th style="width: 120px; text-align: center;">Aksi</th>
                                                 </tr>
                                             </thead>
                                             @foreach ($riwayats as $riwayat)
-                                            <tr>
+                                            <tr class="align-middle">
                                                 <td class='text-center'>{{$loop->iteration}}</td>
                                                 <td class=''>{{$riwayat->nama_barang}}</td>
                                                 <td class=''>{{$riwayat->tgl_mulai_digunakan}}</td>
@@ -63,7 +73,7 @@
                                         <div class="container text-center">
                                             <img src="{{asset('public/assets/images/empty.svg')}}" class="mb-3" width="150px" alt=""><br>
                                             <h3>Tidak Ada data yang ditemukan!</h3><br>
-                                            <a href="{{url('/fasilitas')}}" class="btn btn-neon text-white mb-3"><i class="fa fa-plus"></i> Ajukan Peminjaman Baru</a>
+                                            <a href="{{url('/fasilitas')}}" class="btn btn-neon text-white btn-sm mb-3"><i class="fa fa-plus"></i> Ajukan Peminjaman Baru</a>
             
                                         </div>
                                         @endif
