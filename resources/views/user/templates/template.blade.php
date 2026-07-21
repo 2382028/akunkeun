@@ -149,7 +149,7 @@
                             <li class="nav-item">
                                 <a data-active="barang_saya" class="nav-link" aria-current="page"
                                     href="{{ url('/riwayat_barang/' . 'pengajuan') }}"><i class="fa-solid fa-box-open"></i>
-                                    <span class="hide-profile">Barang Saya</span></a>
+                                    <span class="hide-profile">Pengajuan Peminjaman</span></a>
                             </li>
                         @endunless
                         <li class="nav-item dropdown">

@@ -8,7 +8,7 @@
                 </div>
                 <div class="col-md-6 text-end">
                     <a href="{{ url('/pemeliharaan-pegawai/pengajuan') }}"
-                        class="btn btn-primary btn-sm d-inline-flex align-items-center gap-2 shadow-sm px-3 py-2">
+                        class="btn btn-primary btn-sm d-inline-flex align-items-center gap-2 shadow-sm">
                         <i class="fa fa-plus"></i>
                         <span>Ajukan Pemeliharaan Baru</span>
                     </a>
