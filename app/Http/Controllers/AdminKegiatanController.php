@@ -4343,7 +4343,7 @@ public function uploadTTEPerjadinKegiatan(Request $request)
             ]);
 
 
-        return redirect()->route('HKT-kegiatan', ['status' => 'pengajuan'])->with('success', 'Surat Tugas telah berhasil di Upload!');
+        return redirect()->route('HKT-kegiatan', ['status' => 'pengajuan'])->with('success', 'Proses TTE berhasil ditandai. Silakan upload dokumen final setelah TTE selesai!');
 }
 
 public function generateLaporanHKT(Request $request)

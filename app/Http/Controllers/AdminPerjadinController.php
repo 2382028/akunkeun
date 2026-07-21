@@ -2796,7 +2796,7 @@ public function edit_mobilitas($id)
             ]);
 
 
-        return redirect()->route('HKT-perjadin', ['status' => 'pengajuan'])->with('success', 'Surat Tugas telah berhasil di Upload!');
+        return redirect()->route('HKT-perjadin', ['status' => 'pengajuan'])->with('success', 'Proses TTE berhasil ditandai. Silakan upload dokumen final setelah TTE selesai!');
     }
 
     public function ganerateLaporanHKT(Request $request)

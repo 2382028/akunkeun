@@ -235,18 +235,18 @@ class KegiatanController extends Controller
                                           ->where('perangkat_acaras.tgl_selesai', '>=', $tanggalAkhir);
                             });
                     });
-                    $query->orWhereExists(function ($query) use ($tanggalAwal, $tanggalAkhir) {
-                        $query->select(DB::raw(1))
-                            ->from('data_perjadinlangsungs')
-                            ->whereRaw('pegawais.id = data_perjadinlangsungs.pegawai_id')
-                            ->where('data_perjadinlangsungs.status_persetujuan', '!=', 'Ditolak')
-                            ->where(function ($subquery) use ($tanggalAwal, $tanggalAkhir) {
-                                $subquery->whereBetween('data_perjadinlangsungs.tgl_keberangkatan', [$tanggalAwal, $tanggalAkhir])
-                                    ->orWhereBetween('data_perjadinlangsungs.tgl_selesai', [$tanggalAwal, $tanggalAkhir])
-                                    ->orWhere(function ($subquery2) use ($tanggalAwal, $tanggalAkhir) {
-                                        $subquery2->where('data_perjadinlangsungs.tgl_keberangkatan', '<=', $tanggalAwal)
-                                            ->where('data_perjadinlangsungs.tgl_selesai', '>=', $tanggalAkhir);
-                                    });
+            })
+            ->whereNotExists(function ($query) use ($tanggalAwal, $tanggalAkhir) {
+                $query->select(DB::raw(1))
+                    ->from('data_perjadinlangsungs')
+                    ->whereRaw('pegawais.id = data_perjadinlangsungs.pegawai_id')
+                    ->where('data_perjadinlangsungs.status_persetujuan', '!=', 'Ditolak')
+                    ->where(function ($subquery) use ($tanggalAwal, $tanggalAkhir) {
+                        $subquery->whereBetween('data_perjadinlangsungs.tgl_keberangkatan', [$tanggalAwal, $tanggalAkhir])
+                            ->orWhereBetween('data_perjadinlangsungs.tgl_selesai', [$tanggalAwal, $tanggalAkhir])
+                            ->orWhere(function ($subquery2) use ($tanggalAwal, $tanggalAkhir) {
+                                $subquery2->where('data_perjadinlangsungs.tgl_keberangkatan', '<=', $tanggalAwal)
+                                    ->where('data_perjadinlangsungs.tgl_selesai', '>=', $tanggalAkhir);
                             });
                     });
             })
@@ -271,18 +271,18 @@ class KegiatanController extends Controller
                                           ->where('perangkat_acaras.tgl_selesai', '>=', $tanggalAkhir);
                             });
                     });
-                    $query->orWhereExists(function ($query) use ($tanggalAwal, $tanggalAkhir) {
-                        $query->select(DB::raw(1))
-                            ->from('data_perjadinlangsungs')
-                            ->whereRaw('non_pegawais.id = data_perjadinlangsungs.non_pegawai_id')
-                            ->where('data_perjadinlangsungs.status_persetujuan', '!=', 'Ditolak')
-                            ->where(function ($subquery) use ($tanggalAwal, $tanggalAkhir) {
-                                $subquery->whereBetween('data_perjadinlangsungs.tgl_keberangkatan', [$tanggalAwal, $tanggalAkhir])
-                                    ->orWhereBetween('data_perjadinlangsungs.tgl_selesai', [$tanggalAwal, $tanggalAkhir])
-                                    ->orWhere(function ($subquery2) use ($tanggalAwal, $tanggalAkhir) {
-                                        $subquery2->where('data_perjadinlangsungs.tgl_keberangkatan', '<=', $tanggalAwal)
-                                            ->where('data_perjadinlangsungs.tgl_selesai', '>=', $tanggalAkhir);
-                                    });
+            })
+            ->whereNotExists(function ($query) use ($tanggalAwal, $tanggalAkhir) {
+                $query->select(DB::raw(1))
+                    ->from('data_perjadinlangsungs')
+                    ->whereRaw('non_pegawais.id = data_perjadinlangsungs.non_pegawai_id')
+                    ->where('data_perjadinlangsungs.status_persetujuan', '!=', 'Ditolak')
+                    ->where(function ($subquery) use ($tanggalAwal, $tanggalAkhir) {
+                        $subquery->whereBetween('data_perjadinlangsungs.tgl_keberangkatan', [$tanggalAwal, $tanggalAkhir])
+                            ->orWhereBetween('data_perjadinlangsungs.tgl_selesai', [$tanggalAwal, $tanggalAkhir])
+                            ->orWhere(function ($subquery2) use ($tanggalAwal, $tanggalAkhir) {
+                                $subquery2->where('data_perjadinlangsungs.tgl_keberangkatan', '<=', $tanggalAwal)
+                                    ->where('data_perjadinlangsungs.tgl_selesai', '>=', $tanggalAkhir);
                             });
                     });
             })
@@ -425,18 +425,18 @@ class KegiatanController extends Controller
                                               ->where('perangkat_acaras.tgl_selesai', '>=', $tanggalAkhir);
                                 });
                         });
-                        $query->orWhereExists(function ($query) use ($tanggalAwal, $tanggalAkhir) {
-                            $query->select(DB::raw(1))
-                                ->from('data_perjadinlangsungs')
-                                ->whereRaw('pegawais.id = data_perjadinlangsungs.pegawai_id')
-                                ->where('data_perjadinlangsungs.status_persetujuan', '!=', 'Ditolak')
-                                ->where(function ($subquery) use ($tanggalAwal, $tanggalAkhir) {
-                                    $subquery->whereBetween('data_perjadinlangsungs.tgl_keberangkatan', [$tanggalAwal, $tanggalAkhir])
-                                        ->orWhereBetween('data_perjadinlangsungs.tgl_selesai', [$tanggalAwal, $tanggalAkhir])
-                                        ->orWhere(function ($subquery2) use ($tanggalAwal, $tanggalAkhir) {
-                                            $subquery2->where('data_perjadinlangsungs.tgl_keberangkatan', '<=', $tanggalAwal)
-                                                ->where('data_perjadinlangsungs.tgl_selesai', '>=', $tanggalAkhir);
-                                        });
+                })
+                ->whereNotExists(function ($query) use ($tanggalAwal, $tanggalAkhir) {
+                    $query->select(DB::raw(1))
+                        ->from('data_perjadinlangsungs')
+                        ->whereRaw('pegawais.id = data_perjadinlangsungs.pegawai_id')
+                        ->where('data_perjadinlangsungs.status_persetujuan', '!=', 'Ditolak')
+                        ->where(function ($subquery) use ($tanggalAwal, $tanggalAkhir) {
+                            $subquery->whereBetween('data_perjadinlangsungs.tgl_keberangkatan', [$tanggalAwal, $tanggalAkhir])
+                                ->orWhereBetween('data_perjadinlangsungs.tgl_selesai', [$tanggalAwal, $tanggalAkhir])
+                                ->orWhere(function ($subquery2) use ($tanggalAwal, $tanggalAkhir) {
+                                    $subquery2->where('data_perjadinlangsungs.tgl_keberangkatan', '<=', $tanggalAwal)
+                                        ->where('data_perjadinlangsungs.tgl_selesai', '>=', $tanggalAkhir);
                                 });
                         });
                 })
@@ -461,18 +461,18 @@ class KegiatanController extends Controller
                                               ->where('perangkat_acaras.tgl_selesai', '>=', $tanggalAkhir);
                                 });
                         });
-                        $query->orWhereExists(function ($query) use ($tanggalAwal, $tanggalAkhir) {
-                            $query->select(DB::raw(1))
-                                ->from('data_perjadinlangsungs')
-                                ->whereRaw('non_pegawais.id = data_perjadinlangsungs.non_pegawai_id')
-                                ->where('data_perjadinlangsungs.status_persetujuan', '!=', 'Ditolak')
-                                ->where(function ($subquery) use ($tanggalAwal, $tanggalAkhir) {
-                                    $subquery->whereBetween('data_perjadinlangsungs.tgl_keberangkatan', [$tanggalAwal, $tanggalAkhir])
-                                        ->orWhereBetween('data_perjadinlangsungs.tgl_selesai', [$tanggalAwal, $tanggalAkhir])
-                                        ->orWhere(function ($subquery2) use ($tanggalAwal, $tanggalAkhir) {
-                                            $subquery2->where('data_perjadinlangsungs.tgl_keberangkatan', '<=', $tanggalAwal)
-                                                ->where('data_perjadinlangsungs.tgl_selesai', '>=', $tanggalAkhir);
-                                        });
+                })
+                ->whereNotExists(function ($query) use ($tanggalAwal, $tanggalAkhir) {
+                    $query->select(DB::raw(1))
+                        ->from('data_perjadinlangsungs')
+                        ->whereRaw('non_pegawais.id = data_perjadinlangsungs.non_pegawai_id')
+                        ->where('data_perjadinlangsungs.status_persetujuan', '!=', 'Ditolak')
+                        ->where(function ($subquery) use ($tanggalAwal, $tanggalAkhir) {
+                            $subquery->whereBetween('data_perjadinlangsungs.tgl_keberangkatan', [$tanggalAwal, $tanggalAkhir])
+                                ->orWhereBetween('data_perjadinlangsungs.tgl_selesai', [$tanggalAwal, $tanggalAkhir])
+                                ->orWhere(function ($subquery2) use ($tanggalAwal, $tanggalAkhir) {
+                                    $subquery2->where('data_perjadinlangsungs.tgl_keberangkatan', '<=', $tanggalAwal)
+                                        ->where('data_perjadinlangsungs.tgl_selesai', '>=', $tanggalAkhir);
                                 });
                         });
                 })
@@ -797,6 +797,7 @@ class KegiatanController extends Controller
         return view('user.kegiatan.riwayat', [
             'title' => 'Kegiatanku',
             'active' => 'kegiatanku_perjadin',
+            'status' => $status,
             'kegiatans' => $riwayatKegiatans,
             'countDraf' => $countDrafNew,
             'countPengajuan' => $countPengajuanNew,
