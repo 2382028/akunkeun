@@ -1,27 +1,70 @@
 @extends('user.templates.sidebar')
 
+<style>
+.btn-status {
+    padding: 4px 10px;
+    text-align: center;
+    font-size: 12px;
+    border-radius: 6px;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    position: relative;
+    font-weight: 500;
+}
+
+.btn-status:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.btn-status.status-active {
+    transform: translateY(-1px);
+    box-shadow: 0 0 0 3px rgba(255,255,255,0.6), 0 0 0 5px currentColor;
+    font-weight: 700;
+    z-index: 1;
+    outline: 3px solid rgba(0,0,0,0.25);
+    outline-offset: 2px;
+}
+
+.badge-count {
+    font-size: 11px;
+    padding: 2px 5px;
+    margin-left: 4px;
+    border-radius: 4px;
+}
+</style>
+
 @section('content')
     <section id="beranda" class="pb-5 pt-4">
         <div class="container">
             <div class="row mb-3">
                 <h5 class="fw-bold text-secondary">Pengajuan Peminjaman</h5>
             </div>
-            <div class="row mb-4">
-                <div class="col-12 d-flex flex-wrap gap-2">
-                    <a href="{{url('/riwayat_barang/pengajuan')}}" class="btn rounded-pill px-4 {{ $status == 'pengajuan' ? 'btn-primary shadow-sm' : 'btn-light text-secondary border' }}">
-                        <i class="fa-solid fa-file-signature me-1"></i> Pengajuan
+            <div class="row mb-3">
+                <div class="d-flex flex-wrap gap-2 mb-2">
+                    <!-- Pengajuan: Biru Tua dengan teks putih -->
+                    <a href="{{url('/riwayat_barang/pengajuan')}}" class="btn btn-primary btn-status btn-sm {{ $status === 'pengajuan' ? 'status-active' : '' }}" style="background-color: #004085; color: white;">
+                        Pengajuan <span class="badge badge-count" style="color: white;">{{ $countPengajuan ?? 0 }}</span>
                     </a>
-                    <a href="{{url('/riwayat_barang/digunakan')}}" class="btn rounded-pill px-4 {{ $status == 'digunakan' ? 'btn-primary shadow-sm' : 'btn-light text-secondary border' }}">
-                        <i class="fa-solid fa-box-open me-1"></i> Barang Saya
+
+                    <!-- Barang Saya: Biru Muda dengan teks hitam -->
+                    <a href="{{url('/riwayat_barang/digunakan')}}" class="btn btn-info btn-status btn-sm {{ $status === 'digunakan' ? 'status-active' : '' }}" style="background-color: #87CEEB; color: black;">
+                        Barang Saya <span class="badge badge-count" style="color: black;">{{ $countDigunakan ?? 0 }}</span>
                     </a>
-                    <a href="{{url('/riwayat_barang/diservice')}}" class="btn rounded-pill px-4 {{ $status == 'diservice' ? 'btn-primary shadow-sm' : 'btn-light text-secondary border' }}">
-                        <i class="fa-solid fa-screwdriver-wrench me-1"></i> Sedang Service
+
+                    <!-- Sedang Service: Oranye dengan teks hitam -->
+                    <a href="{{url('/riwayat_barang/diservice')}}" class="btn btn-orange btn-status btn-sm {{ $status === 'diservice' ? 'status-active' : '' }}" style="background-color: #FFA500; color: black;">
+                        Sedang Service <span class="badge badge-count" style="color: black;">{{ $countDiservice ?? 0 }}</span>
                     </a>
-                    <a href="{{url('/riwayat_barang/penolakan')}}" class="btn rounded-pill px-4 {{ $status == 'penolakan' ? 'btn-primary shadow-sm' : 'btn-light text-secondary border' }}">
-                        <i class="fa-solid fa-ban me-1"></i> Penolakan
+
+                    <!-- Penolakan: Merah dengan teks putih -->
+                    <a href="{{url('/riwayat_barang/penolakan')}}" class="btn btn-danger btn-status btn-sm {{ $status === 'penolakan' ? 'status-active' : '' }}" style="color: white;">
+                        Penolakan <span class="badge badge-count" style="color: white;">{{ $countPenolakan ?? 0 }}</span>
                     </a>
-                    <a href="{{url('/riwayat_barang/selesai')}}" class="btn rounded-pill px-4 {{ $status == 'selesai' ? 'btn-primary shadow-sm' : 'btn-light text-secondary border' }}">
-                        <i class="fa-solid fa-clock-rotate-left me-1"></i> Riwayat Peminjaman
+
+                    <!-- Riwayat Peminjaman: Hijau Tua dengan teks putih -->
+                    <a href="{{url('/riwayat_barang/selesai')}}" class="btn btn-dark-green btn-status btn-sm {{ $status === 'selesai' ? 'status-active' : '' }}" style="background-color: #006400; color: white;">
+                        Riwayat Peminjaman <span class="badge badge-count" style="color: white;">{{ $countSelesai ?? 0 }}</span>
                     </a>
                 </div>
             </div>
@@ -60,7 +103,21 @@
                                                 <td class='text-center'>{{$loop->iteration}}</td>
                                                 <td class=''>{{$riwayat->nama_barang}}</td>
                                                 <td class=''>{{$riwayat->tgl_mulai_digunakan}}</td>
-                                                <td class='text-center'>{{$riwayat->status}}</td>
+                                                <td class='text-center'>
+                                                    @if($riwayat->status == 'pengajuan')
+                                                        <span class="badge" style="background-color: #004085; color: white;">Pengajuan</span>
+                                                    @elseif($riwayat->status == 'digunakan')
+                                                        <span class="badge" style="background-color: #87CEEB; color: black;">Barang Saya</span>
+                                                    @elseif($riwayat->status == 'diservice')
+                                                        <span class="badge" style="background-color: #FFA500; color: black;">Sedang Service</span>
+                                                    @elseif($riwayat->status == 'penolakan')
+                                                        <span class="badge bg-danger text-white">Penolakan</span>
+                                                    @elseif($riwayat->status == 'selesai')
+                                                        <span class="badge" style="background-color: #006400; color: white;">Selesai</span>
+                                                    @else
+                                                        <span class="badge bg-secondary">{{ ucfirst($riwayat->status) }}</span>
+                                                    @endif
+                                                </td>
                                                 <td class='text-center'>
                                                     <span class="page details">
                                                         <a href="{{url('/detail_peminjaman/' . $riwayat->idPenanggungJawab)}}" class="page-wrap btn btn-primary btn-sm">Detail</a>

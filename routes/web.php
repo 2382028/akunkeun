@@ -928,39 +928,41 @@ Route::post('/c_peminjaman', [FasilitasController::class, 'store'])->middleware(
 Route::post('/c_permohonan', [FasilitasController::class, 'storePermohonan'])->middleware('auth:pegawai');
 
 /* route kelola user -admin */
-// administrator
-Route::resource('admin', AdminController::class);
-Route::resource('ref_admin_roles', RefAdminRoleController::class)->except(['show']);
-// pegawai
-Route::post('/admin-pegawai', [PegawaiController::class, 'save'])->name('admin-pegawai.store');
-Route::put('/admin-pegawai/{id}', [PegawaiController::class, 'save'])->name('admin-pegawai.update');
-Route::delete('/admin-pegawai/{id}', [PegawaiController::class, 'destroy'])->name('admin-pegawai.destroy');
-Route::get('/admin-pegawai', [PegawaiController::class, 'index'])->name('admin-pegawai.index');
-// non-pegawai
-Route::resource('/admin-nonpegawai', NonPegawaiController::class,);
+Route::middleware('auth:administrator')->group(function () {
+    // administrator
+    Route::resource('admin', AdminController::class);
+    Route::resource('ref_admin_roles', RefAdminRoleController::class)->except(['show']);
+    // pegawai
+    Route::post('/admin-pegawai', [PegawaiController::class, 'save'])->name('admin-pegawai.store');
+    Route::put('/admin-pegawai/{id}', [PegawaiController::class, 'save'])->name('admin-pegawai.update');
+    Route::delete('/admin-pegawai/{id}', [PegawaiController::class, 'destroy'])->name('admin-pegawai.destroy');
+    Route::get('/admin-pegawai', [PegawaiController::class, 'index'])->name('admin-pegawai.index');
+    // non-pegawai
+    Route::resource('/admin-nonpegawai', NonPegawaiController::class);
 
-//Fasilitas
-Route::get('/get-data-fasilitas', [AdminController::class, 'getFasilitas']);
+    //Fasilitas
+    Route::get('/get-data-fasilitas', [AdminController::class, 'getFasilitas']);
 
-/* route rkakl -admin */
-// rkakl_satker
-Route::resource('/admin-rkakl_satker', RkaklSatkerController::class);
-// rkakl_program
-Route::resource('/admin-rkakl_program', RkaklProgramController::class);
-// rkakl_kegiatan
-Route::resource('/admin-rkakl_kegiatan', RkaklKegiatanController::class);
-// rkakl_output
-Route::resource('/admin-rkakl_output', RkaklOutputController::class);
-// rkakl_suboutput
-Route::resource('/admin-rkakl_suboutput', RkaklSuboutputController::class);
-// rkakl_komponen
-Route::resource('/admin-rkakl_komponen', RkaklKomponenController::class);
-// rkakl_subkomponen
-Route::resource('/admin-rkakl_subkomponen', RkaklSubkomponenController::class);
-// rkakl_akun
-Route::resource('/admin-rkakl_akun', AkunController::class);
-// rkakl_akun_x_rkakl
-Route::resource('/admin-akun_x_rkakl', AkunXRkaklController::class);
+    /* route rkakl -admin */
+    // rkakl_satker
+    Route::resource('/admin-rkakl_satker', RkaklSatkerController::class);
+    // rkakl_program
+    Route::resource('/admin-rkakl_program', RkaklProgramController::class);
+    // rkakl_kegiatan
+    Route::resource('/admin-rkakl_kegiatan', RkaklKegiatanController::class);
+    // rkakl_output
+    Route::resource('/admin-rkakl_output', RkaklOutputController::class);
+    // rkakl_suboutput
+    Route::resource('/admin-rkakl_suboutput', RkaklSuboutputController::class);
+    // rkakl_komponen
+    Route::resource('/admin-rkakl_komponen', RkaklKomponenController::class);
+    // rkakl_subkomponen
+    Route::resource('/admin-rkakl_subkomponen', RkaklSubkomponenController::class);
+    // rkakl_akun
+    Route::resource('/admin-rkakl_akun', AkunController::class);
+    // rkakl_akun_x_rkakl
+    Route::resource('/admin-akun_x_rkakl', AkunXRkaklController::class);
+});
 // iku
 Route::get('/admin-iku', [IKUApiController::class, 'indexIKU'])->name('IKU')->middleware('auth:administrator');
 Route::get('/detail_iku/{id}', [IKUApiController::class, 'indexDetailIKU'])->middleware('auth:administrator');

@@ -893,19 +893,21 @@ public function edit_mobilitas($id)
         $fasilitas = DB::table('data_perjadinlangsungs')
         ->join('pegawais', 'data_perjadinlangsungs.pegawai_id', '=', 'pegawais.id')
         ->leftJoin('keuangan_perjadinlangsungs', 'data_perjadinlangsungs.id', '=', 'keuangan_perjadinlangsungs.data_perjadinlangsungs')
-        ->select('pegawais.nama_lengkap', 'pegawais.pangkat', 'pegawais.golongan', 'data_perjadinlangsungs.status_pegawai', 'pegawais.NIP_NIK', 'pegawais.id', 'pegawais.nama_lengkap', 'data_perjadinlangsungs.id as idPeserta', 'keuangan_perjadinlangsungs.id as idKeuangan', 'keuangan_perjadinlangsungs.akun_x_rkakl', 'keuangan_perjadinlangsungs.ref_sbm', 'keuangan_perjadinlangsungs.uang_harian', 'keuangan_perjadinlangsungs.uang_harian_fullday', 'keuangan_perjadinlangsungs.uang_harian_fullboard', 'keuangan_perjadinlangsungs.uang_representasi', 'keuangan_perjadinlangsungs.persen_pajak', 'keuangan_perjadinlangsungs.jumlah_harga', 'keuangan_perjadinlangsungs.status', 'keuangan_perjadinlangsungs.pph22', 'keuangan_perjadinlangsungs.pph23', 'keuangan_perjadinlangsungs.tgl_bayar', 'keuangan_perjadinlangsungs.ppn')
+        ->select('pegawais.nama_lengkap', 'pegawais.pangkat', 'pegawais.golongan', 'data_perjadinlangsungs.status_pegawai', 'pegawais.NIP_NIK', 'pegawais.id', 'data_perjadinlangsungs.id as idPeserta', 'keuangan_perjadinlangsungs.id as idKeuangan', 'keuangan_perjadinlangsungs.akun_x_rkakl', 'keuangan_perjadinlangsungs.ref_sbm', 'keuangan_perjadinlangsungs.uang_harian', 'keuangan_perjadinlangsungs.uang_harian_fullday', 'keuangan_perjadinlangsungs.uang_harian_fullboard', 'keuangan_perjadinlangsungs.uang_representasi', 'keuangan_perjadinlangsungs.persen_pajak', 'keuangan_perjadinlangsungs.jumlah_harga', 'keuangan_perjadinlangsungs.status', 'keuangan_perjadinlangsungs.pph22', 'keuangan_perjadinlangsungs.pph23', 'keuangan_perjadinlangsungs.tgl_bayar', 'keuangan_perjadinlangsungs.ppn')
         ->where('data_perjadinlangsungs.info_perjadinlangsung', $id)
         ->whereNull('keuangan_perjadinlangsungs.kebutuhan_id')
+        ->groupBy('data_perjadinlangsungs.id')
         ->get();
         
         // dd($fasilitas);
 
         $pesertaNonPegawais = DB::table('data_perjadinlangsungs')
             ->join('non_pegawais', 'data_perjadinlangsungs.non_pegawai_id', '=', 'non_pegawais.id')
-            ->join('keuangan_perjadinlangsungs', 'data_perjadinlangsungs.id', '=', 'keuangan_perjadinlangsungs.data_perjadinlangsungs')
+            ->leftJoin('keuangan_perjadinlangsungs', 'data_perjadinlangsungs.id', '=', 'keuangan_perjadinlangsungs.data_perjadinlangsungs')
             ->select('keuangan_perjadinlangsungs.id  as idKeuangan', 'non_pegawais.id', 'non_pegawais.nama_lengkap', 'non_pegawais.pangkat', 'non_pegawais.golongan', 'data_perjadinlangsungs.status_pegawai', 'data_perjadinlangsungs.id as idData', 'keuangan_perjadinlangsungs.akun_x_rkakl', 'keuangan_perjadinlangsungs.ref_sbm', 'keuangan_perjadinlangsungs.uang_harian', 'keuangan_perjadinlangsungs.uang_harian_fullday','keuangan_perjadinlangsungs.uang_harian_fullboard','keuangan_perjadinlangsungs.uang_representasi','keuangan_perjadinlangsungs.persen_pajak', 'keuangan_perjadinlangsungs.jumlah_harga', 'keuangan_perjadinlangsungs.status', 'keuangan_perjadinlangsungs.pph22', 'keuangan_perjadinlangsungs.pph23', 'keuangan_perjadinlangsungs.tgl_bayar', 'keuangan_perjadinlangsungs.ppn')
             ->where('data_perjadinlangsungs.info_perjadinlangsung', $id)
             ->whereNull('keuangan_perjadinlangsungs.kebutuhan_id')
+            ->groupBy('data_perjadinlangsungs.id')
             ->get();
 
         $kebutuhans = DB::table('kebutuhans')
@@ -1873,7 +1875,7 @@ public function edit_mobilitas($id)
         if ($action === 'approval') {
             $totalpesertapegawai = $request->numPegawai;
             for ($i = 0; $i < $totalpesertapegawai; $i++) {
-                $idpesertapegawai = 'idKeuangan_' . $i;
+                $idpesertapegawai = 'idPegawai_' . $i;
                 $uangharian = 'uang_harian' . $i;
                 $uangfullday = 'uang_harian_fullday' . $i;
                 $uangfullboard = 'uang_harian_fullboard' . $i;
@@ -1885,6 +1887,7 @@ public function edit_mobilitas($id)
                 $statuspersetujuan = 'statuspegawai_' . $i;
                 DB::table('keuangan_perjadinlangsungs')
                     ->where('data_perjadinlangsungs', $request->$idpesertapegawai)
+                    ->whereNull('kebutuhan_id')
                     ->update([
                         'uang_harian' => $request->$uangharian,
                         'uang_harian_fullday' => $request->$uangfullday,

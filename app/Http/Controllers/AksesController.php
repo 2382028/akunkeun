@@ -60,11 +60,13 @@ class AksesController extends Controller
 
     public function logout(Request $request)
     {
-        Auth::logout();
+        Auth::guard('pegawai')->logout();
     
         $request->session()->invalidate();
     
         $request->session()->regenerateToken();
+
+        $request->session()->forget('versi');
     
         return redirect('/akses');
     }

@@ -145,7 +145,7 @@
                 </li>
                 <div class="" id="notif-list"></div>
                 <!-- Footer Notifikasi -->
-                @if (auth('administrator')->user()->role != 'Master')
+                @if (auth('administrator')->check() && auth('administrator')->user()->role != 'Master')
                 <li class="dropdown-footer text-center" id="mark-all-read-item" style="display: none;">
                   <a href="#" id="mark-all-read" class="text-primary">Tandai Semua sudah dibaca</a>
                 </li>
@@ -154,10 +154,10 @@
             </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle small" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="fa-solid fa-user"></i> {{ auth('administrator')->user()->email }}
+              <i class="fa-solid fa-user"></i> {{ auth('administrator')->user()->email ?? '' }}
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
-              @if (auth('administrator')->user()->role == 'Master')
+              @if (auth('administrator')->check() && auth('administrator')->user()->role == 'Master')
               <li><a class="dropdown-item" href="{{url('/pengaturan')}}">Pengaturan</a></li>
               @endif
               <li>
@@ -942,8 +942,10 @@ $(document).ready(function() {
   <script>
   $(document).ready(function() {
     function notifAdmin() {
+      const adminRole = "{{ auth('administrator')->user()->role ?? '' }}";
+      if (!adminRole) return;
       $.ajax({
-        url: "/notifAdmin/{{ auth('administrator')->user()->role }}",
+        url: "/notifAdmin/" + adminRole,
         type: "GET",
         dataType: "json",
         success: function(res) {
@@ -994,7 +996,7 @@ $(document).ready(function() {
             const notifId = $(this).data('id');
 
             // Mengambil role pengguna
-            const role = "{{ auth('administrator')->user()->role }}"; // Pastikan menggunakan tanda kutip untuk string
+            const role = "{{ auth('administrator')->user()->role ?? '' }}"; // Pastikan menggunakan tanda kutip untuk string
 
             // Periksa apakah role adalah "Master"
             if (role === 'Master') {
@@ -1043,8 +1045,9 @@ $(document).ready(function() {
 
         // Mengonfirmasi tindakan
         if (confirm('Apakah Anda yakin ingin menandai semua notifikasi sebagai dibaca?')) {
+            const adminRole = "{{ auth('administrator')->user()->role ?? '' }}";
             $.ajax({
-                url: "/mark-all-notif-admin/{{ auth('administrator')->user()->role }}", // Ganti dengan URL endpoint Anda
+                url: "/mark-all-notif-admin/" + adminRole, // Ganti dengan URL endpoint Anda
                 method: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}' // Pastikan Anda menyertakan token CSRF

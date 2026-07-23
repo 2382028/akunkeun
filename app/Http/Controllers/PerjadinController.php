@@ -764,7 +764,7 @@ public function editPerjadin(Request $request)
     // lagi di edit
     public function storePeserta(Request $request)
     {
-        DB::table('data_perjadinlangsungs')->insertOrIgnore([
+        $data_perjaidinlangsung_id = DB::table('data_perjadinlangsungs')->insertGetId([
             'status_pegawai' => 'Pegawai',
             'info_perjadinlangsung' => $request->info_perjadinlangsung,
             'pegawai_id' => $request->peserta_pegawai,
@@ -776,11 +776,9 @@ public function editPerjadin(Request $request)
             'updated_at' => now()->format('Y-m-d H:i:s'),
         ]);
 
-        $data_perjaidinlangsung_max = data_perjadinlangsung::max('id');
-
         DB::table('keuangan_perjadinlangsungs')->insertOrIgnore([
             'info_perjadinlangsung' => $request->info_perjadinlangsung,
-            'data_perjadinlangsungs' => $data_perjaidinlangsung_max,
+            'data_perjadinlangsungs' => $data_perjaidinlangsung_id,
             'created_at' => now()->format('Y-m-d H:i:s'),
             'updated_at' => now()->format('Y-m-d H:i:s'),
         ]);
@@ -791,8 +789,7 @@ public function editPerjadin(Request $request)
 
     public function storePesertaDetail(Request $request)
     {
-
-        DB::table('data_perjadinlangsungs')->insertOrIgnore([
+        $data_perjaidinlangsung_id = DB::table('data_perjadinlangsungs')->insertGetId([
             'status_pegawai' => 'Pegawai',
             'info_perjadinlangsung' => $request->info_perjadinlangsung,
             'pegawai_id' => $request->peserta_pegawai,
@@ -802,11 +799,9 @@ public function editPerjadin(Request $request)
             'updated_at' => now()->format('Y-m-d H:i:s'),
         ]);
 
-        $data_perjaidinlangsung_max = data_perjadinlangsung::max('id');
-
         DB::table('keuangan_perjadinlangsungs')->insertOrIgnore([
             'info_perjadinlangsung' => $request->info_perjadinlangsung,
-            'data_perjadinlangsungs' => $data_perjaidinlangsung_max,
+            'data_perjadinlangsungs' => $data_perjaidinlangsung_id,
             'created_at' => now()->format('Y-m-d H:i:s'),
             'updated_at' => now()->format('Y-m-d H:i:s'),
         ]);
@@ -860,7 +855,7 @@ public function editPerjadin(Request $request)
         }
     
         // Menyimpan data non-pegawai di data_perjadinlangsungs
-        DB::table('data_perjadinlangsungs')->insertOrIgnore([
+        $dataPerjadinlangsungId = DB::table('data_perjadinlangsungs')->insertGetId([
             'status_pegawai' => 'Non-Pegawai',
             'info_perjadinlangsung' => $request->info_perjadinlangsung,
             'non_pegawai_id' => $nonPegawaiId,
@@ -870,9 +865,6 @@ public function editPerjadin(Request $request)
             'created_at' => now()->format('Y-m-d H:i:s'),
             'updated_at' => now()->format('Y-m-d H:i:s'),
         ]);
-    
-        // Mendapatkan ID terakhir yang dimasukkan di data_perjadinlangsungs untuk tabel keuangan_perjadinlangsungs
-        $dataPerjadinlangsungId = DB::table('data_perjadinlangsungs')->max('id');
         
         // Menyimpan data di keuangan_perjadinlangsungs
         DB::table('keuangan_perjadinlangsungs')->insertOrIgnore([
@@ -890,9 +882,10 @@ public function editPerjadin(Request $request)
     public function storeNonPesertaDetail(Request $request)
     {
         $non_pegawai_tersedia = $request->peserta_non_pegawai;
+        $data_perjaidinlangsung_id = null;
         if ($non_pegawai_tersedia != null) {
-            DB::table('data_perjadinlangsungs')->insertOrIgnore([
-                'status_pegawai' => 'Pegawai',
+            $data_perjaidinlangsung_id = DB::table('data_perjadinlangsungs')->insertGetId([
+                'status_pegawai' => 'Non-Pegawai',
                 'info_perjadinlangsung' => $request->info_perjadinlangsung,
                 'non_pegawai_id' => $request->peserta_non_pegawai,
                 'status_persetujuan' => 'Proses Persetujuan',
@@ -902,7 +895,7 @@ public function editPerjadin(Request $request)
         }
 
         if ($request->nama_lengkap != null) {
-            DB::table('non_pegawais')->insertOrIgnore([
+            $id_non_pegawai_new = DB::table('non_pegawais')->insertGetId([
                 'NIP_NIK' => $request->NIP_NIK,
                 'nama_lengkap' => $request->nama_lengkap,
                 'golongan' => $request->golongan,
@@ -911,9 +904,8 @@ public function editPerjadin(Request $request)
                 'updated_at' => now()->format('Y-m-d H:i:s'),
             ]);
 
-            $id_non_pegawai_new = Non_pegawai::max('id'); // mengambil id non pegawai yang baru diinput
-            DB::table('data_perjadinlangsungs')->insertOrIgnore([
-                'status_pegawai' => 'Pegawai',
+            $data_perjaidinlangsung_id = DB::table('data_perjadinlangsungs')->insertGetId([
+                'status_pegawai' => 'Non-Pegawai',
                 'info_perjadinlangsung' => $request->info_perjadinlangsung,
                 'non_pegawai_id' => $id_non_pegawai_new,
                 'status_persetujuan' => 'Proses Persetujuan',
@@ -922,14 +914,14 @@ public function editPerjadin(Request $request)
             ]);
         }
 
-        $data_perjaidinlangsung_max = data_perjadinlangsung::max('id');
-
-        DB::table('keuangan_perjadinlangsungs')->insertOrIgnore([
-            'info_perjadinlangsung' => $request->info_perjadinlangsung,
-            'data_perjadinlangsungs' => $data_perjaidinlangsung_max,
-            'created_at' => now()->format('Y-m-d H:i:s'),
-            'updated_at' => now()->format('Y-m-d H:i:s'),
-        ]);
+        if ($data_perjaidinlangsung_id) {
+            DB::table('keuangan_perjadinlangsungs')->insertOrIgnore([
+                'info_perjadinlangsung' => $request->info_perjadinlangsung,
+                'data_perjadinlangsungs' => $data_perjaidinlangsung_id,
+                'created_at' => now()->format('Y-m-d H:i:s'),
+                'updated_at' => now()->format('Y-m-d H:i:s'),
+            ]);
+        }
 
 
         $id = $request->info_perjadinlangsung;

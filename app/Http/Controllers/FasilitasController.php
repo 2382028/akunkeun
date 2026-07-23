@@ -17,7 +17,7 @@ class FasilitasController extends Controller
         return view('user.fasilitas.index', [
             'title' => 'Fasilitas BMN LLDIKTI 4',
             'active' => 'barang_saya',
-            'assets' => Asset::whereInIn('status_peminjaman', [['Tidak Dipakai', 'Tidak Digunakan'], 'Tidak Digunakan'])->get()
+            'assets' => Asset::whereIn('status_peminjaman', ['Tidak Dipakai', 'Tidak Digunakan'])->orWhereNull('status_peminjaman')->get()
         ]);
     }
 
@@ -33,20 +33,33 @@ class FasilitasController extends Controller
 
     public function riwayat($status = 'pengajuan')
     {
+        $userId = auth('pegawai')->user()->id;
+
         $assetPinjam = DB::table('data_penanggungjawabs')
                         ->join('assets', 'data_penanggungjawabs.asset_id', '=', 'assets.id')
                         ->join('pegawais', 'data_penanggungjawabs.pegawai_id', '=', 'pegawais.id')
                         ->select('data_penanggungjawabs.id as idPenanggungJawab', 'assets.nama_barang', 'assets.status_peminjaman', 'data_penanggungjawabs.tgl_mulai_digunakan', 'data_penanggungjawabs.status', 'pegawais.nama_lengkap')
-                        ->where('pegawais.id', auth('pegawai')->user()->id)
+                        ->where('pegawais.id', $userId)
                         ->where('data_penanggungjawabs.status', $status)
                         ->get();
+
+        $countPengajuan = DB::table('data_penanggungjawabs')->where('pegawai_id', $userId)->where('status', 'pengajuan')->count();
+        $countDigunakan = DB::table('data_penanggungjawabs')->where('pegawai_id', $userId)->where('status', 'digunakan')->count();
+        $countDiservice = DB::table('data_penanggungjawabs')->where('pegawai_id', $userId)->where('status', 'diservice')->count();
+        $countPenolakan = DB::table('data_penanggungjawabs')->where('pegawai_id', $userId)->where('status', 'penolakan')->count();
+        $countSelesai   = DB::table('data_penanggungjawabs')->where('pegawai_id', $userId)->where('status', 'selesai')->count();
+
         return view('user.fasilitas.riwayat', [
             'title' => 'Riwayat Peminjaman Barang',
             'active' => 'barang_saya',
             'status' => $status,
-            'riwayats' => $assetPinjam
+            'riwayats' => $assetPinjam,
+            'countPengajuan' => $countPengajuan,
+            'countDigunakan' => $countDigunakan,
+            'countDiservice' => $countDiservice,
+            'countPenolakan' => $countPenolakan,
+            'countSelesai' => $countSelesai,
         ]);
-
     }
 
     public function Detailriwayat($id)
