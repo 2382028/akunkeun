@@ -870,7 +870,7 @@ Route::get('/kegiatan_step_4/{id}', [KegiatanController::class, 'KegiatanStep4']
 Route::get('/kegiatan_step_5/{id}', [KegiatanController::class, 'KegiatanStep5'])->name('kegiatan_step_5')->middleware('auth:pegawai');
 Route::get('/kegiatan_step_6/{id}', [KegiatanController::class, 'KegiatanStep6'])->name('kegiatan_step_6')->middleware('auth:pegawai');
 Route::get('/kegiatan_step_7/{id}', [KegiatanController::class, 'KegiatanStep7'])->name('kegiatan_step_7')->middleware('auth:pegawai');
-Route::get('/kegiatan/riwayat/{status}', [KegiatanController::class, 'riwayat'])->name('riwayat-kegiatan')->middleware('auth:pegawai');
+Route::get('/kegiatan/riwayat/{status}', function($status) { return redirect()->route('riwayat', ['status' => $status]); })->name('riwayat-kegiatan')->middleware('auth:pegawai');
 Route::get('/detail-kegiatan/{id}', [KegiatanController::class, 'detail'])->name('detail')->middleware('auth:pegawai');
 Route::get('/kegiatanAjukanUlang/{id}', [KegiatanController::class, 'indexAjukan'])->middleware('auth:pegawai');
 Route::put('/detailKegiatanajukan/{id}', [KegiatanController::class, 'ajukanUlang'])->middleware('auth:pegawai');

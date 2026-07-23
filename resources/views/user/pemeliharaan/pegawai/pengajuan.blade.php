@@ -1,12 +1,11 @@
 @extends('user.templates.sidebar')
 
 @section('content')
-    <section class="mb-5">
+    <section class="pb-5 pt-4">
         <div class="container">
             <div class="row">
                 <div class="col-lg-10 mx-auto">
-                    <div class="mt-4">
-                        <h3 class="fw-bold text-secondary">Pengajuan Pemeliharaan BMN</h3>
+                    <div><h3 class="fw-bold text-secondary">Pengajuan Pemeliharaan BMN</h3>
                     </div>
                     <!-- Pilihan Jenis Pengajuan -->
                     <div class="mb-3 row">

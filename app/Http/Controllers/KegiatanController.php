@@ -220,75 +220,75 @@ class KegiatanController extends Controller
             ->groupBy('kebutuhans.id', 'kebutuhans.nama', 'kebutuhans.jumlah_frekuensi', 'kebutuhans.satuan', 'kebutuhans.tipe_pendanaan', 'kebutuhans.ket', 'keuangan_perjadinkegiatans.data_perjadinkegiatan', 'keuangan_perjadinkegiatans.kebutuhan_id', 'keuangan_perjadinkegiatans.perangkat_acara', 'keuangan_perjadinkegiatans.status')
             ->get();
 
+            // Cross-check: Pegawai sibuk di Program Kegiatan (perangkat_acaras)
+            // JOIN ke data_perjadinkegiatans untuk tanggal kegiatan sebagai fallback
+            $occupiedPegawaiIds = DB::table('perangkat_acaras')
+                ->join('data_perjadinkegiatans', 'perangkat_acaras.data_perjadin_kegiatan', '=', 'data_perjadinkegiatans.id')
+                ->where('perangkat_acaras.status', '!=', 'Ditolak')
+                ->whereNotNull('perangkat_acaras.pegawai_id')
+                ->where('data_perjadinkegiatans.status_pengajuan', '!=', 'ditolak')
+                ->where(function ($q) use ($tanggalAwal, $tanggalAkhir) {
+                    $q->whereRaw('COALESCE(perangkat_acaras.tgl_mulai, data_perjadinkegiatans.tgl_mulai) <= ?', [$tanggalAkhir])
+                      ->whereRaw('COALESCE(perangkat_acaras.tgl_selesai, data_perjadinkegiatans.tgl_selesai) >= ?', [$tanggalAwal]);
+                })
+                ->pluck('perangkat_acaras.pegawai_id')
+                ->toArray();
+
+            // Cross-check: Pegawai sibuk di Perjalanan Dinas (data_perjadinlangsungs)
+            // JOIN ke info_perjadinlangsungs untuk tanggal yang benar
+            $occupiedPegawaiLangsungs = DB::table('data_perjadinlangsungs')
+                ->join('info_perjadinlangsungs', 'data_perjadinlangsungs.info_perjadinlangsung', '=', 'info_perjadinlangsungs.id')
+                ->where('data_perjadinlangsungs.status_persetujuan', '!=', 'Ditolak')
+                ->whereNotNull('data_perjadinlangsungs.pegawai_id')
+                ->where('info_perjadinlangsungs.status_pengajuan', '!=', 'ditolak')
+                ->where(function ($q) use ($tanggalAwal, $tanggalAkhir) {
+                    $q->whereRaw('COALESCE(data_perjadinlangsungs.tgl_keberangkatan, info_perjadinlangsungs.tgl_keberangkatan) <= ?', [$tanggalAkhir])
+                      ->whereRaw('COALESCE(data_perjadinlangsungs.tgl_selesai, info_perjadinlangsungs.tgl_selesai) >= ?', [$tanggalAwal]);
+                })
+                ->pluck('data_perjadinlangsungs.pegawai_id')
+                ->toArray();
+
+            $allOccupiedPegawaiIds = array_unique(array_merge($occupiedPegawaiIds, $occupiedPegawaiLangsungs));
+
             $pegawais = DB::table('pegawais')
-            ->select('pegawais.id', 'pegawais.nama_lengkap')
-            ->whereNotExists(function ($query) use ($id, $tanggalAwal, $tanggalAkhir) {
-                $query->select(DB::raw(1))
-                    ->from('perangkat_acaras')
-                    ->whereRaw('pegawais.id = perangkat_acaras.pegawai_id')
-                    ->where('perangkat_acaras.status', '!=', 'Ditolak')
-                    ->where(function ($subquery) use ($tanggalAwal, $tanggalAkhir) {
-                        $subquery->whereBetween('perangkat_acaras.tgl_mulai', [$tanggalAwal, $tanggalAkhir])
-                            ->orWhereBetween('perangkat_acaras.tgl_selesai', [$tanggalAwal, $tanggalAkhir])
-                            ->orWhere(function ($subquery2) use ($tanggalAwal, $tanggalAkhir) {
-                                $subquery2->where('perangkat_acaras.tgl_mulai', '<=', $tanggalAwal)
-                                          ->where('perangkat_acaras.tgl_selesai', '>=', $tanggalAkhir);
-                            });
-                    });
-            })
-            ->whereNotExists(function ($query) use ($tanggalAwal, $tanggalAkhir) {
-                $query->select(DB::raw(1))
-                    ->from('data_perjadinlangsungs')
-                    ->whereRaw('pegawais.id = data_perjadinlangsungs.pegawai_id')
-                    ->where('data_perjadinlangsungs.status_persetujuan', '!=', 'Ditolak')
-                    ->where(function ($subquery) use ($tanggalAwal, $tanggalAkhir) {
-                        $subquery->whereBetween('data_perjadinlangsungs.tgl_keberangkatan', [$tanggalAwal, $tanggalAkhir])
-                            ->orWhereBetween('data_perjadinlangsungs.tgl_selesai', [$tanggalAwal, $tanggalAkhir])
-                            ->orWhere(function ($subquery2) use ($tanggalAwal, $tanggalAkhir) {
-                                $subquery2->where('data_perjadinlangsungs.tgl_keberangkatan', '<=', $tanggalAwal)
-                                    ->where('data_perjadinlangsungs.tgl_selesai', '>=', $tanggalAkhir);
-                            });
-                    });
-            })
-            ->where('pegawais.jabatan_id', '!=', 14)
-            ->distinct()
-            ->get();
+                ->select('id', 'nama_lengkap')
+                ->whereNotIn('id', $allOccupiedPegawaiIds)
+                ->where('jabatan_id', '!=', 14)
+                ->get();
 
+            // Cross-check: Non-Pegawai sibuk di Program Kegiatan
+            $occupiedNonPegawaiIds = DB::table('perangkat_acaras')
+                ->join('data_perjadinkegiatans', 'perangkat_acaras.data_perjadin_kegiatan', '=', 'data_perjadinkegiatans.id')
+                ->where('perangkat_acaras.status', '!=', 'Ditolak')
+                ->whereNotNull('perangkat_acaras.non_pegawai_id')
+                ->where('data_perjadinkegiatans.status_pengajuan', '!=', 'ditolak')
+                ->where(function ($q) use ($tanggalAwal, $tanggalAkhir) {
+                    $q->whereRaw('COALESCE(perangkat_acaras.tgl_mulai, data_perjadinkegiatans.tgl_mulai) <= ?', [$tanggalAkhir])
+                      ->whereRaw('COALESCE(perangkat_acaras.tgl_selesai, data_perjadinkegiatans.tgl_selesai) >= ?', [$tanggalAwal]);
+                })
+                ->pluck('perangkat_acaras.non_pegawai_id')
+                ->toArray();
 
-        $nonPegawais = DB::table('non_pegawais')
-            ->select('non_pegawais.id', 'non_pegawais.nama_lengkap')
-            ->whereNotExists(function ($query) use ($id, $tanggalAwal, $tanggalAkhir) {
-                $query->select(DB::raw(1))
-                    ->from('perangkat_acaras')
-                    ->whereRaw('non_pegawais.id = perangkat_acaras.non_pegawai_id')
-                    ->where('perangkat_acaras.status', '!=', 'Ditolak')
-                    ->where(function ($subquery) use ($tanggalAwal, $tanggalAkhir) {
-                        // Pengecekan apakah tanggal kegiatan tumpang tindih
-                        $subquery->whereBetween('perangkat_acaras.tgl_mulai', [$tanggalAwal, $tanggalAkhir])
-                            ->orWhereBetween('perangkat_acaras.tgl_selesai', [$tanggalAwal, $tanggalAkhir])
-                            ->orWhere(function ($subquery2) use ($tanggalAwal, $tanggalAkhir) {
-                                $subquery2->where('perangkat_acaras.tgl_mulai', '<=', $tanggalAwal)
-                                          ->where('perangkat_acaras.tgl_selesai', '>=', $tanggalAkhir);
-                            });
-                    });
-            })
-            ->whereNotExists(function ($query) use ($tanggalAwal, $tanggalAkhir) {
-                $query->select(DB::raw(1))
-                    ->from('data_perjadinlangsungs')
-                    ->whereRaw('non_pegawais.id = data_perjadinlangsungs.non_pegawai_id')
-                    ->where('data_perjadinlangsungs.status_persetujuan', '!=', 'Ditolak')
-                    ->where(function ($subquery) use ($tanggalAwal, $tanggalAkhir) {
-                        $subquery->whereBetween('data_perjadinlangsungs.tgl_keberangkatan', [$tanggalAwal, $tanggalAkhir])
-                            ->orWhereBetween('data_perjadinlangsungs.tgl_selesai', [$tanggalAwal, $tanggalAkhir])
-                            ->orWhere(function ($subquery2) use ($tanggalAwal, $tanggalAkhir) {
-                                $subquery2->where('data_perjadinlangsungs.tgl_keberangkatan', '<=', $tanggalAwal)
-                                    ->where('data_perjadinlangsungs.tgl_selesai', '>=', $tanggalAkhir);
-                            });
-                    });
-            })
-            ->where('non_pegawais.id', '!=', 14) // Menyaring hanya non-pegawai dengan ID valid
-            ->distinct()
-            ->get();
+            // Cross-check: Non-Pegawai sibuk di Perjalanan Dinas
+            $occupiedNonPegawaiLangsungs = DB::table('data_perjadinlangsungs')
+                ->join('info_perjadinlangsungs', 'data_perjadinlangsungs.info_perjadinlangsung', '=', 'info_perjadinlangsungs.id')
+                ->where('data_perjadinlangsungs.status_persetujuan', '!=', 'Ditolak')
+                ->whereNotNull('data_perjadinlangsungs.non_pegawai_id')
+                ->where('info_perjadinlangsungs.status_pengajuan', '!=', 'ditolak')
+                ->where(function ($q) use ($tanggalAwal, $tanggalAkhir) {
+                    $q->whereRaw('COALESCE(data_perjadinlangsungs.tgl_keberangkatan, info_perjadinlangsungs.tgl_keberangkatan) <= ?', [$tanggalAkhir])
+                      ->whereRaw('COALESCE(data_perjadinlangsungs.tgl_selesai, info_perjadinlangsungs.tgl_selesai) >= ?', [$tanggalAwal]);
+                })
+                ->pluck('data_perjadinlangsungs.non_pegawai_id')
+                ->toArray();
+
+            $allOccupiedNonPegawaiIds = array_unique(array_merge($occupiedNonPegawaiIds, $occupiedNonPegawaiLangsungs));
+
+            $nonPegawais = DB::table('non_pegawais')
+                ->select('id', 'nama_lengkap')
+                ->whereNotIn('id', $allOccupiedNonPegawaiIds)
+                ->where('id', '!=', 14)
+                ->get();
 
             $data_bank = DB::table('ref_bank')
             ->get();
@@ -409,74 +409,76 @@ class KegiatanController extends Controller
                 ->where('keuangan_perjadinkegiatans.data_perjadinkegiatan', $id)
                 ->get();
 
+            $occupiedPegawaiIds = DB::table('perangkat_acaras')
+                ->where('status', '!=', 'Ditolak')
+                ->whereNotNull('pegawai_id')
+                ->where(function ($q) use ($tanggalAwal, $tanggalAkhir) {
+                    $q->whereBetween('tgl_mulai', [$tanggalAwal, $tanggalAkhir])
+                      ->orWhereBetween('tgl_selesai', [$tanggalAwal, $tanggalAkhir])
+                      ->orWhere(function ($q2) use ($tanggalAwal, $tanggalAkhir) {
+                          $q2->where('tgl_mulai', '<=', $tanggalAwal)
+                             ->where('tgl_selesai', '>=', $tanggalAkhir);
+                      });
+                })
+                ->pluck('pegawai_id')
+                ->toArray();
+
+            $occupiedPegawaiLangsungs = DB::table('data_perjadinlangsungs')
+                ->where('status_persetujuan', '!=', 'Ditolak')
+                ->whereNotNull('pegawai_id')
+                ->where(function ($q) use ($tanggalAwal, $tanggalAkhir) {
+                    $q->whereBetween('tgl_keberangkatan', [$tanggalAwal, $tanggalAkhir])
+                      ->orWhereBetween('tgl_selesai', [$tanggalAwal, $tanggalAkhir])
+                      ->orWhere(function ($q2) use ($tanggalAwal, $tanggalAkhir) {
+                          $q2->where('tgl_keberangkatan', '<=', $tanggalAwal)
+                             ->where('tgl_selesai', '>=', $tanggalAkhir);
+                      });
+                })
+                ->pluck('pegawai_id')
+                ->toArray();
+
+            $allOccupiedPegawaiIds = array_unique(array_merge($occupiedPegawaiIds, $occupiedPegawaiLangsungs));
+
             $pegawais = DB::table('pegawais')
-                ->select('pegawais.id', 'pegawais.nama_lengkap')
-                ->whereNotExists(function ($query) use ($id, $tanggalAwal, $tanggalAkhir) {
-                    $query->select(DB::raw(1))
-                        ->from('perangkat_acaras')
-                        ->whereRaw('pegawais.id = perangkat_acaras.pegawai_id')
-                        ->where('perangkat_acaras.status', '!=', 'Ditolak')
-                        ->where(function ($subquery) use ($tanggalAwal, $tanggalAkhir) {
-                            $subquery->whereBetween('perangkat_acaras.tgl_mulai', [$tanggalAwal, $tanggalAkhir])
-                                ->orWhereBetween('perangkat_acaras.tgl_selesai', [$tanggalAwal, $tanggalAkhir])
-                                ->orWhere(function ($subquery2) use ($tanggalAwal, $tanggalAkhir) {
-                                    $subquery2->where('perangkat_acaras.tgl_mulai', '<=', $tanggalAwal)
-                                              ->where('perangkat_acaras.tgl_selesai', '>=', $tanggalAkhir);
-                                });
-                        });
-                })
-                ->whereNotExists(function ($query) use ($tanggalAwal, $tanggalAkhir) {
-                    $query->select(DB::raw(1))
-                        ->from('data_perjadinlangsungs')
-                        ->whereRaw('pegawais.id = data_perjadinlangsungs.pegawai_id')
-                        ->where('data_perjadinlangsungs.status_persetujuan', '!=', 'Ditolak')
-                        ->where(function ($subquery) use ($tanggalAwal, $tanggalAkhir) {
-                            $subquery->whereBetween('data_perjadinlangsungs.tgl_keberangkatan', [$tanggalAwal, $tanggalAkhir])
-                                ->orWhereBetween('data_perjadinlangsungs.tgl_selesai', [$tanggalAwal, $tanggalAkhir])
-                                ->orWhere(function ($subquery2) use ($tanggalAwal, $tanggalAkhir) {
-                                    $subquery2->where('data_perjadinlangsungs.tgl_keberangkatan', '<=', $tanggalAwal)
-                                        ->where('data_perjadinlangsungs.tgl_selesai', '>=', $tanggalAkhir);
-                                });
-                        });
-                })
-                ->where('pegawais.jabatan_id', '!=', 14)
-                ->distinct()
+                ->select('id', 'nama_lengkap')
+                ->whereNotIn('id', $allOccupiedPegawaiIds)
+                ->where('jabatan_id', '!=', 14)
                 ->get();
 
+            $occupiedNonPegawaiIds = DB::table('perangkat_acaras')
+                ->where('status', '!=', 'Ditolak')
+                ->whereNotNull('non_pegawai_id')
+                ->where(function ($q) use ($tanggalAwal, $tanggalAkhir) {
+                    $q->whereBetween('tgl_mulai', [$tanggalAwal, $tanggalAkhir])
+                      ->orWhereBetween('tgl_selesai', [$tanggalAwal, $tanggalAkhir])
+                      ->orWhere(function ($q2) use ($tanggalAwal, $tanggalAkhir) {
+                          $q2->where('tgl_mulai', '<=', $tanggalAwal)
+                             ->where('tgl_selesai', '>=', $tanggalAkhir);
+                      });
+                })
+                ->pluck('non_pegawai_id')
+                ->toArray();
+
+            $occupiedNonPegawaiLangsungs = DB::table('data_perjadinlangsungs')
+                ->where('status_persetujuan', '!=', 'Ditolak')
+                ->whereNotNull('non_pegawai_id')
+                ->where(function ($q) use ($tanggalAwal, $tanggalAkhir) {
+                    $q->whereBetween('tgl_keberangkatan', [$tanggalAwal, $tanggalAkhir])
+                      ->orWhereBetween('tgl_selesai', [$tanggalAwal, $tanggalAkhir])
+                      ->orWhere(function ($q2) use ($tanggalAwal, $tanggalAkhir) {
+                          $q2->where('tgl_keberangkatan', '<=', $tanggalAwal)
+                             ->where('tgl_selesai', '>=', $tanggalAkhir);
+                      });
+                })
+                ->pluck('non_pegawai_id')
+                ->toArray();
+
+            $allOccupiedNonPegawaiIds = array_unique(array_merge($occupiedNonPegawaiIds, $occupiedNonPegawaiLangsungs));
 
             $nonPegawais = DB::table('non_pegawais')
-                ->select('non_pegawais.id', 'non_pegawais.nama_lengkap')
-                ->whereNotExists(function ($query) use ($id, $tanggalAwal, $tanggalAkhir) {
-                    $query->select(DB::raw(1))
-                        ->from('perangkat_acaras')
-                        ->whereRaw('non_pegawais.id = perangkat_acaras.non_pegawai_id')
-                        ->where('perangkat_acaras.status', '!=', 'Ditolak')
-                        ->where(function ($subquery) use ($tanggalAwal, $tanggalAkhir) {
-                            // Pengecekan apakah tanggal kegiatan tumpang tindih
-                            $subquery->whereBetween('perangkat_acaras.tgl_mulai', [$tanggalAwal, $tanggalAkhir])
-                                ->orWhereBetween('perangkat_acaras.tgl_selesai', [$tanggalAwal, $tanggalAkhir])
-                                ->orWhere(function ($subquery2) use ($tanggalAwal, $tanggalAkhir) {
-                                    $subquery2->where('perangkat_acaras.tgl_mulai', '<=', $tanggalAwal)
-                                              ->where('perangkat_acaras.tgl_selesai', '>=', $tanggalAkhir);
-                                });
-                        });
-                })
-                ->whereNotExists(function ($query) use ($tanggalAwal, $tanggalAkhir) {
-                    $query->select(DB::raw(1))
-                        ->from('data_perjadinlangsungs')
-                        ->whereRaw('non_pegawais.id = data_perjadinlangsungs.non_pegawai_id')
-                        ->where('data_perjadinlangsungs.status_persetujuan', '!=', 'Ditolak')
-                        ->where(function ($subquery) use ($tanggalAwal, $tanggalAkhir) {
-                            $subquery->whereBetween('data_perjadinlangsungs.tgl_keberangkatan', [$tanggalAwal, $tanggalAkhir])
-                                ->orWhereBetween('data_perjadinlangsungs.tgl_selesai', [$tanggalAwal, $tanggalAkhir])
-                                ->orWhere(function ($subquery2) use ($tanggalAwal, $tanggalAkhir) {
-                                    $subquery2->where('data_perjadinlangsungs.tgl_keberangkatan', '<=', $tanggalAwal)
-                                        ->where('data_perjadinlangsungs.tgl_selesai', '>=', $tanggalAkhir);
-                                });
-                        });
-                })
-                ->where('non_pegawais.id', '!=', 14) // Menyaring hanya non-pegawai dengan ID valid
-                ->distinct()
+                ->select('id', 'nama_lengkap')
+                ->whereNotIn('id', $allOccupiedNonPegawaiIds)
+                ->where('id', '!=', 14)
                 ->get();
 
         $panitias = $perangkatPegawai->filter(fn($item) => $item->sebagai == 'Panitia');
@@ -1088,7 +1090,7 @@ class KegiatanController extends Controller
                 'id_pengaju' => auth('pegawai')->user()->id // Tambahkan ID pengaju yang login
             ]);
 
-        return redirect()->route('riwayat-kegiatan', ['status' => 'Draf-pengajuan'])
+        return redirect()->route('riwayat', ['status' => 'Draf-pengajuan'])
             ->with('success', 'Draf pengajuan kegiatan berhasil disimpan.');
     }
 
@@ -2184,7 +2186,7 @@ class KegiatanController extends Controller
         // Update data perjadinkegiatans
         DB::table('data_perjadinkegiatans')->where('id', $id)->update($dataToUpdate);
         
-        return redirect()->route('riwayat-kegiatan', ['status' => 'pengajuan'])->with('success', 'Program berhasil dibuat. Silakan tunggu persetujuan dari Keuangan!');
+        return redirect()->route('riwayat', ['status' => 'pengajuan'])->with('success', 'Program berhasil dibuat. Silakan tunggu persetujuan dari Keuangan!');
     }
     /**
      * Display the specified resource.
@@ -2239,7 +2241,7 @@ class KegiatanController extends Controller
 
 
 
-        return redirect()->route('riwayat-kegiatan', ['status' => 'pengajuan'])->with('success', 'Program berhasil dibuat. Silakan tunggu persetujuan dari Keuangan!');
+        return redirect()->route('riwayat', ['status' => 'pengajuan'])->with('success', 'Program berhasil dibuat. Silakan tunggu persetujuan dari Keuangan!');
     }
 
     public function updateKegiatanDetail(Request $request, $id)
@@ -2258,7 +2260,7 @@ class KegiatanController extends Controller
                     'updated_at' => now()->format('Y-m-d H:i:s'),
                 ]);
 
-            return redirect()->route('riwayat-kegiatan', ['status' => 'selesai'])->with('success', 'Program telah diperbaharui!, Silahkan tunggu persetujuan dari keuangan!');
+            return redirect()->route('riwayat', ['status' => 'selesai'])->with('success', 'Program telah diperbaharui!, Silahkan tunggu persetujuan dari keuangan!');
         }
 
         if (($kegiatan->status_pengajuan == 'revisi') and ($kegiatan->is_acceptKeu == 'revisi')) {
@@ -2272,10 +2274,10 @@ class KegiatanController extends Controller
                     'updated_at' => now()->format('Y-m-d H:i:s'),
                 ]);
 
-            return redirect()->route('riwayat-kegiatan', ['status' => 'proses'])->with('success', 'Program telah diperbaharui!, Silahkan tunggu persetujuan dari keuangan!');
+            return redirect()->route('riwayat', ['status' => 'proses'])->with('success', 'Program telah diperbaharui!, Silahkan tunggu persetujuan dari keuangan!');
         }
 
-        return redirect()->route('riwayat-kegiatan', ['status' => 'pengajuan'])->with('success', 'Program telah diperbaharui!, Silahkan tunggu persetujuan dari keuangan!');
+        return redirect()->route('riwayat', ['status' => 'pengajuan'])->with('success', 'Program telah diperbaharui!, Silahkan tunggu persetujuan dari keuangan!');
     }
 
     public function getKegiatanData($id)

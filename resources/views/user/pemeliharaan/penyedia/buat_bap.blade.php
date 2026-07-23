@@ -86,7 +86,7 @@
             text-align: justify;
         }
     </style>
-<section class="mb-5">
+<section class="pb-5 pt-4">
     <div class="container">
         <form method="POST" action="{{ url('/penyedia/ttd-store-bap') }}" enctype="multipart/form-data" id="bapForm">
             @csrf

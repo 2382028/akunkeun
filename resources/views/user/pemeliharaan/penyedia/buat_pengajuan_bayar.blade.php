@@ -91,7 +91,7 @@
             line-height: 1.1;
         }
     </style>
-    <section class="mb-5">
+    <section class="pb-5 pt-4">
         <div class="container">
             <h3 class="fw-bold text-secondary mt-4">Buat Pengajuan Pembayaran</h3>
             <div class="row">
