@@ -68,6 +68,7 @@
                     </div>
                     <div class="d-grid gap-2 submit-button">
                         <button class="btn btn-primary" type="submit">Masuk</button>
+                        <a href="{{ url('/akses') }}" class="btn btn-outline-secondary">Kembali ke Login User</a>
                     </div>
                     <br>
                     <p class="text-center text-muted small">copyright &#169; 2024</p>

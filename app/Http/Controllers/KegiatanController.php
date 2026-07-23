@@ -1096,8 +1096,15 @@ class KegiatanController extends Controller
 
     public function storeKegiatan(Request $request)
     {
-
         $versi = Versi::where('status', 'aktif')->first();
+
+        $jumlahHari = null;
+        if ($request->tgl_mulai && $request->tgl_selesai) {
+            $tglMulai = Carbon::parse($request->tgl_mulai);
+            $tglSelesai = Carbon::parse($request->tgl_selesai);
+            $jumlahHari = $tglMulai->diffInDays($tglSelesai) + 1;
+        }
+
         DB::table('data_perjadinkegiatans')->insertOrIgnore([
             'uraian' => $request->uraian,
             'id_pengaju' => auth('pegawai')->user()->id,
@@ -1111,6 +1118,7 @@ class KegiatanController extends Controller
             'tgl_mulai' => $request->tgl_mulai,
             'tempat_kegiatan' => $request->tempat_kegiatan,
             'tgl_selesai' => $request->tgl_selesai,
+            'tambah_penginapan' => $jumlahHari,
             'versi_id' => $versi->id,
             'jenis_kegiatan' => $request->jenis_kegiatan,
             'provinsi' => $request->provinsi,
@@ -1163,6 +1171,13 @@ class KegiatanController extends Controller
 
     public function updateKegiatan(Request $request, $id)
     {
+        $jumlahHari = null;
+        if ($request->tgl_mulai && $request->tgl_selesai) {
+            $tglMulai = Carbon::parse($request->tgl_mulai);
+            $tglSelesai = Carbon::parse($request->tgl_selesai);
+            $jumlahHari = $tglMulai->diffInDays($tglSelesai) + 1;
+        }
+
             DB::table('data_perjadinkegiatans')
             ->where('id',$id)
             ->update([
@@ -1175,6 +1190,7 @@ class KegiatanController extends Controller
                 'tgl_mulai' => $request->tgl_mulai,
                 'tempat_kegiatan' => $request->tempat_kegiatan,
                 'tgl_selesai' => $request->tgl_selesai,
+                'tambah_penginapan' => $jumlahHari,
                 'jenis_kegiatan' => $request->jenis_kegiatan,
                 'provinsi' => $request->provinsi,
                 'kab_kota' => $request->kab_kota,
@@ -2530,6 +2546,14 @@ class KegiatanController extends Controller
 
         $existingKegiatan = DB::table('data_perjadinkegiatans')->where('id', $id)->first();
 
+        $tglMulaiStr = $request->tgl_mulai ?? $existingKegiatan->tgl_mulai;
+        $tglSelesaiStr = $request->tgl_selesai ?? $existingKegiatan->tgl_selesai;
+        $jumlahHari = null;
+        if ($tglMulaiStr && $tglSelesaiStr) {
+            $tglMulai = Carbon::parse($tglMulaiStr);
+            $tglSelesai = Carbon::parse($tglSelesaiStr);
+            $jumlahHari = $tglMulai->diffInDays($tglSelesai) + 1;
+        }
 
         $newId = DB::table('data_perjadinkegiatans')->insertGetId([
             'id_pengaju' => auth('pegawai')->user()->id,
@@ -2542,10 +2566,10 @@ class KegiatanController extends Controller
             'jumlah_kepanitiaan' => $request->jumlah_kepanitiaan ?? $existingKegiatan->jumlah_kepanitiaan,
             'jumlah_peserta' => $request->jumlah_peserta ?? $existingKegiatan->jumlah_peserta,
             'jumlah_kamar' => $request->jumlah_kamar ?? $existingKegiatan->jumlah_kamar,
-            'tambah_penginapan' => $request->tambah_penginapan ?? $existingKegiatan->tambah_penginapan,
-            'tgl_mulai' => $request->tgl_mulai ?? $existingKegiatan->tgl_mulai,
+            'tambah_penginapan' => $jumlahHari,
+            'tgl_mulai' => $tglMulaiStr,
             'tempat_kegiatan' => $request->tempat_kegiatan ?? $existingKegiatan->tempat_kegiatan,
-            'tgl_selesai' => $request->tgl_selesai ?? $existingKegiatan->tgl_selesai,
+            'tgl_selesai' => $tglSelesaiStr,
             'jenis_kegiatan' => $request->jenis_kegiatan ?? $existingKegiatan->jenis_kegiatan,
             'provinsi' => $request->provinsi ?? $existingKegiatan->provinsi,
             'kab_kota' => $request->kab_kota ?? $existingKegiatan->kab_kota,
