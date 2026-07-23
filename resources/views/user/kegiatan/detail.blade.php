@@ -9,7 +9,7 @@
 
 </style>
     <!-- Awal Form Perjalanan Dinas Biasa  -->
-    <section id="beranda" class="pb-5 mt-5 pt-5">
+    <section id="beranda" class="pb-5 pt-4">
         <div class="container">
             <div class="row mb-3">
                 <h3 class="fw-bold text-secondary">Kegiatanku | Program Kegiatan</h3>

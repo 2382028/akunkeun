@@ -1,7 +1,7 @@
 @extends('user.templates.sidebar')
 
 @section('content')
-<section class="mb-5">
+<section class="pb-5 pt-4">
     <div class="container">
         <div class="row">
         <div class="col-lg-10 mx-auto">

@@ -10,16 +10,16 @@
 
 </style>
 <!-- Awal Form Perjadin Kegiatan  -->
-<section id="beranda" class=" pb-5 mt-5 pt-5">
+<section id="beranda" class="pb-5 pt-4">
     <div class="container">
         <div class="row text-secondary justify-content-center">
             <div class="col-md-10 mb-3">
                 <div class="row">
                     <h3 class="fw-bold text-secondary">Pengajuan Kegiatan</h3>
                 </div>
-                <div class="card shadow-sm rounded-0 border-0 p-4" data-aos="fade-up" data-aos-delay="100" data-aos-duration="1000">
+                <div class="card shadow-sm rounded-0 border-0 p-3" data-aos="fade-up" data-aos-delay="100" data-aos-duration="1000">
                     <!-- Progress bar -->
-                    <div class="progressbar col-md-8 mx-auto mb-4">
+                    <div class="progressbar col-md-8 mx-auto mb-5" style="transform: scale(0.9);">
                         <div class="progress" id="progress"></div>
                         <div class="progress-step" data-title="Informasi Kegiatan">1</div>
                         <div class="progress-step progress-step-active" data-title="Dokumen Kegiatan">2</div>
@@ -30,28 +30,28 @@
                         @csrf
 
                         <!-- Jumlah Peserta -->
-                        <div class="mb-3 row align-items-center">
-                            <label for="jumlah_peserta" class="col-md-4 col-form-label">Jumlah Peserta<span class="text-danger">*</span></label>
+                        <div class="mb-2 row align-items-center">
+                            <label for="jumlah_peserta" class="col-md-4 col-form-label" style="font-size: 0.9rem;">Jumlah Peserta<span class="text-danger">*</span></label>
                             <div class="col-md-8">
-                                <div class="input-group">
+                                <div class="input-group input-group-sm">
                                     <input type="number" id="jumlah_peserta" name="jumlah_peserta" class="form-control" placeholder="Masukkan Jumlah Peserta" required>
                                     <span class="input-group-text">Orang</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="mb-3 row align-items-start">
-                            <label for="jumlah_kamar" class="col-md-4 col-form-label">Jumlah Kamar<span class="text-danger">*</span></label>
+                        <div class="mb-2 row align-items-center">
+                            <label for="jumlah_kamar" class="col-md-4 col-form-label" style="font-size: 0.9rem;">Jumlah Kamar<span class="text-danger">*</span></label>
                             <div class="col-md-8">
                                 <div class="row">
                                     <div class="col-md-6 mb-2">
-                                        <div class="input-group">
+                                        <div class="input-group input-group-sm">
                                             <input type="number" id="jumlah_kamar" name="jumlah_kamar" class="form-control" placeholder="Masukan Jumlah Kamar" required>
                                             <span class="input-group-text">Kamar</span>
                                         </div>
                                     </div>
                                     <div class="col-md-6 mb-2">
-                                        <div class="input-group">
+                                        <div class="input-group input-group-sm">
                                             <input type="number" id="tambah_penginapan" name="tambah_penginapan" class="form-control" placeholder="Masukan Jumlah Hari" required>
                                             <span class="input-group-text">Hari</span>
                                         </div>
@@ -61,11 +61,11 @@
                                 <!-- Baris untuk Maksimal Panitia dan Cek Batas Panitia -->
                                 <div class="d-flex justify-content-between align-items-center">
                                     @if ($cekJumlahPeserta != '-1' && $maksPanitia != '-1')
-                                        <span class="text-muted me-3">
+                                        <span class="text-muted me-3" style="font-size: 0.85rem;">
                                             <strong>Maksimal Panitia:</strong> {{ $maksPanitia }} orang
                                         </span>
                                     @endif
-                                    <button type="button" id="btnBatasPanitia" class="btn btn-outline-secondary" onclick="batasPanitia()">
+                                    <button type="button" id="btnBatasPanitia" class="btn btn-outline-secondary btn-sm" onclick="batasPanitia()">
                                         Cek/Validasi
                                     </button>
                                 </div>
@@ -73,112 +73,103 @@
                         </div>
 
                         <!-- Kepanitiaan -->
-                        <div class="mb-3 row align-items-start">
-                            <label for="kepanitian" class="col-md-4 col-form-label">Kepanitiaan<span class="text-danger">*</span></label>
-                            <div class="col-md-8">
-                                <div class="d-flex justify-content-between mb-2">
+                        <div class="mb-2 row align-items-center">
+                            <label for="kepanitian" class="col-md-4 col-form-label" style="font-size: 0.9rem;">Kepanitiaan<span class="text-danger">*</span></label>
+                            <div class="col-md-8" id="summary-kepanitiaan">
+                                <div class="input-group input-group-sm mb-2">
                                     <input type="number" name="jumlah_kepanitiaan" class="form-control text-muted input-abuk" placeholder="Jumlah Kepanitiaan" value="{{ $jumlah_kepanitiaan }}">
-                                    <div>
-                                        <span class="input-group-text">Orang</span>
-                                    </div>
+                                    <span class="input-group-text">Orang</span>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <button class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#tambah_peserta" type="button">
-                                            <i class="fa fa-plus"></i> Tambah Kepanitiaan
-                                        </button>
+                                <div class="d-flex align-items-center justify-content-between py-1 px-2 border rounded bg-light">
+                                    <div class="small text-secondary">
+                                        @php $totalPanitia = $perangkatPegawais->count() + $perangkatNonPegawais->count(); @endphp
+                                        @if($totalPanitia > 0)
+                                            <i class="fa fa-check-circle text-success me-1"></i> <span class="fw-bold">{{ $totalPanitia }} Orang</span> terdaftar
+                                        @else
+                                            <i class="fa fa-info-circle me-1"></i> Belum ada data
+                                        @endif
                                     </div>
-                                    <div class="col-md-6">
-                                        <button class="btn btn-outline-secondary w-100" data-bs-toggle="modal" data-bs-target="#informasiPerangkatModal" type="button">
-                                            <i class="fa fa-eye"></i> Lihat Kepanitiaan
-                                        </button>
-                                    </div>
+                                    <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#tambah_peserta" type="button">
+                                        <i class="fa fa-plus"></i> Tambah
+                                    </button>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="mb-3 row align-items-start">
-                            <label for="mobilitas" class="col-md-4 col-form-label">Mobilitas</label>
-                            <div class="col-md-8">
-                                <div class="row">
-                                    @if (!$mobilitasExists)
-                                        <div class="col-md-6">
-                                            <button class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#tambah_mobilitas" type="button">
-                                                <i class="fa fa-plus"></i> Tambah Mobilitas
-                                            </button>
-                                        </div>
-                                    @else
-                                        <div class="col-md-6">
-                                            <button class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#tambah_mobilitas" type="button" disabled>
-                                                <i class="fa fa-plus"></i> Tambah Mobilitas
-                                            </button>
-                                        </div>
-                                    @endif
-                                    <div class="col-md-6">
-                                        <button class="btn btn-outline-secondary w-100" data-bs-toggle="modal" data-bs-target="#lihatMobilitasModal" type="button">
-                                            <i class="fa fa-eye"></i> Lihat Mobilitas
-                                        </button>
+                        <div class="mb-2 row align-items-center">
+                            <label for="mobilitas" class="col-md-4 col-form-label" style="font-size: 0.9rem;">Mobilitas</label>
+                            <div class="col-md-8" id="summary-mobilitas">
+                                <div class="d-flex align-items-center justify-content-between py-1 px-2 border rounded bg-light">
+                                    <div class="small text-secondary">
+                                        @if($mobilitasExists)
+                                            <i class="fa fa-check-circle text-success me-1"></i> <span class="fw-bold">{{ $mobilitas->first()->mobilitas }}</span> terdaftar
+                                        @else
+                                            <i class="fa fa-info-circle me-1"></i> Belum ada data
+                                        @endif
                                     </div>
+                                    <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#tambah_mobilitas" type="button" {{ $mobilitasExists ? 'disabled' : '' }}>
+                                        <i class="fa fa-plus"></i> Tambah
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                        <div class="mb-3 row align-items-start">
-                            <label for="mobilitas" class="col-md-4 col-form-label">Fasilitas Tambahan</label>
-                            <div class="col-md-8">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <button class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#pilihTipeFasilitas" type="button">
-                                            <i class="fa fa-plus"></i> Tambah Fasilitas
-                                        </button>
+                        <div class="mb-2 row align-items-center">
+                            <label for="mobilitas" class="col-md-4 col-form-label" style="font-size: 0.9rem;">Fasilitas Tambahan</label>
+                            <div class="col-md-8" id="summary-fasilitas">
+                                <div class="d-flex align-items-center justify-content-between py-1 px-2 border rounded bg-light">
+                                    <div class="small text-secondary">
+                                        @if($kebutuhans->count() > 0)
+                                            <i class="fa fa-check-circle text-success me-1"></i> <span class="fw-bold">{{ $kebutuhans->count() }} Fasilitas</span> terdaftar
+                                        @else
+                                            <i class="fa fa-info-circle me-1"></i> Belum ada data
+                                        @endif
                                     </div>
-                                    <div class="col-md-6">
-                                       <button class="btn btn-outline-secondary w-100" data-bs-toggle="modal"  data-bs-target="#lihatFasilitasModal" type="button">
-                                            <i class="fa fa-eye"></i> Lihat Fasilitas
-                                        </button>
-                                    </div>
+                                    <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#pilihTipeFasilitas" type="button">
+                                        <i class="fa fa-plus"></i> Tambah
+                                    </button>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Sarana dan Prasarana -->
-                        <div class="mb-3 row align-items-start">
-                            <label for="sapras" class="col-md-4 col-form-label">Sarana dan Prasarana</label>
-                            <div class="col-md-8">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <button class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#tambah_sapras" type="button">
-                                            <i class="fa fa-plus"></i> Tambah Sapras
-                                        </button>
+                        <div class="mb-2 row align-items-center">
+                            <label for="sapras" class="col-md-4 col-form-label" style="font-size: 0.9rem;">Sarana dan Prasarana</label>
+                            <div class="col-md-8" id="summary-sapras">
+                                <div class="d-flex align-items-center justify-content-between py-1 px-2 border rounded bg-light">
+                                    <div class="small text-secondary">
+                                        @if($sapras->count() > 0)
+                                            <i class="fa fa-check-circle text-success me-1"></i> <span class="fw-bold">{{ $sapras->count() }} Sarana</span> dipinjam
+                                        @else
+                                            <i class="fa fa-info-circle me-1"></i> Belum ada data
+                                        @endif
                                     </div>
-                                    <div class="col-md-6">
-                                        <button class="btn btn-outline-secondary w-100" data-bs-toggle="modal" data-bs-target="#lihatSaprasModal" type="button">
-                                            <i class="fa fa-eye"></i> Lihat Sapras
-                                        </button>
-                                    </div>
+                                    <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#tambah_sapras" type="button">
+                                        <i class="fa fa-plus"></i> Tambah
+                                    </button>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Dokumen -->
-                        <div class="mb-3 row align-items-start">
-                            <label for="dokumen" class="col-md-4 col-form-label">Dokumen<span class="text-danger">*</span></label>
-                            <div class="col-md-8">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <button class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#tambah_dokumen" type="button">
-                                            <i class="fa fa-plus"></i> Tambah Dokumen
-                                        </button>
+                        <div class="mb-2 row align-items-center">
+                            <label for="dokumen" class="col-md-4 col-form-label" style="font-size: 0.9rem;">Dokumen<span class="text-danger">*</span></label>
+                            <div class="col-md-8" id="summary-dokumen">
+                                <div class="d-flex align-items-center justify-content-between py-1 px-2 border rounded bg-light">
+                                    <div class="small text-secondary">
+                                        @if($dokumens->count() > 0)
+                                            <i class="fa fa-check-circle text-success me-1"></i> <span class="fw-bold">{{ $dokumens->count() }} Dokumen</span> terlampir
+                                        @else
+                                            <i class="fa fa-info-circle me-1"></i> Belum ada data
+                                        @endif
                                     </div>
-                                    <div class="col-md-6">
-                                        <button class="btn btn-outline-secondary w-100" data-bs-toggle="modal" data-bs-target="#lihatDokumenModal" type="button">
-                                            <i class="fa fa-eye"></i> Lihat Dokumen
-                                        </button>
-                                    </div>
+                                    <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#tambah_dokumen" type="button">
+                                        <i class="fa fa-plus"></i> Tambah
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                        <div class="mb-3 row align-items-start">
-                            <label for="surtug" class="col-md-4 col-form-label">Apakah diPerlukan Surtug?<span class="text-danger">*</span></label>
+                        <div class="mb-2 row align-items-center">
+                            <label for="surtug" class="col-md-4 col-form-label" style="font-size: 0.9rem;">Apakah diPerlukan Surtug?<span class="text-danger">*</span></label>
                             <div class="col-md-8">
                                 <div class="row">
                                     <div class="col-md-9"></div>
@@ -208,7 +199,7 @@
                             </div>
                             <div class="d-flex col-md-6">
                             <button type="button" id="btnSimpanDraft" class="btn btn-secondary col-md-6 me-2" onclick="submitDraft()">Simpan Draft</button>
-                                <button type="submit" id="btnAjukanKegiatan" class="btn btn-primary col-md-6">Ajukan Kegiatan</button>
+                                <button type="button" id="btnAjukanKegiatan" class="btn btn-primary col-md-6" onclick="openModalIfValid()">Ajukan Kegiatan</button>
                             </div>
                         </div>
                     </form>
@@ -220,179 +211,69 @@
 <!-- Akhir Form Perjadin Kegiatan -->
 
 
-<div class="modal fade" id="informasiPerangkatModal" tabindex="-1" aria-labelledby="informasiPerangkatModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title fw-bold text-secondary" id="informasiPerangkatModalLabel">Informasi Panitia/Pelaksana Tugas, Narasumber, dan Moderator</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<!-- MODAL RINGKASAN PENGAJUAN -->
+<div class="modal fade" id="modalRingkasanPengajuan" tabindex="-1" aria-labelledby="modalRingkasanPengajuanLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-primary text-white py-3">
+                <h5 class="modal-title fw-bold" id="modalRingkasanPengajuanLabel">Ringkasan Detail Pengajuan Kegiatan</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <div class="table-responsive">
-                    <!-- Informasi Panitia (Pegawai dan Non-Pegawai disatukan) -->
-                    <h6 class="fw-bold text-secondary mb-3">Panitia</h6>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr class="text-center small">
-                                <th>Nama Lengkap</th>
-                                <th>Pangkat/Golongan</th>
-                                <th>Sebagai</th>
-                                <th>Status</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Pegawai yang bertindak sebagai Panitia -->
-                            @foreach ($perangkatPegawais as $perangkatPegawai)
-                            @if (strtolower($perangkatPegawai->posisi) == 'panitia')
-                            <tr>
-                                <td class="text-center">{{ $perangkatPegawai->nama_lengkap }}</td>
-                                <td class="text-center">{{ $perangkatPegawai->pangkat }} - {{ $perangkatPegawai->golongan }}</td>
-                                <td class="text-center">{{ $perangkatPegawai->sebagai }}</td>
-                                <td class="text-center">{{ $perangkatPegawai->status }}</td>
-                                <td class="text-center">
-                                    <form action="{{url('/h_peserta_kegiatan/'. $perangkatPegawai->idPerangkat)}}" method="post">
-                                        @method('DELETE')
-                                        @csrf
-                                        <input type="hidden" value="{{ $kegiatan->id }}" name="kegiatanId">
-                                        <button class="btn btn-danger btn-sm text-white" onclick="return confirm('Hapus Data Peserta?')"><i class="fa-solid fa-trash"></i></button>
-                                    </form>
-                                </td>
-                            </tr>
-                            @endif
-                            @endforeach
+            <div class="modal-body p-4 bg-light" id="modalScrollBody" onscroll="checkScroll(this)">
+                <div class="alert alert-info border-0 shadow-sm rounded-3 mb-4">
+                    <i class="fa fa-info-circle me-2"></i> Pastikan seluruh data di bawah ini sudah benar sebelum Anda mengajukan kegiatan. <strong>Anda harus menggulir ke bawah untuk mengaktifkan tombol Ajukan.</strong>
+                </div>
+                
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body">
+                        <h6 class="fw-bold text-primary mb-3"><i class="fa fa-users me-2"></i>Kepanitiaan</h6>
+                        <div id="tabel-kepanitiaan-container">
+                            @include('user.kegiatan.partials.table_kepanitiaan')
+                        </div>
+                    </div>
+                </div>
 
-                            <!-- Non-Pegawai yang bertindak sebagai Panitia -->
-                            @foreach ($perangkatNonPegawais as $perangkatNonPegawai)
-                            @if (strtolower($perangkatNonPegawai->posisi) == 'panitia')
-                            <tr>
-                                <td class="text-center">{{ $perangkatNonPegawai->nama_lengkap }}</td>
-                                <td class="text-center">{{ $perangkatNonPegawai->pangkat }} - {{ $perangkatNonPegawai->golongan }}</td>
-                                <td class="text-center">{{ $perangkatNonPegawai->sebagai }}</td>
-                                <td class="text-center">{{ $perangkatNonPegawai->status }}</td>
-                                <td class="text-center">
-                                    <form action="{{url('/h_peserta_kegiatan/' . $perangkatNonPegawai->idPerangkat)}}" method="post">
-                                        @method('DELETE')
-                                        @csrf
-                                        <input type="hidden" value="{{ $kegiatan->id }}" name="kegiatanId">
-                                        <button class="btn btn-danger btn-sm text-white" onclick="return confirm('Hapus Data Peserta?')"><i class="fa-solid fa-trash"></i></button>
-                                    </form>
-                                </td>
-                            </tr>
-                            @endif
-                            @endforeach
-                        </tbody>
-                    </table>
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body">
+                        <h6 class="fw-bold text-primary mb-3"><i class="fa fa-car me-2"></i>Mobilitas</h6>
+                        <div id="tabel-mobilitas-container">
+                            @include('user.kegiatan.partials.table_mobilitas')
+                        </div>
+                    </div>
+                </div>
 
-                    <!-- Informasi Narasumber -->
-                    <h6 class="fw-bold text-secondary mb-3 mt-5">Narasumber</h6>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr class="text-center small">
-                                <th>Nama Lengkap</th>
-                                <th>Pangkat/Golongan</th>
-                                <th>Sebagai</th>
-                                <th>Status</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($perangkatPegawais as $perangkatPegawai)
-                            @if ($perangkatPegawai->posisi == 'Narasumber')
-                            <tr>
-                                <td class="text-center">{{ $perangkatPegawai->nama_lengkap }}</td>
-                                <td class="text-center">{{ $perangkatPegawai->pangkat }} - {{ $perangkatPegawai->golongan }}</td>
-                                <td class="text-center">{{ $perangkatPegawai->sebagai }}</td>
-                                <td class="text-center">{{ $perangkatPegawai->status }}</td>
-                                <td class="text-center">
-                                    <form action="{{url('/h_peserta_kegiatan/'. $perangkatPegawai->idPerangkat)}}" method="post">
-                                        @method('DELETE')
-                                        @csrf
-                                        <input type="hidden" value="{{ $kegiatan->id }}" name="kegiatanId">
-                                        <button class="btn btn-danger btn-sm text-white" onclick="return confirm('Hapus Data Peserta?')"><i class="fa-solid fa-trash"></i></button>
-                                    </form>
-                                </td>
-                            </tr>
-                            @endif
-                            @endforeach
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body">
+                        <h6 class="fw-bold text-primary mb-3"><i class="fa fa-box me-2"></i>Fasilitas Tambahan</h6>
+                        <div id="tabel-fasilitas-container">
+                            @include('user.kegiatan.partials.table_fasilitas')
+                        </div>
+                    </div>
+                </div>
 
-                            @foreach ($perangkatNonPegawais as $perangkatNonPegawai)
-                            @if ($perangkatNonPegawai->posisi == 'Narasumber')
-                            <tr>
-                                <td class="text-center">{{ $perangkatNonPegawai->nama_lengkap }}</td>
-                                <td class="text-center">{{ $perangkatNonPegawai->pangkat }} - {{ $perangkatNonPegawai->golongan }}</td>
-                                <td class="text-center">{{ $perangkatNonPegawai->sebagai }}</td>
-                                <td class="text-center">{{ $perangkatNonPegawai->status }}</td>
-                                <td class="text-center">
-                                    <form action="{{url('/h_peserta_kegiatan/' . $perangkatNonPegawai->idPerangkat)}}" method="post">
-                                        @method('DELETE')
-                                        @csrf
-                                        <input type="hidden" value="{{ $kegiatan->id }}" name="kegiatanId">
-                                        <button class="btn btn-danger btn-sm text-white" onclick="return confirm('Hapus Data Peserta?')"><i class="fa-solid fa-trash"></i></button>
-                                    </form>
-                                </td>
-                            </tr>
-                            @endif
-                            @endforeach
-                        </tbody>
-                    </table>
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body">
+                        <h6 class="fw-bold text-primary mb-3"><i class="fa fa-building me-2"></i>Sarana dan Prasarana</h6>
+                        <div id="tabel-sapras-container">
+                            @include('user.kegiatan.partials.table_sapras')
+                        </div>
+                    </div>
+                </div>
 
-                    <!-- Informasi Moderator -->
-                    <h6 class="fw-bold text-secondary mb-3 mt-5">Moderator</h6>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr class="text-center small">
-                                <th>Nama Lengkap</th>
-                                <th>Pangkat/Golongan</th>
-                                <th>Sebagai</th>
-                                <th>Status</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($perangkatPegawais as $perangkatPegawai)
-                            @if ($perangkatPegawai->posisi == 'Moderator')
-                            <tr>
-                                <td class="text-center">{{ $perangkatPegawai->nama_lengkap }}</td>
-                                <td class="text-center">{{ $perangkatPegawai->pangkat }} - {{ $perangkatPegawai->golongan }}</td>
-                                <td class="text-center">{{ $perangkatPegawai->sebagai }}</td>
-                                <td class="text-center">{{ $perangkatPegawai->status }}</td>
-                                <td class="text-center">
-                                    <form action="{{url('/h_peserta_kegiatan/'. $perangkatPegawai->idPerangkat)}}" method="post">
-                                        @method('DELETE')
-                                        @csrf
-                                        <input type="hidden" value="{{ $kegiatan->id }}" name="kegiatanId">
-                                        <button class="btn btn-danger btn-sm text-white" onclick="return confirm('Hapus Data Peserta?')"><i class="fa-solid fa-trash"></i></button>
-                                    </form>
-                                </td>
-                            </tr>
-                            @endif
-                            @endforeach
-
-                            @foreach ($perangkatNonPegawais as $perangkatNonPegawai)
-                            @if ($perangkatNonPegawai->posisi == 'Moderator')
-                            <tr>
-                                <td class="text-center">{{ $perangkatNonPegawai->nama_lengkap }}</td>
-                                <td class="text-center">{{ $perangkatNonPegawai->pangkat }} - {{ $perangkatNonPegawai->golongan }}</td>
-                                <td class="text-center">{{ $perangkatNonPegawai->sebagai }}</td>
-                                <td class="text-center">{{ $perangkatNonPegawai->status }}</td>
-                                <td class="text-center">
-                                    <form action="{{url('/h_peserta_kegiatan/' . $perangkatNonPegawai->idPerangkat)}}" method="post">
-                                        @method('DELETE')
-                                        @csrf
-                                        <input type="hidden" value="{{ $kegiatan->id }}" name="kegiatanId">
-                                        <button class="btn btn-danger btn-sm text-white" onclick="return confirm('Hapus Data Peserta?')"><i class="fa-solid fa-trash"></i></button>
-                                    </form>
-                                </td>
-                            </tr>
-                            @endif
-                            @endforeach
-                        </tbody>
-                    </table>
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <h6 class="fw-bold text-primary mb-3"><i class="fa fa-file-alt me-2"></i>Dokumen Pendukung</h6>
+                        <div id="tabel-dokumen-container">
+                            @include('user.kegiatan.partials.table_dokumen')
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger text-white" data-bs-dismiss="modal">Tutup</button>
+            <div class="modal-footer bg-white border-top-0 py-3" id="modalFooterActions">
+                <button type="button" class="btn btn-outline-secondary px-4 rounded-pill" data-bs-dismiss="modal">Kembali Cek Data</button>
+                <button type="submit" id="btnAjukanKegiatanFinal" class="btn btn-primary px-4 rounded-pill" form="myForm" disabled>
+                    <i class="fa fa-paper-plane me-1"></i> Konfirmasi & Ajukan
+                </button>
             </div>
         </div>
     </div>
@@ -591,215 +472,6 @@
 
 
 
-
-<!-- Modal Lihat Data Fasilitas -->
-<div class="modal fade" id="lihatFasilitasModal" tabindex="-1" aria-labelledby="lihatFasilitasModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="lihatFasilitasModalLabel">Lihat Data Fasilitas</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr class="text-center small">
-                                <th>No</th>
-                                <th>Jenis Fasilitas</th>
-                                <th>Jumlah</th>
-                                <th>Satuan</th>
-                                <th>Tipe Pembayaran</th>
-                                <th>Keterangan</th>
-                                <th>Pelaksana</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                                @foreach($kebutuhans as $item)
-                                    <tr class="text-center small">
-                                        <td class="text-center">{{ $loop->iteration }}</td>
-                                        <td>{{ $item->nama }}</td>
-                                        <td>{{ $item->jumlah_frekuensi }}</td>
-                                        <td>{{ $item->satuan }}</td>
-                                        <td>{{ $item->tipe_pendanaan }}</td>
-                                        <td>{{ $item->ket }}</td>
-                                        <td>{{ $item->pelaksana }}</td>
-                                        <td>
-                                            <form action="{{ url('/h_fasilitas_kegiatan/' . $item->idKebutuhan) }}" method="post">
-                                                @method('delete')
-                                                @csrf
-                                                <input type="hidden" value="{{ $kegiatan->id }}" name="kegiatanId">
-                                                <button type="submit" class="text-decoration-none btn btn-danger btn-sm text-white" onclick="return confirm('Hapus Data Fasilitas?')">
-                                                    <i class="fa fa-trash"></i>
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="modal-footer border-0">
-                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Lihat Mobilitas -->
-<div class="modal fade" id="lihatMobilitasModal" tabindex="-1" aria-labelledby="lihatMobilitasLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title fw-bold text-secondary" id="lihatMobilitasLabel">Informasi Mobilitas</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr class="text-center small">
-                                <th>No</th>
-                                <th>Mobilitas</th>
-                                <th>Tanggal Digunakan</th>
-                                <th>Kegunaan</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($mobilitas as $mobil)
-                            <tr>
-                                <td class="text-center">{{ $loop->iteration }}</td>
-                                <td class="text-center">{{ $mobil->mobilitas }}</td>
-                                <td class='text-center'>{{$mobil->tgl_mulai}}</td>
-                                <td class='text-center'>{{$mobil->tujuan_penggunaan}}</td>
-                                <td class='text-center'>
-                                <form action="{{url('/h_mobilitas_kegiatan/' . $mobil->id)}}" method="post">
-                                     @method('delete')
-                                    @csrf
-                                    <input id="" type="hidden" value="{{ $kegiatan->id }}" name="kegiatanId">
-                                    <span>
-                                    <button class="text-decoration-none btn btn-danger btn-sm text-white" onclick="return confirm('Hapus Data Mobilitas?')"><i class="fa-solid fa-trash"></i></button>
-                                    </span>
-                                </form>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Lihat Sapras -->
-<div class="modal fade" id="lihatSaprasModal" tabindex="-1" aria-labelledby="lihatSaprasLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title fw-bold text-secondary" id="lihatSaprasLabel">Informasi Sarana dan Prasarana</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr class="text-center small">
-                                <th>No</th>
-                                <th>Sarana</th>
-                                <th>Jumlah</th>
-                                <th>Tanggal Digunakan</th>
-                                <th>Status</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($sapras as $sapra)
-                            <tr>
-                                <td class="text-center">{{ $loop->iteration }}</td>
-                                <td>{{ $sapra->nama_barang }}</td>
-                                <td class="text-center">{{ $sapra->jumlah_asset }}</td>
-                                <td class="text-center">{{ $sapra->tgl_peminjaman }}</td>
-                                <td class="text-center">{{ $sapra->status }}</td>
-                                <td class="text-center">
-                                    <form action="{{url('/h_sapras/' . $sapra->idPeminjaman)}}" method="post">
-                                        @method('delete')
-                                        @csrf
-                                        <input id="" type="hidden" value="{{ $kegiatan->id }}" name="kegiatanId">
-                                        <input id="" type="hidden" value="{{ $sapra->IdBarang }}" name="idAsset">
-                                        <button class="btn btn-danger btn-sm text-white" onclick="return confirm('Hapus Data?')">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Lihat Dokumen -->
-<div class="modal fade" id="lihatDokumenModal" tabindex="-1" aria-labelledby="lihatDokumenLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title fw-bold text-secondary" id="lihatDokumenLabel">Dokumen Pendukung</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr class="text-center small">
-                                <th>No</th>
-                                <th>Nama Dokumen</th>
-                                <th>Lampiran</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($dokumens as $dokumen)
-                            <tr>
-                                <td class="text-center">{{ $loop->iteration }}</td>
-                                <td>{{ $dokumen->nama_dokumen }}</td>
-                                <td class="text-center">
-                                    <a href="{{ url('kegiatan/getDokumen/' . basename($dokumen->file)) }}" target="_blank">[Lihat Lampiran]</a>
-                                </td>
-                                <td class="text-center">
-                                    <form action="{{url('/h_dokumen_kegiatan/' . $dokumen->id)}}" method="post">
-                                        @method('delete')
-                                        @csrf
-                                        <input type="hidden" value="{{ $kegiatan->id }}" name="kegiatanId">
-                                        <button class="btn btn-danger btn-sm text-white" onclick="return confirm('Hapus Data?')">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 @php
 $terdaftarPegawaiIds = session('terdaftarPegawaiIds', []);  // Jika variabel tidak ada, gunakan array kosong
@@ -1563,10 +1235,275 @@ document.querySelector('select[name="posisi"]').addEventListener("change", updat
             satuanSelect.append('<option value="">Pilih Satuan</option>'); // Opsi default
 
              // Kembalikan label ke format default
+        // Clear existing options
+        penugasanSelect.innerHTML = "";
+
+        if (posisi === "Panitia") {
+            satuanInput.value = jumlahHari;
+            if (jumlahHari >= 30) {
+                detailSatuanSelect.value = 'bulan';
+            } else {
+                detailSatuanSelect.value = 'hari';
+            }
+
+            addOption(penugasanSelect, "Penanggung Jawab", "Penanggung Jawab");
+            addOption(penugasanSelect, "Anggota", "Anggota");
+            addOption(penugasanSelect, "Ketua", "Ketua");
+            addOption(penugasanSelect, "Sekretaris", "Sekretaris");
+        } else if (posisi === "Narasumber") {
+            satuanInput.value = '';
+            detailSatuanSelect.value = 'jam';
+            addOption(penugasanSelect, "Narasumber", "Narasumber");
+        } else if (posisi === "Moderator") {
+            satuanInput.value = '';
+            detailSatuanSelect.value = 'jam';
+            addOption(penugasanSelect, "Moderator", "Moderator");
+        }
+    }
+
+    function addOption(selectElement, text, value) {
+        var option = document.createElement("option");
+        option.text = text;
+        option.value = value;
+        selectElement.add(option);
+    }
+
+    // Call updatePenugasanOptionsNonPegawai when the posisi changes
+    document.getElementById("posisiSelectNonPegawai").addEventListener("change", updatePenugasanOptionsNonPegawai);
+</script>
+
+<script>
+    function setInputFasilitas(hasil) {
+        var input = document.getElementById('fasilitasId');
+        input.setAttribute("value", hasil);
+
+        var input = document.getElementById('fasilitasIdNonPegawai');
+        input.setAttribute("value", hasil);
+    }
+
+    $(".js-example-basic-single-peserta").select2({
+        placeholder: "Select an option",
+        dropdownParent: "#tambah_peserta",
+    });
+</script>
+
+<script>
+    $('.js-example-basic-single-3').select2({
+        placeholder: 'Select an option',
+        dropdownParent: '#tambah_sapras'
+    });
+</script>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Ambil nilai cekJumlahPeserta dari PHP
+        const cekJumlahPeserta = {{ $cekJumlahPeserta }};
+
+        // Jika cekJumlahPeserta adalah -1, disable tombol yang memiliki data-bs-toggle="modal"
+        if (cekJumlahPeserta === -1) {
+            // Seleksi semua tombol dengan data-bs-toggle="modal"
+            const modalButtons = document.querySelectorAll('[data-bs-toggle="modal"]');
+
+            modalButtons.forEach(button => {
+                button.disabled = true; // Set tombol menjadi disabled
+            });
+        }
+    });
+</script>
+
+
+<script>
+    function setInputFasilitas(hasil) {
+        var input = document.getElementById('fasilitasId');
+        input.setAttribute("value", hasil);
+
+        var input = document.getElementById('fasilitasIdNonPegawai');
+        input.setAttribute("value", hasil);
+    }
+
+    $(".js-example-basic-single-peserta").select2({
+        placeholder: "Select an option",
+        dropdownParent: "#tambah_peserta",
+    });
+</script>
+<script>
+    function submitDraft() {
+        const form = document.getElementById('myForm');
+        form.action = "{{ url('/draft_kegiatan_all/' . $kegiatan->id) }}";
+        form.submit();
+        }
+    function batasPanitia() {
+        const form = document.getElementById('myForm');
+        form.action = "{{ url('/kegiatan/batas-panitia/' . $kegiatan->id) }}";
+        form.submit();
+        }
+</script>
+<script>
+   document.addEventListener('DOMContentLoaded', function () {
+    const tambahKepanitiaanButton = document.querySelector('button[data-bs-target="#tambah_peserta"]');
+    const jumlahPesertaInput = document.getElementById('jumlah_peserta');
+    const jumlahKepanitiaanInput = document.getElementById('jumlah_kepanitiaan'); // Element hidden yang menyimpan jumlah kepanitiaan saat ini.
+
+    function checkKepanitiaanLimit() {
+        const jumlahPeserta = parseInt(jumlahPesertaInput.value) || 0;
+        const jumlahKepanitiaan = parseInt(jumlahKepanitiaanInput.value) || 0;
+        const batasKepanitiaan = Math.floor(jumlahPeserta * 0.10); // 10% dari peserta
+
+        if (jumlahKepanitiaan >= batasKepanitiaan) {
+            // Tampilkan peringatan menggunakan SweetAlert jika batas tercapai
+            Swal.fire({
+                icon: 'warning',
+                title: 'Batas Kepanitiaan Terlampaui!',
+                text: `Jumlah kepanitiaan tidak boleh lebih dari 10% dari jumlah peserta. Batas maksimal: ${batasKepanitiaan} orang.`,
+                confirmButtonText: 'OK'
+            });
+
+            // Disable button untuk menambahkan kepanitiaan
+            tambahKepanitiaanButton.disabled = true;
+        } else {
+            // Enable button jika masih di bawah batas
+            tambahKepanitiaanButton.disabled = false;
+        }
+    }
+
+    // Cek batasan setiap kali jumlah peserta atau jumlah kepanitiaan berubah
+    jumlahPesertaInput.addEventListener('input', checkKepanitiaanLimit);
+    jumlahKepanitiaanInput.addEventListener('input', checkKepanitiaanLimit);
+
+    // Panggil fungsi saat halaman dimuat pertama kali untuk validasi awal
+    checkKepanitiaanLimit();
+});
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  $(document).ready(function() {
+    // Event listener untuk dropdown "Jenis Fasilitas"
+    $('#jenisFasilitas').on('change', function() {
+        var selectedValue = $(this).val();
+        var satuanSelect = $('#satuan');
+        var keteranganLabel = $('label[for="keterangan"]');
+
+        // Kosongkan opsi sebelumnya
+        satuanSelect.empty();
+
+        // Tambahkan opsi satuan sesuai dengan pilihan "Jenis Fasilitas"
+        if (selectedValue === 'Tiket Pesawat' || selectedValue === 'Tiket Kereta' || selectedValue === 'Tiket Travel') {
+            satuanSelect.append('<option value="Tiket">Tiket</option>');
+
+            // Ubah label keterangan
+            keteranganLabel.html(
+            'Keterangan <span class="text-secondary small">(Contoh : Argo Parahyangan Eksekutif, Garuda Indonesia Ekonomi)</span>'
+            );
+        } else if (selectedValue === 'BBM') {
+            satuanSelect.append('<option value="Liter">Liter</option>');
+
+            // Ubah label keterangan
+            keteranganLabel.html(
+            'Keterangan <span class="text-secondary small">(Contoh : Keperluan Isi Bensin di SPBU)</span>'
+            );
+        } else if (selectedValue === 'Akomodasi Hotel') {
+            satuanSelect.append('<option value="Malam">Malam</option>');
+
+            // Ubah label keterangan
+            keteranganLabel.html(
+            'Keterangan <span class="text-secondary small">(Contoh : Hotel Aston)</span>'
+            );
+        } else if (selectedValue === 'Transportasi Online') {
+            satuanSelect.append('<option value="Perjalanan">Perjalanan</option>');
+
+            // Ubah label keterangan
+            keteranganLabel.html(
+            'Keterangan <span class="text-secondary small">(Contoh : Ojek Online dari Stasiun ke Hotel)</span>'
+            );
+        } else if (selectedValue === 'Konsumsi') {
+            satuanSelect.append('<option value="pax">Pax</option>');
+
+            // Ubah label keterangan
+            keteranganLabel.html(
+            'Keterangan <span class="text-secondary small">(Contoh : Makan Siang Peserta, Snack Panitia)</span>'
+            );
+        } else {
+            satuanSelect.append('<option value="">Pilih Satuan</option>'); // Opsi default
+
+             // Kembalikan label ke format default
             keteranganLabel.html('Keterangan');
         }
     });
 });
 
+</script>
+
+<script>
+    function checkScroll(el) {
+        // Toleransi 10px untuk mengatasi perbedaaan desimal atau margin
+        if (el.scrollTop + el.clientHeight >= el.scrollHeight - 10) {
+            document.getElementById('btnAjukanKegiatanFinal').removeAttribute('disabled');
+        }
+    }
+    
+    // Periksa saat modal ditampilkan jika konten terlalu sedikit sehingga tidak perlu scroll
+    document.getElementById('modalRingkasanPengajuan').addEventListener('shown.bs.modal', function () {
+        const el = document.getElementById('modalScrollBody');
+        if (el.scrollHeight <= el.clientHeight) {
+            document.getElementById('btnAjukanKegiatanFinal').removeAttribute('disabled');
+        } else {
+            // Reset ke disabled saat dibuka, user harus scroll ke bawah lagi
+            document.getElementById('btnAjukanKegiatanFinal').setAttribute('disabled', 'disabled');
+        }
+    });
+
+    function openModalIfValid() {
+        const form = document.getElementById('myForm');
+        if (form.checkValidity()) {
+            const modalElement = document.getElementById('modalRingkasanPengajuan');
+            const modalInstance = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
+            modalInstance.show();
+        } else {
+            form.reportValidity();
+        }
+    }
+</script>
+
+<script>
+$(document).ready(function() {
+    let currentPanitiaCount = {{ $perangkatPegawais->where('posisi', 'Panitia')->count() + $perangkatNonPegawais->where('posisi', 'Panitia')->count() }};
+    
+    $('.js-example-basic-multiple').on('select2:select', function(e) {
+        let posisi = $('#posisiSelect').val();
+        if (posisi === 'Panitia') {
+            let jumlahPeserta = parseInt($('#jumlah_peserta').val()) || 0;
+            let maxPanitia = Math.floor(jumlahPeserta * 0.10);
+            
+            let selectedValues = $(this).val() || [];
+            let selectedCount = selectedValues.length;
+            
+            if (currentPanitiaCount + selectedCount > maxPanitia) {
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'warning',
+                    title: 'Batas Panitia Terlampaui!',
+                    text: `Maksimal panitia adalah ${maxPanitia} orang (10% dari peserta). Anda sudah menambahkan ${currentPanitiaCount} panitia.`,
+                    showConfirmButton: false,
+                    timer: 5000,
+                    timerProgressBar: true
+                });
+                
+                // Hapus item yang baru saja dipilih
+                let lastSelected = e.params.data.id;
+                selectedValues = selectedValues.filter(val => val !== lastSelected);
+                $(this).val(selectedValues).trigger('change');
+            }
+        }
+    });
+
+    // Reset pilihan jika posisi diubah untuk mencegah bypass limit
+    $('#posisiSelect').on('change', function() {
+        $('.js-example-basic-multiple').val(null).trigger('change');
+    });
+});
 </script>
 @endsection

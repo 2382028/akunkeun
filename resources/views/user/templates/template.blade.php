@@ -267,52 +267,56 @@
     <div class="top-nav">
         @yield('content')
         @if (session()->has('success'))
-    <div aria-live="polite" aria-atomic="true" class="position-relative">
-        <div class="toast-container end-0 mt-4 pt-4 position-fixed">
-            <div class="show toast" role="alert" aria-live="assertive" aria-atomic="true" id="myToast">
-                <div class="toast-header">
-                  <strong class="me-auto">Pesan Sobat Akunkeun</strong>
-                  <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-                <div class="toast-body">
-                    {{ session('success') }}
-                </div>
-            </div>
-        </div>
-    </div>
-  @endif
-  @if (session()->has('error'))
-    <div aria-live="polite" aria-atomic="true" class="position-relative">
-        <div class="toast-container end-0 mt-4 pt-4 position-fixed">
-            <div class="show toast text-bg-danger" role="alert" aria-live="assertive" aria-atomic="true" id="myToast">
-                <div class="toast-header">
-                    <strong class="me-auto">Kesalahan</strong>
-                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-                <div class="toast-body">
-                    {{ session('error') }}
-                </div>
-            </div>
-        </div>
-    </div>
-    @endif
-    @if ($errors->any())
-      <div aria-live="polite" aria-atomic="true" class="position-relative">
-          <div class="toast-container end-0 mt-4 pt-4 position-fixed">
-              <div class="show toast text-bg-danger" role="alert" aria-live="assertive" aria-atomic="true" id="myToast">
-                  <div class="toast-header">
-                      <strong class="me-auto">Kesalahan Validasi</strong>
-                      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                  </div>
-                  <div class="toast-body">
-                      @foreach ($errors->all() as $error)
-                          <p>{{ $error }}</p>
-                      @endforeach
-                  </div>
-              </div>
-          </div>
-      </div>
-  @endif
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: 'Pesan Sobat Akunkeun',
+                text: "{{ session('success') }}",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            });
+        </script>
+        @endif
+
+        @if (session()->has('error'))
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'error',
+                title: 'Kesalahan',
+                text: "{{ session('error') }}",
+                showConfirmButton: false,
+                timer: 4000,
+                timerProgressBar: true
+            });
+        </script>
+        @endif
+
+        @if ($errors->any())
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            let errorMsg = ``;
+            @foreach ($errors->all() as $error)
+                errorMsg += `{{ $error }}\n`;
+            @endforeach
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'error',
+                title: 'Kesalahan Validasi',
+                text: errorMsg,
+                showConfirmButton: false,
+                timer: 5000,
+                timerProgressBar: true
+            });
+        </script>
+        @endif
 
     </div>
 

@@ -21,7 +21,7 @@
 @section('content')
 
 <!-- Awal Form Perjalanan Dinas Biasa  -->
-<section id="beranda" class="pb-5 mt-4 pt-4">
+<section id="beranda" class="pb-5 pt-4">
     <div class="container">
         <div class="row mb-3">
             <h4 class="fw-bold text-secondary">Kegiatanku | Perjadin Kegiatan</h4>
