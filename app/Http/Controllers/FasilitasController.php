@@ -17,7 +17,7 @@ class FasilitasController extends Controller
         return view('user.fasilitas.index', [
             'title' => 'Fasilitas BMN LLDIKTI 4',
             'active' => 'barang_saya',
-            'assets' => Asset::whereInIn('status_peminjaman', [['Tidak Dipakai', 'Tidak Digunakan'], 'Tidak Digunakan'])->get()
+            'assets' => Asset::whereIn('status_peminjaman', ['Tidak Dipakai', 'Tidak Digunakan'])->get()
         ]);
     }
 
