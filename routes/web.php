@@ -852,6 +852,7 @@ Route::put('/kegiatan/batas-panitia/{id}', [KegiatanController::class, 'storeBat
 Route::get('/kegiatan/getDokumen/{filename}', [KegiatanController::class, 'getDokumen'])->middleware('auth:pegawai');
 Route::get('/kegiatan/getTemplateDokumen/{filename}', [KegiatanController::class, 'getTemplateDokumen'])->middleware('auth:pegawai');
 Route::get('/note-penugasan-kegiatan/{id}', [KegiatanController::class, 'notePenugasanKegiatan'])->name('note-penugasan-kegiatan')->middleware('auth:pegawai');
+Route::get('/note-penugasan-kegiatan-user/{id}', [KegiatanController::class, 'previewNotePenugasanKegiatan'])->name('note-penugasan-kegiatan-user')->middleware('auth:pegawai');
 Route::post('/note_penugasan', [KegiatanController::class, 'storeLaporanPenugasan'])->middleware('auth:pegawai');
 Route::delete('/h_fasilitas_kegiatan/{HFasilitasKegiatan:id}', [KegiatanController::class, 'destroyFasilitasKegiatan'])->middleware('auth:pegawai');
 

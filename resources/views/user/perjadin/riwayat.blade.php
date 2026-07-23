@@ -161,9 +161,9 @@
                                             $editUrl = $isKeg ? url('/kegiatan_step_2/' . $perjadin->idPerjadin) : url('/perjadin_step_2/' . $perjadin->idPerjadin);
                                             $detailUrl = $isKeg ? url('/detail-kegiatan/' . $perjadin->idPerjadin) : url('/detail-perjadin/' . $perjadin->idPerjadin);
                                             $deleteRoute = $isKeg ? route('kegiatan.delete', $perjadin->idPerjadin) : route('perjadin.delete', $perjadin->idPerjadin);
-                                            $pelaporanUrl = $isKeg ? url('/note-kegiatan/' . $perjadin->idPerjadin) : url('/note-perjadin/' . $perjadin->idPerjadin);
+                                            $pelaporanUrl = $isKeg ? url('/note-penugasan-kegiatan/' . $perjadin->idPerjadin) : url('/note-perjadin/' . $perjadin->idPerjadin);
                                             $ajukanUlangUrl = $isKeg ? url('/kegiatanAjukanUlang/' . $perjadin->idPerjadin) : url('/perjadin/Ajukan-Ulang/' . $perjadin->idPerjadin);
-                                            $lihatLpdUrl = $isKeg ? url('/note-kegiatan-user/' . $perjadin->idPerjadin) : url('/note-perjadin-user/' . $perjadin->idPerjadin);
+                                            $lihatLpdUrl = $isKeg ? url('/note-penugasan-kegiatan-user/' . $perjadin->idPerjadin) : url('/note-perjadin-user/' . $perjadin->idPerjadin);
                                         @endphp
                                         <tr>
                                             <td class='text-center'>{{ $loop->iteration }}</td>
